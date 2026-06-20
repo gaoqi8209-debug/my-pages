@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>365能歌善舞 · 同修晴雨录</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-outer: #F2EBE1;
+            --rice-paper: #FDFCF0;
+            --card-paper: #FFFDF7;
+            --ink-dark: #2A2722;
+            --ink-medium: #665F55;
+            --ink-light: #A89E92;
+            --cinnabar: #B93A32;
+            --forest-green: #2D6A4F;
+            --border-line: #E8DFD3;
+        }
+        
+        body { font-family: 'Noto Sans SC', sans-serif; background-color: var(--bg-outer); color: var(--ink-dark); -webkit-font-smoothing: antialiased; }
+        .font-serif { font-family: 'Noto Serif SC', serif; }
+        .font-sans { font-family: 'Noto Sans SC', sans-serif; }
+        .whole-scroll-page { background-color: var(--rice-paper); background-image: radial-gradient(rgba(42, 39, 34, 0.01) 1px, transparent 0); background-size: 6px 6px; box-shadow: 0 0 30px rgba(42, 39, 34, 0.06); }
+        .home-scroll-bg { background-image: url('https://pic1.imgdb.cn/item/6a33e49791b65c4475ad0a72.jpg'); background-size: cover; background-position: calc(50% - 30px) calc(50% - 60px); background-repeat: no-repeat; }
+        
+        /* 磨砂蒙版样式 */
+        .mask-base-layer {
+            position: absolute; inset: 0; background: rgba(253, 252, 240, 0.85);
+            backdrop-filter: blur(1px) grayscale(90%); z-index: 10;
+            transition: opacity 0.5s ease; pointer-events: none;
+        }
+
+        .traditional-seal { width: 32px; height: 32px; color: var(--cinnabar); border: 2.5px solid var(--cinnabar); font-family: 'Noto Serif SC', serif; font-weight: 900; font-size: 15px; display: flex; align-items: center; justify-content: center; text-align: center; background-color: var(--card-paper); box-shadow: inset 0 0 4px rgba(185, 58, 50, 0.15); border-radius: 3px; border-top-width: 3px; border-left-width: 2.2px; border-bottom-width: 2.8px; border-right-width: 3.5px; position: absolute; right: 14px; bottom: 10px; z-index: 90; opacity: 0; transform: rotate(-15deg) scale(1.6); transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; }
+        .seal-stamped { opacity: 0.95 !important; transform: rotate(-4deg) scale(1) !important; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .page-view { transition: opacity 0.25s ease-in-out; }
+        .text-ink-shadow { text-shadow: 0px 1px 2px rgba(253, 252, 240, 0.9); }
+        .tower-piece-img { display: block; width: 100%; height: auto; object-fit: contain; margin-top: -1.5px; pointer-events: none; transition: all 0.4s ease; }
+        .unlocked-stage-box { position: relative; }
+        .locked-mask-active .tower-piece-img { filter: grayscale(100%) brightness(0.96) opacity(0.25); }
+        .locked-mask-active .lantern-icon { filter: grayscale(100%) opacity(0.25); }
+        .locked-mask-active .text-title, .locked-mask-active .text-poem { opacity: 0 !important; visibility: hidden; }
+        .locked-mask-active .text-date { color: var(--ink-light); opacity: 0.35; }
+        .base-cell-mask { position: absolute; inset: -8px; background: rgba(253, 252, 240, 0.78); pointer-events: none; z-index: 5; transition: opacity 0.4s ease; opacity: 0; border-radius: 2px; }
+        .locked-mask-active .base-cell-mask { opacity: 1; }
+        .base-cell-content { position: relative; z-index: 10; }
+    </style>
+</head>
+<body class="flex justify-center min-h-screen items-stretch">
+
+    <div class="w-full max-w-md whole-scroll-page flex flex-col relative min-h-screen overflow-hidden shadow-2xl">
+        
+        <div id="view-qingyu" class="page-view flex flex-col flex-1 min-h-screen home-scroll-bg">
+            <div class="w-full pt-5 pb-3 px-6 flex justify-center items-center border-b border-[var(--border-line)]/50 bg-transparent">
+                <div class="w-full bg-[var(--forest-green)] rounded-lg py-2 flex justify-center items-center -mt-[5px] shadow-sm">
+                    <span class="font-serif font-bold tracking-[0.12em] text-[11px] text-white text-center">◈ 365能歌善舞 · 同修晴雨录 ◈</span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto no-scrollbar px-8 pt-6 pb-40 flex flex-col justify-between">
+                <div class="w-full flex flex-col items-center relative">
+                    <div class="w-full mb-5 -mt-[10px]" style="display: flex; flex-direction: row; align-items: center; gap: 8px;">
+                        <span class="font-serif text-xs text-[var(--ink-medium)] tracking-wider" style="white-space: nowrap;">寻迹</span>
+                        <input id="home-search-input" type="text" placeholder="输入同修姓名（如：卓楠）" class="flex-1 bg-[#F8F3E9]/60 border border-[var(--border-line)] rounded px-3 py-1.5 text-xs focus:outline-none focus:border-[var(--forest-green)] placeholder-[var(--ink-light)] font-serif">
+                        <button id="home-search-btn" class="bg-[var(--forest-green)] text-white text-xs font-serif px-3 py-1.5 rounded shadow-sm hover:opacity-90 active:scale-95 transition-all" style="white-space: nowrap;">调阅</button>
+                    </div>
+                    <p class="text-[11px] text-[var(--ink-light)] tracking-[0.12em] font-serif font-light mb-1 -mt-[5px]">2026年6月16日 · 照见当日资粮</p>
+                    <h1 class="text-6xl font-serif font-bold text-[var(--forest-green)] my-7 tracking-tighter">174</h1>
+                    <div class="w-full relative flex justify-center items-center mb-8 -mt-[10px]">
+                        <p class="text-xs font-sans tracking-[0.15em] text-[var(--text-gray)]">位同修今日在一起精进</p>
+                        <img src="https://pic1.imgdb.cn/item/6a360eda71d0c6ff6149bec2.gif" alt="金色动态微光" class="absolute right-[40px] top-[50%] -translate-y-[50%] w-14 h-auto pointer-events-none opacity-85 mix-blend-multiply z-20">
+                    </div>
+                    <div class="w-full border-b border-dashed border-[var(--border-line)]/60 mb-5"></div>
+                    <div class="w-full space-y-4 -mt-[10px]">
+                        <div class="grid grid-cols-3 gap-2 w-full bg-transparent">
+                            <div class="bg-[#FFFDF7]/40 backdrop-blur-[1px] border border-[var(--border-line)]/60 rounded-xl py-3 text-center"><span class="font-mono text-xl font-bold text-[#2C1D11] block mb-0.5">96</span><span class="text-[11px] text-[#2C1D11] font-bold tracking-wide font-serif block">🪷日日相续</span></div>
+                            <div class="bg-[#FFFDF7]/40 backdrop-blur-[1px] border border-[var(--border-line)]/60 rounded-xl py-3 text-center"><span class="font-mono text-xl font-bold text-[#2C1D11] block mb-0.5">5</span><span class="text-[11px] text-[#2C1D11] font-bold tracking-wide font-serif block">🎖️本月通关</span></div>
+                            <div class="bg-[#FFFDF7]/40 backdrop-blur-[1px] border border-[var(--border-line)]/60 rounded-xl py-3 text-center"><span class="font-mono text-xl font-bold text-[#2C1D11] block mb-0.5">25<span class="text-[10px] font-serif font-bold text-[#2C1D11] ml-0.5">天</span></span><span class="text-[11px] text-[#2C1D11] font-bold tracking-wide font-serif block">📅同修缘深</span></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 w-full relative py-1 overflow-hidden select-none bg-transparent">
+                            <div class="relative flex items-center min-h-[44px] pl-2"><span class="font-serif text-[10px] text-[var(--ink-medium)] tracking-tight opacity-90 pr-0 shrink-0 scale-95 origin-left">✨ 三阶</span><div class="relative flex-1 flex items-center"><img src="https://pic1.imgdb.cn/item/6a33de9291b65c4475ad08bf.png" alt="三阶水墨" class="w-full h-auto object-contain pointer-events-none opacity-95 mix-blend-multiply"><span id="text-stage3" class="absolute right-[6px] font-sans text-[11px] font-bold text-[#2A2722] tracking-wide bg-[#FFFDF7]/60 px-0.5 rounded">141人</span></div></div>
+                            <div class="relative flex items-center min-h-[44px] border-l border-[var(--border-line)]/40 pl-2"><span class="font-serif text-[10px] text-[var(--forest-green)] tracking-tight opacity-90 pr-0 shrink-0 scale-95 origin-left">🌸 四阶</span><div class="relative flex-1 flex items-center"><img src="https://pic1.imgdb.cn/item/6a33de9b91b65c4475ad08c2.png" alt="四阶水墨" class="w-full h-auto object-contain pointer-events-none opacity-95 mix-blend-multiply"><span id="text-stage4" class="absolute right-[4px] font-sans text-[11px] font-bold text-[#2D6A4F] tracking-wide bg-[#FFFDF7]/60 px-0.5 rounded">33人</span></div></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 w-full bg-transparent">
+                            <div class="bg-[#FFFDF7]/40 backdrop-blur-[1px] border border-[var(--border-line)]/60 rounded-xl py-3 text-center"><span class="font-mono text-xl font-bold text-[#2C1D11] block mb-0.5">352</span><span class="text-[11px] text-[#2C1D11] font-bold tracking-wide font-serif block">功德布施</span></div>
+                            <div class="bg-[#FFFDF7]/40 backdrop-blur-[1px] border border-[var(--border-line)]/60 rounded-xl py-3 text-center"><span class="font-mono text-xl font-bold text-[#2C1D11] block mb-0.5">13</span><span class="text-[11px] text-[#2C1D11] font-bold tracking-wide font-serif block">覆履如初</span></div>
+                        </div>
+                    </div>
+                    <div class="w-full border-b border-dashed border-[var(--border-line)]/60 mt-5"></div>
+                </div>
+
+                <div class="w-full flex flex-col items-center mt-5">
+                    <div id="dynamic-title" class="text-xl font-bold tracking-wide text-[var(--ink-dark)] font-serif mt-1 text-ink-shadow">◈ 同修 · 晴雨录 ◈</div>
+                    <div id="energy-pool" class="text-xs font-serif font-medium tracking-wider px-1 text-[var(--forest-green)] mt-[5px] mb-[12px] text-ink-shadow">总能量池：舞 <span id="val-dance">X</span> · 诵 <span id="val-chant">X</span> · 合计 <span id="val-total">X</span></div>
+                    <div class="grid grid-cols-2 w-full text-center gap-2 mb-3 bg-transparent">
+                        <div class="bg-[#FFFDF7]/40 backdrop-blur-[1px] border border-[var(--border-line)]/60 rounded-xl py-3"><span class="font-mono text-xl font-bold text-[#801819] block mb-0.5"><span id="val-month">X</span><span class="text-xs font-serif font-bold text-[#801819] ml-0.5">天</span></span><span class="text-[11px] text-[#801819] font-bold tracking-wider font-serif block">当月履约</span></div>
+                        <div class="bg-[#FFFDF7]/40 backdrop-blur-[1px] border border-[var(--border-line)]/60 rounded-xl py-3"><span class="font-mono text-xl font-bold text-[#801819] block mb-0.5"><span id="val-leak">X</span><span class="text-xs font-serif font-bold text-[#801819] ml-0.5">天</span></span><span class="text-[11px] text-[#801819] font-bold tracking-wider font-serif block">有漏净计</span></div>
+                    </div>
+                    <div id="month-energy-pool" class="text-xs font-serif font-medium tracking-wider px-1 text-[var(--forest-green)] mt-2 mb-4 text-ink-shadow">🌟 本月 能量池：舞 <span id="m-dance">1378</span> · 诵 <span id="m-chant">845</span> · 合计 <span id="m-total">2223</span></div>
+                    <div class="grid grid-cols-2 w-full gap-2 pt-1 items-stretch text-left">
+                        <div class="py-2 px-3 border border-dashed border-[var(--border-line)]/60 rounded-xl bg-[#FFFDF7]/92 flex flex-col justify-center"><span class="text-[10px] text-[var(--ink-light)] block mb-1 font-serif">当月通关规则：</span><div class="text-[11px] text-[var(--ink-medium)] font-sans leading-relaxed">觉之舞：210 关<br>觉之诵：210 关</div></div>
+                        <div class="py-2 px-3 border border-dashed border-[var(--border-line)]/60 rounded-xl bg-[#FFFDF7]/92 flex flex-col justify-center relative min-h-[72px]"><span class="text-[10px] text-[var(--ink-light)] block mb-1 font-serif">目标达成情况：</span><span id="m-status" class="text-[12px] font-bold text-[var(--ink-light)] tracking-widest block">未调阅</span><div id="m-seal" class="traditional-seal">契</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-baota" class="page-view flex flex-col flex-1 min-h-screen hidden opacity-0" style="background-color: var(--rice-paper);">
+            <div class="w-full pt-5 pb-3 px-6 flex justify-center items-center border-b border-[var(--border-line)]/50 bg-transparent">
+                <div class="w-full bg-[var(--forest-green)] rounded-lg py-2 flex justify-center items-center -mt-[5px] shadow-sm"><span class="font-serif font-bold tracking-[0.12em] text-[11px] text-white text-center">◈ 365能歌善舞 · 灯燃九层塔 ◈</span></div>
+            </div>
+            <div class="flex-1 overflow-y-auto no-scrollbar pt-5 pb-40">
+                <div class="w-full flex flex-col items-center">
+                    <div id="baota-user-title" class="text-xl font-serif font-bold tracking-widest text-[#2A2722] mb-6">◈ 同修 · 点亮宝塔 ◈</div>
+                    <div class="w-full flex flex-col relative" id="baota-growth-container">
+                        <div class="w-full relative flex items-center unlocked-stage-box locked-mask-active" id="stage-layer-9"><img src="https://pic1.imgdb.cn/item/6a3615802830ce602a4c4d4f.jpg" alt="九层" class="tower-piece-img"><div class="absolute left-0 right-0 top-[93%] -translate-y-[50%] flex items-center px-5 pointer-events-none z-20"><div class="w-[76%] flex items-center truncate"><span class="text-base shrink-0 mr-1.5 mt-[-2px] lantern-icon">🏮</span><div class="flex items-baseline space-x-2"><span class="font-serif text-sm font-bold text-[#2C1D11] shrink-0 text-title">大圆满</span><span class="text-[12px] text-[var(--ink-medium)] font-sans truncate font-light text-poem">圆满非终点，是起点</span></div></div><div class="w-[24%] text-right font-sans text-[12px] text-[var(--ink-light)] pr-[4px] text-date">2027.05</div></div></div>
+                        <div class="w-full relative flex items-center unlocked-stage-box locked-mask-active" id="stage-layer-8"><img src="https://pic1.imgdb.cn/item/6a3615742830ce602a4c4d3d.jpg" alt="八层" class="tower-piece-img"><div class="absolute inset-0 flex items-center px-5 pointer-events-none"><div class="w-[76%] flex items-center truncate"><span class="text-base shrink-0 mr-1.5 mt-[-2px] lantern-icon">🏮</span><div class="flex items-baseline space-x-2"><span class="font-serif text-sm font-bold text-[#2C1D11] shrink-0 text-title">圆满</span><span class="text-[12px] text-[var(--ink-medium)] font-sans truncate font-light text-poem">圆满资粮，自性具足</span></div></div><div class="w-[24%] text-right font-sans text-[12px] text-[var(--ink-light)] pr-[4px] text-date">2027.04</div></div></div>
+                        <div class="w-full relative flex items-center unlocked-stage-box locked-mask-active" id="stage-layer-7"><img src="https://pic1.imgdb.cn/item/6a3615742830ce602a4c4d3e.jpg" alt="七层" class="tower-piece-img"><div class="absolute inset-0 flex items-center px-5 pointer-events-none"><div class="w-[76%] flex items-center truncate"><span class="text-base shrink-0 mr-1.5 mt-[-2px] lantern-icon">🏮</span><div class="flex items-baseline space-x-2"><span class="font-serif text-sm font-bold text-[#2C1D11] shrink-0 text-title">现证</span><span class="text-[12px] text-[var(--ink-medium)] font-sans truncate font-light text-poem">现证本来，无一可得</span></div></div><div class="w-[24%] text-right font-sans text-[12px] text-[var(--ink-light)] pr-[4px] text-date">2027.03</div></div></div>
+                        <div class="w-full relative flex items-center unlocked-stage-box locked-mask-active" id="stage-layer-6"><img src="https://pic1.imgdb.cn/item/6a36155b2830ce602a4c4d2c.jpg" alt="六层" class="tower-piece-img"><div class="absolute inset-0 flex items-center px-5 pointer-events-none"><div class="w-[76%] flex items-center truncate"><span class="text-base shrink-0 mr-1.5 mt-[-2px] lantern-icon">🏮</span><div class="flex items-baseline space-x-2"><span class="font-serif text-sm font-bold text-[#2C1D11] shrink-0 text-title">相应</span><span class="text-[12px] text-[var(--ink-medium)] font-sans truncate font-light text-poem">相应一处，万法归宗</span></div></div><div class="w-[24%] text-right font-sans text-[12px] text-[var(--ink-light)] pr-[4px] text-date">2027.02</div></div></div>
+                        <div class="w-full relative flex items-center unlocked-stage-box locked-mask-active" id="stage-layer-5"><img src="https://pic1.imgdb.cn/item/6a36155b2830ce602a4c4d2f.jpg" alt="五层" class="tower-piece-img"><div class="absolute inset-0 flex items-center px-5 pointer-events-none"><div class="w-[76%] flex items-center truncate"><span class="text-base shrink-0 mr-1.5 mt-[-2px] lantern-icon">🏮</span><div class="flex items-baseline space-x-2"><span class="font-serif text-sm font-bold text-[#2C1D11] shrink-0 text-title">觉行</span><span class="text-[12px] text-[var(--ink-medium)] font-sans truncate font-light text-poem">觉行淬炼，方见真金</span></div></div><div class="w-[24%] text-right font-sans text-[12px] text-[var(--ink-light)] pr-[4px] text-date">2027.01</div></div></div>
+                        <div class="w-full relative flex items-center unlocked-stage-box locked-mask-active" id="stage-layer-4"><img src="https://pic1.imgdb.cn/item/6a36155b2830ce602a4c4d30.jpg" alt="四层" class="tower-piece-img"><div class="absolute inset-0 flex items-center px-5 pointer-events-none"><div class="w-[76%] flex items-center truncate"><span class="text-base shrink-0 mr-1.5 mt-[-2px] lantern-icon">🏮</span><div class="flex items-baseline space-x-2"><span class="font-serif text-sm font-bold text-[#2C1D11] shrink-0 text-title">净行</span><span class="text-[12px] text-[var(--ink-medium)] font-sans truncate font-light text-poem">净心如莲，不染尘泥</span></div></div><div class="w-[24%] text-right font-sans text-[12px] text-[var(--ink-light)] pr-[4px] text-date">2026.12</div></div></div>
+                        <div class="w-full relative flex items-center unlocked-stage-box locked-mask-active" id="stage-layer-3"><img src="https://pic1.imgdb.cn/item/6a36155b2830ce602a4c4d31.jpg" alt="三层" class="tower-piece-img"><div class="absolute inset-0 flex items-center px-5 pointer-events-none"><div class="w-[76%] flex items-center truncate"><span class="text-base shrink-0 mr-1.5 mt-[-2px] lantern-icon">🏮</span><div class="flex items-baseline space-x-2"><span class="font-serif text-sm font-bold text-[#2C1D11] shrink-0 text-title">发心</span><span class="text-[12px] text-[var(--ink-medium)] font-sans truncate font-light text-poem">发心一发，天地同宽</span></div></div><div class="w-[24%] text-right font-sans text-[12px] text-[var(--ink-light)] pr-[4px] text-date">2026.11</div></div></div>
+                        <div class="w-full relative flex items-center unlocked-stage-box locked-mask-active" id="stage-layer-2"><img src="https://pic1.imgdb.cn/item/6a36155b2830ce602a4c4d2d.jpg" alt="二层" class="tower-piece-img"><div class="absolute inset-0 flex items-center px-5 pointer-events-none"><div class="w-[76%] flex items-center truncate"><span class="text-base shrink-0 mr-1.5 mt-[-2px] lantern-icon">🏮</span><div class="flex items-baseline space-x-2"><span class="font-serif text-sm font-bold text-[#2C1D11] shrink-0 text-title">观缘</span><span class="text-[12px] text-[var(--ink-medium)] font-sans truncate font-light text-poem">观缘起，知性空</span></div></div><div class="w-[24%] text-right font-sans text-[12px] text-[var(--ink-light)] pr-[4px] text-date">2026.10</div></div></div>
+                        <div class="w-full relative flex items-center unlocked-stage-box locked-mask-active" id="stage-layer-1"><img src="https://pic1.imgdb.cn/item/6a36155b2830ce602a4c4d2e.jpg" alt="一层" class="tower-piece-img"><div class="absolute inset-0 flex items-center px-5 pointer-events-none"><div class="w-[76%] flex items-center truncate"><span class="text-base shrink-0 mr-1.5 mt-[-2px] lantern-icon">🏮</span><div class="flex items-baseline space-x-2"><span class="font-serif text-sm font-bold text-[#2C1D11] shrink-0 text-title">闻思</span><span class="text-[12px] text-[var(--ink-medium)] font-sans truncate font-light text-poem">闻思为眼，修行是足</span></div></div><div class="w-[24%] text-right font-sans text-[12px] text-[var(--ink-light)] pr-[4px] text-date">2026.09</div></div></div>
+                        
+                        <div class="w-full relative overflow-hidden" style="margin-top: -1.5px;">
+                            <img src="https://pic1.imgdb.cn/item/6a361e2c2830ce602a4c8d21.jpg" alt="地基底座" class="w-full h-auto block">
+                            <div class="absolute top-4 left-0 right-0 grid grid-cols-3 text-center px-4 z-20">
+                                <div class="relative flex flex-col items-center space-y-0.5 unlocked-stage-box locked-mask-active" id="base-cell-6">
+                                    <div class="base-cell-mask"></div>
+                                    <div class="base-cell-content flex flex-col items-center space-y-0.5">
+                                        <span class="text-sm shrink-0 lantern-icon">🏮</span>
+                                        <span class="font-serif text-xs font-bold text-[#2C1D11] text-title">归真</span>
+                                        <span class="font-sans text-[12px] text-[var(--ink-medium)] text-date">2026.06</span>
+                                    </div>
+                                </div>
+                                <div class="relative flex flex-col items-center space-y-0.5 border-l border-r border-[var(--border-line)]/30 unlocked-stage-box locked-mask-active" id="base-cell-7">
+                                    <div class="base-cell-mask"></div>
+                                    <div class="base-cell-content flex flex-col items-center space-y-0.5">
+                                        <span class="text-sm shrink-0 lantern-icon">🏮</span>
+                                        <span class="font-serif text-xs font-bold text-[#2C1D11] text-title">惜缘</span>
+                                        <span class="font-sans text-[12px] text-[var(--ink-medium)] text-date">2026.07</span>
+                                    </div>
+                                </div>
+                                <div class="relative flex flex-col items-center space-y-0.5 unlocked-stage-box locked-mask-active" id="base-cell-8">
+                                    <div class="base-cell-mask"></div>
+                                    <div class="base-cell-content flex flex-col items-center space-y-0.5">
+                                        <span class="text-sm shrink-0 lantern-icon">🏮</span>
+                                        <span class="font-serif text-xs font-bold text-[#2C1D11] text-title">励勤</span>
+                                        <span class="font-sans text-[12px] text-[var(--ink-medium)] text-date">2026.08</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full text-center py-8 px-6 bg-transparent border-t border-[var(--border-line)]/30 flex justify-center">
+                            <div class="w-full bg-[var(--card-paper)] border border-[var(--border-line)] rounded-lg py-2.5 px-4 shadow-sm flex justify-center items-center">
+                                <p class="font-serif font-bold text-[12px] tracking-[0.15em] text-[var(--ink-medium)] text-center">◈ 根基须固，次第而修，功不唐捐 ◈</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-0 left-0 right-0 bg-[var(--rice-paper)] border-t border-[var(--border-line)]/60 grid grid-cols-2 text-center py-3.5 shadow-md pb-safe z-30">
+            <button id="nav-btn-qingyu" class="flex flex-col items-center justify-center space-y-1 text-[var(--cinnabar)] transition-colors duration-200">
+                <span class="text-lg leading-none mb-0.5">📜</span>
+                <span class="text-[10px] font-serif font-bold tracking-widest">共修晴雨录</span>
+            </button>
+            <button id="nav-btn-baota" class="flex flex-col items-center justify-center space-y-1 text-[var(--ink-light)] opacity-60 transition-colors duration-200">
+                <span class="text-lg leading-none mb-0.5">🏯</span>
+                <span class="text-[10px] font-serif font-medium tracking-widest">灯燃九层塔</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const databaseSample = {
+            "卓楠": { dance: 88, chant: 92, total: 180, monthDays: 28, leakDays: 2, mDance: 1378, mChant: 845, mTotal: 2223, status: "已通关", monthsCleared: [1,2,3,4,5,6,7,8,9] },
+            "张喜美": { dance: 90, chant: 85, total: 175, monthDays: 26, leakDays: 4, mDance: 1200, mChant: 790, mTotal: 1990, status: "未通关", monthsCleared: [1,2,3,4] },
+            "秋红": { dance: 85, chant: 90, total: 175, monthDays: 30, leakDays: 0, mDance: 1410, mChant: 900, mTotal: 2310, status: "已通关", monthsCleared: [1,2,3,4,5,6,7,8,9,10,11,12] }
+        };
+
+        // 12个月对应DOM元素，从下往上：地基3格 → 塔1~9层
+        const STAGE_ORDER = [
+            'base-cell-6',   // 月1: 2026.06 归真
+            'base-cell-7',   // 月2: 2026.07 惜缘
+            'base-cell-8',   // 月3: 2026.08 励勤
+            'stage-layer-1', // 月4: 2026.09 闻思
+            'stage-layer-2', // 月5: 2026.10 观缘
+            'stage-layer-3', // 月6: 2026.11 发心
+            'stage-layer-4', // 月7: 2026.12 净行
+            'stage-layer-5', // 月8: 2027.01 觉行
+            'stage-layer-6', // 月9: 2027.02 相应
+            'stage-layer-7', // 月10: 2027.03 现证
+            'stage-layer-8', // 月11: 2027.04 圆满
+            'stage-layer-9'  // 月12: 2027.05 大圆满
+        ];
+
+        function unlockPagoda(monthsCleared) {
+            STAGE_ORDER.forEach(function(stageId, index) {
+                var monthNum = index + 1;
+                var el = document.getElementById(stageId);
+                if (!el) return;
+                if (monthsCleared.indexOf(monthNum) !== -1) {
+                    el.classList.remove('locked-mask-active');
+                } else {
+                    el.classList.add('locked-mask-active');
+                }
+            });
+        }
+
+        document.getElementById('home-search-btn').addEventListener('click', function() {
+            const name = document.getElementById('home-search-input').value.trim();
+            const statusEl = document.getElementById('m-status');
+            const sealEl = document.getElementById('m-seal');
+            
+            if(name && databaseSample[name]) {
+                const data = databaseSample[name];
+                document.getElementById('dynamic-title').innerText = `◈ ${name} · 晴雨录 ◈`;
+                document.getElementById('baota-user-title').innerText = `◈ ${name} · 点亮宝塔 ◈`;
+                document.getElementById('val-dance').innerText = data.dance;
+                document.getElementById('val-chant').innerText = data.chant;
+                document.getElementById('val-total').innerText = data.total;
+                document.getElementById('val-month').innerText = data.monthDays;
+                document.getElementById('val-leak').innerText = data.leakDays;
+                document.getElementById('m-dance').innerText = data.mDance;
+                document.getElementById('m-chant').innerText = data.mChant;
+                document.getElementById('m-total').innerText = data.mTotal;
+                statusEl.innerText = data.status;
+                
+                if(data.status === "已通关") { statusEl.style.color = "#2D6A4F"; sealEl.classList.add('seal-stamped'); }
+                else { statusEl.style.color = "#B93A32"; sealEl.classList.remove('seal-stamped'); }
+
+                // 点亮宝塔：按通关月份逐层解锁
+                unlockPagoda(data.monthsCleared || []);
+            } else {
+                document.getElementById('dynamic-title').innerText = '◈ 同修 · 晴雨录 ◈';
+                document.getElementById('baota-user-title').innerText = '◈ 同修 · 点亮宝塔 ◈';
+                statusEl.innerText = "未调阅";
+                statusEl.style.color = "#A89E92";
+                sealEl.classList.remove('seal-stamped');
+                unlockPagoda([]);
+            }
+        });
+
+        // 导航切换保持原逻辑...
+        const btnQingyu = document.getElementById('nav-btn-qingyu');
+        const btnBaota = document.getElementById('nav-btn-baota');
+        const viewQingyu = document.getElementById('view-qingyu');
+        const viewBaota = document.getElementById('view-baota');
+        btnQingyu.addEventListener('click', () => { btnQingyu.classList.add('text-[var(--cinnabar)]'); btnQingyu.classList.remove('text-[var(--ink-light)]'); btnBaota.classList.remove('text-[var(--cinnabar)]'); btnBaota.classList.add('text-[var(--ink-light)]', 'opacity-60'); viewBaota.classList.add('hidden', 'opacity-0'); viewQingyu.classList.remove('hidden'); setTimeout(() => viewQingyu.classList.remove('opacity-0'), 10); });
+        btnBaota.addEventListener('click', () => { btnBaota.classList.add('text-[var(--cinnabar)]'); btnBaota.classList.remove('text-[var(--ink-light)]', 'opacity-60'); btnQingyu.classList.remove('text-[var(--cinnabar)]'); btnQingyu.classList.add('text-[var(--ink-light)]', 'opacity-60'); viewQingyu.classList.add('hidden', 'opacity-0'); viewBaota.classList.remove('hidden'); setTimeout(() => viewBaota.classList.remove('opacity-0'), 10); });
+    </script>
+</body>
+</html>
