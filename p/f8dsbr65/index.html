@@ -400,4 +400,268 @@
                 ]
             },
             {
-                name:
+                name: "触觉禅",
+                hasDetail: true,
+                details: [
+                    {
+                        title: "触觉禅：感知",
+                        content: "选择手边或公园里五种材质不同的物品，进行触觉禅，摸一摸这个物品的质地，感受不同的质地给我们的心理带来的不同感觉。",
+                        imgUrl: "",
+                        footer: "觉知当下"
+                    }
+                ]
+            },
+            {
+                name: "意识禅",
+                hasDetail: true,
+                details: [
+                    {
+                        title: "意识禅：观念头",
+                        content: "今天，有意识地在不同时刻觉知自己的念头，可以感受一下这个念头给您带来的感受，这个念头来自哪里。只是觉知，不带评判。",
+                        imgUrl: "",
+                        footer: "觉知当下"
+                    }
+                ]
+            },
+            {
+                name: "慈心禅",
+                hasDetail: true,
+                details: [
+                    {
+                        title: "慈心禅：送祝福",
+                        content: "今天，在早上出门前或任何您有空的时候，用心为家人、邻居、朋友送上真诚的祝福，希望您开心，希望您快乐，希望您欢喜自在、早日离苦得乐、究竟圆满。",
+                        imgUrl: "",
+                        footer: "觉知当下"
+                    }
+                ]
+            },
+            {
+                name: "放松禅",
+                hasDetail: true,
+                details: [
+                    {
+                        title: "放松禅：休息",
+                        content: "今天，在身体疲倦的时候拿出宇廷老师的引导音频，好好地给自己的身心来一个 spa，自上而下放松我们的头部、颈部、肩部、背部，一直到脚趾头，让我们的身体和心都变得松松的，像云朵一样，像棉花糖一样。",
+                        imgUrl: "",
+                        footer: "觉知当下"
+                    }
+                ]
+            },
+            {
+                name: "视觉禅",
+                hasDetail: true,
+                details: [
+                    {
+                        title: "视觉禅：观云",
+                        content: "今天，腾出一点时间，抬头看一看天上的云朵，带着觉，看一看它们的形状，看着它们不断地来来去去，聚散变化着，带着放松的心情，觉知它们的变化。也可以感受一下它们变化时我们念头的变化。",
+                        imgUrl: "",
+                        footer: "觉知当下"
+                    },
+                    {
+                        title: "视觉禅",
+                        content: "",
+                        imgUrl: "https://pic1.imgdb.cn/item/6a40c3b333bc7bc02d77f517.jpg",
+                        footer: "觉知当下"
+                    }
+                ]
+            },
+            {
+                name: "禅睡",
+                hasDetail: true,
+                details: [
+                    {
+                        title: "禅睡",
+                        content: "",
+                        imgUrl: "https://pic1.imgdb.cn/item/6a40c3b333bc7bc02d77f516.jpg",
+                        footer: "觉知当下"
+                    }
+                ]
+            },
+            {
+                name: "听觉禅",
+                hasDetail: true,
+                details: [
+                    {
+                        title: "听觉禅",
+                        content: "",
+                        imgUrl: "https://pic1.imgdb.cn/item/6a40c3b333bc7bc02d77f518.png",
+                        footer: "觉知当下"
+                    }
+                ]
+            },
+            {
+                name: "行禅",
+                hasDetail: true,
+                details: [
+                    {
+                        title: "行禅：缓慢行走，极度专注脚底",
+                        content: "今天，当你需要从静止状态（如久坐）切换到活动状态时，先有意识地做三个深呼吸，感受身体，然后再行动。这就是一个微型的\"动静转换禅\"。",
+                        imgUrl: "",
+                        footer: "觉知当下"
+                    }
+                ]
+            },
+            {
+                name: "觉之舞",
+                hasDetail: true,
+                details: [
+                    {
+                        title: "觉之舞：觉察放松和呼吸",
+                        content: "跟随音频自由舞动，不追求动作，只感受身体想如何表达，保持对动作 and 呼吸的觉察",
+                        imgUrl: "",
+                        footer: "觉知当下"
+                    }
+                ]
+            },
+            {
+                name: "觉之诵",
+                hasDetail: true,
+                details: [
+                    {
+                        title: "觉之诵：放低专注点",
+                        content: "如果你觉得气还是下不去，可以花个3分钟、5分钟，把专注点放在脚板心跟地接触的那个地方，不需要很用力，就是很放松地，让你的专注力放在很低的位置，丹田或者脚板心都可以，这时候有时候会让你的气息更放松下去。",
+                        imgUrl: "",
+                        footer: "觉知当下"
+                    }
+                ]
+            },
+            {
+                name: "觉之音",
+                hasDetail: true,
+                details: [
+                    {
+                        title: "觉之音：把心靠在音乐上",
+                        content: "请打开一首央金老师的音乐，找一个放松的角落，闭上眼睛把心靠在音乐上。",
+                        imgUrl: "",
+                        footer: "觉知当下"
+                    }
+                ]
+            },
+            {
+                name: "觉察",
+                hasDetail: true,
+                details: [
+                    {
+                        title: "觉与觉察：少量多次",
+                        content: "保持放松，觉与觉察的转换，少量多次练习，念头跑了温肉的拉回来。",
+                        imgUrl: "",
+                        footer: "觉知当下"
+                    }
+                ]
+            }
+        ];
+
+        let isShaking = false;
+        let currentZen = null;
+        let isRevealed = false;
+
+        function drawZenStick() {
+            if (isShaking) return;
+            isShaking = true;
+
+            const containerInner = document.getElementById('drawButton');
+            const shadow = document.getElementById('cylinderShadow');
+            
+            containerInner.classList.add('shake-animation');
+            shadow.style.transform = "scale(0.8)";
+            shadow.style.opacity = "0.3";
+
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * zenMethods.length);
+                currentZen = zenMethods[randomIndex];
+
+                document.getElementById('stickText').innerText = currentZen.name;
+                resetStick();
+
+                document.getElementById('resultOverlay').classList.add('show');
+
+                containerInner.classList.remove('shake-animation');
+                shadow.style.transform = "scale(1)";
+                shadow.style.opacity = "1";
+                isShaking = false;
+            }, 800);
+        }
+
+        function revealDetail(event) {
+            event.stopPropagation();
+            
+            if (isRevealed) {
+                closeOverlay();
+                return;
+            }
+
+            if (!currentZen.hasDetail || !currentZen.details || currentZen.details.length === 0) {
+                closeOverlay();
+                return;
+            }
+
+            const stick = document.getElementById('fortuneStick');
+            const stickBody = document.getElementById('stickBody');
+            const stickDetail = document.getElementById('stickDetail');
+
+            stickBody.style.opacity = "0";
+            
+            setTimeout(() => {
+                stickBody.style.display = "none";
+                
+                const randomVersionIndex = Math.floor(Math.random() * currentZen.details.length);
+                const selectedVersion = currentZen.details[randomVersionIndex];
+                
+                // 判断是否为纯图片版本（有图片链接且无正文内容）
+                const isPureImage = (selectedVersion.imgUrl && !selectedVersion.content);
+
+                if (isPureImage) {
+                    // 纯图片大图直出形态
+                    stickDetail.innerHTML = `<img class="stick-img" src="${selectedVersion.imgUrl}" alt="zen-image">`;
+                    stick.classList.add('show-pure-image');
+                } else {
+                    // 常规图文/文字精美排版形态
+                    let imageHtml = selectedVersion.imgUrl ? `<img class="stick-img" src="${selectedVersion.imgUrl}" alt="zen-image">` : '';
+                    let textHtml = selectedVersion.content ? `<p>${selectedVersion.content}</p>` : '';
+
+                    stickDetail.innerHTML = `
+                        <h3>${selectedVersion.title}</h3>
+                        ${imageHtml}
+                        ${textHtml}
+                        <div class="zen-footer">${selectedVersion.footer}</div>
+                    `;
+                    stick.classList.add('show-detail');
+                }
+                
+                stickDetail.style.display = "block";
+                isRevealed = true;
+            }, 250);
+        }
+
+        function handleOverlayClick(event) {
+            closeOverlay();
+        }
+
+        function closeOverlay() {
+            document.getElementById('resultOverlay').classList.remove('show');
+            setTimeout(resetStick, 500);
+        }
+
+        function resetStick() {
+            const stick = document.getElementById('fortuneStick');
+            const stickBody = document.getElementById('stickBody');
+            const stickDetail = document.getElementById('stickDetail');
+            const clickHint = document.getElementById('clickHint');
+
+            if (currentZen && !currentZen.hasDetail) {
+                clickHint.style.visibility = "hidden";
+            } else {
+                clickHint.style.visibility = "visible";
+            }
+
+            stick.classList.remove('show-detail');
+            stick.classList.remove('show-pure-image');
+            stickDetail.style.display = "none";
+            stickDetail.innerHTML = "";
+            stickBody.style.display = "flex";
+            stickBody.style.opacity = "1";
+            isRevealed = false;
+        }
+    </script>
+</body>
+</html>
