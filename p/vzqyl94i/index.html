@@ -3,216 +3,296 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>三十七道品 · 药方抽签</title>
+    <title>觉性十三禅</title>
     <style>
-        /* 核心古风美化 */
+        /* 基础样式与宣纸底色 */
         body {
-            background-color: #fdfcf0; /* 宣纸微黄底色 */
-            font-family: "Noto Serif SC", "SimSun", "Georgia", serif;
+            margin: 0;
+            padding: 0;
+            background-color: #FDFCF0; /* 柔和的宣纸微黄底色 */
+            font-family: "PingFang SC", "Lantinghei SC", "Microsoft YaHei", sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* 禅意水墨背景暗纹（写意禅圈） */
+        .zen-bg {
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            border: 6px solid rgba(90, 80, 70, 0.04);
+            border-radius: 50%;
+            border-left-color: rgba(90, 80, 70, 0.08);
+            border-bottom-color: rgba(90, 80, 70, 0.06);
+            transform: rotate(-45deg);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* 场景容器 */
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+
+        /* 签筒区域与悬浮呼吸动效 */
+        .container-inner {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: float 4s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* 阴影随呼吸缩放 */
+        .shadow {
+            width: 120px;
+            height: 12px;
+            background: rgba(40, 30, 20, 0.06);
+            border-radius: 50%;
+            filter: blur(4px);
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        /* 古朴签筒样式 */
+        .cylinder {
+            width: 130px;
+            height: 220px;
+            background: linear-gradient(135deg, #4A3B32 0%, #2F231B 100%);
+            border-radius: 12px 12px 6px 6px;
+            border: 2px solid #201610;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 5px 10px 20px rgba(0,0,0,0.15);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 签筒口微内凹视觉 */
+        .cylinder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 14px;
+            background: #1C130E;
+            border-radius: 10px 10px 0 0;
+            box-shadow: inset 0 -3px 5px rgba(0,0,0,0.5);
+        }
+
+        /* 签筒文字标签 */
+        .label {
+            background-color: #E8E2D5;
+            padding: 15px 8px;
+            color: #2F231B;
+            font-weight: bold;
+            font-size: 16px;
+            letter-spacing: 4px;
+            writing-mode: vertical-rl; /* 传统竖排 */
+            border: 1px solid #C8BFA9;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            border-radius: 2px;
+            margin-top: 10px;
+        }
+
+        /* 摇晃动效样式 */
+        .shake-animation {
+            animation: shake 0.8s ease-in-out !important;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            15% { transform: rotate(-8deg) translateX(-4px); }
+            30% { transform: rotate(7deg) translateX(4px); }
+            45% { transform: rotate(-5deg) translateX(-3px); }
+            60% { transform: rotate(4deg) translateX(3px); }
+            75% { transform: rotate(-2deg) translateX(-1px); }
+            90% { transform: rotate(1deg) translateX(1px); }
+        }
+
+        /* 遮罩层 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(253, 252, 240, 0.85); /* 宣纸半透明遮罩 */
+            backdrop-filter: blur(2px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            z-index: 10;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* 弹出的竹签样式 */
+        .fortune-stick {
+            background: linear-gradient(to bottom, #F4ECD8 0%, #E6D5B8 100%);
+            width: 75px;
+            height: 400px;
+            border-radius: 30px;
+            border: 2px solid #C5B293;
+            box-shadow: 3px 5px 20px rgba(40, 30, 20, 0.15), inset 0 0 10px rgba(255,255,255,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 30px 0;
+            box-sizing: border-box;
+            transform: translateY(50px) scale(0.9);
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .overlay.show .fortune-stick {
+            transform: translateY(0) scale(1);
+        }
+
+        /* 竹签顶部装饰圆孔 */
+        .stick-top {
+            width: 8px;
+            height: 8px;
+            background: #BAA685;
+            border-radius: 50%;
+        }
+
+        /* 竹签核心文字：竖排书写 */
+        .stick-content {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 24px;
+            color: #2F231B;
+            letter-spacing: 6px;
+            font-weight: 500;
+            text-align: center;
+            line-height: 1.5;
+            opacity: 0;
+            transition: opacity 0.4s ease 0.3s;
+            margin-top: 10px;
+        }
+
+        .overlay.show .stick-content {
+            opacity: 1;
+        }
+
+        /* 签底文字：两排横排 */
+        .stick-bottom {
+            font-size: 11px;
+            color: #8A785F;
+            letter-spacing: 2px;
+            line-height: 1.8;
+            border-top: 1px dashed #C5B293;
+            padding-top: 12px;
+            width: 70%;
+            text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            user-select: none;
         }
 
-        .title {
-            font-size: 22px;
-            color: #3c362d;
-            letter-spacing: 6px;
-            margin-bottom: 60px;
-            font-weight: normal;
-            border-bottom: 1px solid #dcd6cd;
-            padding-bottom: 10px;
-        }
-
-        /* 签筒容器 */
-        .container {
-            position: relative;
-            cursor: pointer;
-        }
-
-        /* 签筒外观 */
-        .stick-holder {
-            width: 110px;
-            height: 190px;
-            background: #5c4433; /* 古朴木色 */
-            border-radius: 8px 8px 4px 4px;
-            box-shadow: inset 0 12px 20px rgba(0,0,0,0.4), 0 10px 25px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fdfcf0;
-            writing-mode: vertical-rl; /* 竖排文字 */
-            font-size: 20px;
-            letter-spacing: 8px;
-            border: 1px solid #4a3629;
-        }
-
-        /* 摇动动画 */
-        @keyframes shake {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            20% { transform: translate(-6px, 2px) rotate(-4deg); }
-            40% { transform: translate(5px, -1px) rotate(4deg); }
-            60% { transform: translate(-5px, -1px) rotate(-3deg); }
-            80% { transform: translate(4px, 1px) rotate(2deg); }
-            100% { transform: translate(0, 0) rotate(0deg); }
-        }
-
-        .shaking {
-            animation: shake 0.5s ease-in-out infinite;
-        }
-
-        /* 遮罩层 */
-        .mask {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(40, 35, 30, 0.2);
-            backdrop-filter: blur(1px);
-            z-index: 10;
-        }
-
-        /* 出签 - 初始木签状态 */
-        .result-card {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 65px;
-            height: 280px;
-            background: #e2cca9; /* 木签色 */
-            border: 1px solid #8c6e53;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            padding: 25px 10px;
-            writing-mode: vertical-rl;
+        /* 引导语提示 */
+        .hint-text {
+            position: absolute;
+            bottom: 12%;
+            color: #8A785F;
+            font-size: 14px;
+            letter-spacing: 2px;
             text-align: center;
-            font-size: 24px;
-            letter-spacing: 10px;
-            color: #2c1a0c;
-            border-radius: 4px;
-            cursor: pointer;
-            z-index: 20;
-            animation: popUp 0.4s ease-out forwards;
-            box-sizing: border-box;
-        }
-
-        /* 解签 - 展开纸牌状态 */
-        .result-card.expanded {
-            width: 240px;
-            height: 400px;
-            background: #fbf9f3; /* 浅色宣纸感 */
-            border: 2px solid #5c4433;
-            padding: 35px 25px;
-            font-size: 18px;
-            letter-spacing: 4px;
-            writing-mode: vertical-rl;
-            text-align: start;
-            line-height: 1.8;
-            transition: all 0.3s ease-out;
-        }
-
-        @keyframes popUp {
-            from { transform: translate(-50%, -20%) scale(0.6); opacity: 0; }
-            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        }
-
-        /* 签内文字排版 */
-        .card-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #1a1a1a;
-            margin-left: 15px; /* 竖排时为左侧间距 */
-            border-left: 1px dotted #ccc;
-            padding-left: 10px;
-        }
-        .card-content {
-            color: #4a443c;
-            font-size: 16px;
+            width: 100%;
         }
     </style>
 </head>
 <body>
 
-    <!-- 顶栏文字已修改为 药方抽签 -->
-    <div class="title">三十七道品 · 药方抽签</div>
+    <div class="zen-bg"></div>
 
-    <!-- 签筒 -->
-    <div class="container" id="holderContainer" onclick="drawStick()">
-        <div class="stick-holder" id="stickHolder">三十七道品</div>
+    <div class="container">
+        <div class="container-inner" id="drawButton" onclick="drawZenStick()">
+            <div class="cylinder">
+                <div class="label">觉性十三禅</div>
+            </div>
+            <div class="shadow" id="cylinderShadow"></div>
+        </div>
+        
+        <div class="hint-text">清修片刻 · 领受觉法</div>
     </div>
 
-    <!-- 遮罩与签面 -->
-    <div class="mask" id="mask" onclick="closeCard()"></div>
-    <div id="resultCard" class="result-card" onclick="handleCardClick()"></div>
+    <div class="overlay" id="resultOverlay" onclick="closeOverlay()">
+        <div class="fortune-stick">
+            <div class="stick-top"></div>
+            <div class="stick-content" id="stickText">放松禅</div>
+            <div class="stick-bottom">
+                <div>慢慢走</div>
+                <div>快快到</div>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // 7个签及其对应的解签内容
-        const data = {
-            "四念处": "身念住、受念住、心念住、法念住\n观身不净、观受是苦、观心无常、观法无我",
-            "四正勤": "已生恶令断灭、未生恶令不生\n未生善令生起、已生善令增长",
-            "四神足": "欲神足、勤神足、心神足、观神足",
-            "五根": "信、精进、念、定、慧",
-            "五力": "信、精进、念、定、慧",
-            "七觉支": "念、择法、精进、喜\n轻安、定、舍",
-            "八正道": "正见、正思维、正语、正业\n正命、正精进、正念、正定"
-        };
+        // 十三禅内容（已修正“觉之音”）
+        const zenMethods = [
+            "放松禅", "禅睡", "觉之诵", "觉之舞", "觉之音", 
+            "呼吸禅", "视觉禅", "听觉禅", "触觉禅", "行禅", 
+            "意识禅", "慈心禅", "觉察"
+        ];
 
-        const keys = Object.keys(data);
         let isShaking = false;
-        let currentStatus = "closed"; // closed, drawn, expanded
-        let selectedSign = "";
 
-        function drawStick() {
-            if (isShaking || currentStatus !== "closed") return;
+        function drawZenStick() {
+            if (isShaking) return;
             isShaking = true;
 
-            const holder = document.getElementById('stickHolder');
-            holder.classList.add('shaking');
+            const containerInner = document.getElementById('drawButton');
+            const shadow = document.getElementById('cylinderShadow');
+            
+            containerInner.classList.add('shake-animation');
+            shadow.style.transform = "scale(0.8)";
+            shadow.style.opacity = "0.3";
 
-            // 摇签过程
             setTimeout(() => {
-                holder.classList.remove('shaking');
-                
-                // 随机抽取
-                selectedSign = keys[Math.floor(Math.random() * keys.length)];
+                const randomIndex = Math.floor(Math.random() * zenMethods.length);
+                const selectedZen = zenMethods[randomIndex];
 
-                // 显示初签（仅显示总名）
-                const card = document.getElementById('resultCard');
-                card.innerText = selectedSign;
-                card.className = "result-card"; // 恢复初始样式
-                
-                document.getElementById('mask').style.display = 'block';
-                card.style.display = 'block';
-                
-                currentStatus = "drawn";
+                document.getElementById('stickText').innerText = selectedZen;
+                document.getElementById('resultOverlay').classList.add('show');
+
+                containerInner.classList.remove('shake-animation');
+                shadow.style.transform = "scale(1)";
+                shadow.style.opacity = "1";
                 isShaking = false;
             }, 800);
         }
 
-        function handleCardClick() {
-            const card = document.getElementById('resultCard');
-            
-            if (currentStatus === "drawn") {
-                // 点击初签，展现细目答案
-                const answer = data[selectedSign].replace(/\n/g, '<br> '); // 换行对齐
-                card.innerHTML = `<span class="card-title">${selectedSign}</span><span class="card-content">${answer}</span>`;
-                card.classList.add('expanded');
-                currentStatus = "expanded";
-            } else if (currentStatus === "expanded") {
-                // 再次点击，收回
-                closeCard();
-            }
-        }
-
-        function closeCard() {
-            document.getElementById('mask').style.display = 'none';
-            document.getElementById('resultCard').style.display = 'none';
-            currentStatus = "closed";
+        function closeOverlay() {
+            document.getElementById('resultOverlay').classList.remove('show');
         }
     </script>
 </body>
