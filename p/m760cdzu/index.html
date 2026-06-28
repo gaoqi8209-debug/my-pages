@@ -232,11 +232,9 @@
 </head>
 <body>
 
-    <!-- 水墨暗纹背景 -->
     <div class="zen-bg"></div>
 
     <div class="container">
-        <!-- 可点击的签筒主体 -->
         <div class="container-inner" id="drawButton" onclick="drawZenStick()">
             <div class="cylinder">
                 <div class="label">觉性十三禅</div>
@@ -244,17 +242,13 @@
             <div class="shadow" id="cylinderShadow"></div>
         </div>
         
-        <!-- 引导语 -->
         <div class="hint-text">清修片刻 · 领受觉法</div>
     </div>
 
-    <!-- 领法弹窗遮罩 -->
     <div class="overlay" id="resultOverlay" onclick="closeOverlay()">
         <div class="fortune-stick">
             <div class="stick-top"></div>
-            <!-- 展现的具体法门 -->
             <div class="stick-content" id="stickText">放松禅</div>
-            <!-- 横排两行文字 -->
             <div class="stick-bottom">
                 <div>慢慢走</div>
                 <div>快快到</div>
@@ -262,10 +256,10 @@
         </div>
     </div>
 
-    <script {rule_1_strict_completion}>
-        // 十三禅内容
+    <script>
+        // 十三禅内容（已修正“觉之音”）
         const zenMethods = [
-            "放松禅", "禅睡", "觉之诵", "觉之舞", "觉知音", 
+            "放松禅", "禅睡", "觉之诵", "觉之舞", "觉之音", 
             "呼吸禅", "视觉禅", "听觉禅", "触觉禅", "行禅", 
             "意识禅", "慈心禅", "觉察"
         ];
