@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>九觀智 - 禪意抽籤</title>
+    <style>
+        /* 核心視覺：宣紙微黃底色與古風字體 */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #FDFCF0; 
+            font-family: "Noto Serif HK", "Noto Serif TC", "Source Han Serif TC", "SimSun", serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+        }
+
+        /* 專屬背景圖案：水墨暈染與遠山虛影效果 */
+        .background-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.12; 
+            background-image: 
+                radial-gradient(circle at 10% 20%, #000 0%, transparent 40%),
+                radial-gradient(circle at 85% 80%, #000 0%, transparent 35%);
+            filter: blur(40px);
+        }
+
+        /* 遠山寫意線條 */
+        .mountain-line {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 25vh;
+            background: linear-gradient(to top, rgba(0,0,0,0.05), transparent);
+            clip-path: polygon(0% 100%, 0% 70%, 25% 45%, 45% 65%, 70% 30%, 85% 55%, 100% 40%, 100% 100%);
+            z-index: 1;
+            opacity: 0.3;
+        }
+
+        /* 主舞台容器 */
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        /* 頂部的標題 */
+        .app-title {
+            font-size: 24px;
+            letter-spacing: 6px;
+            color: #3A352E;
+            margin-bottom: 50px;
+            writing-mode: horizontal-tb;
+            border-bottom: 1px solid rgba(58, 53, 46, 0.15);
+            padding-bottom: 12px;
+            opacity: 0.85;
+        }
+
+        /* 整個籤筒區域 */
+        .cylinder-wrapper {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 籤筒設計 */
+        .cylinder {
+            width: 130px;
+            height: 240px;
+            background: linear-gradient(90deg, #564B3D 0%, #85755E 50%, #463C31 100%);
+            border-radius: 4px 4px 16px 16px;
+            box-shadow: inset 0 8px 16px rgba(0,0,0,0.45), 0 12px 28px rgba(58, 53, 46, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .cylinder-text {
+            writing-mode: vertical-rl;
+            color: #E5C185; 
+            font-size: 22px; 
+            letter-spacing: 16px; 
+            font-weight: 600;
+            opacity: 0.95;
+            text-shadow: -1px -1px 2px rgba(0, 0, 0, 0.9), 1px 1px 1px rgba(255, 255, 255, 0.15);
+        }
+
+        .cylinder::after {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: rgba(0,0,0,0.25);
+            box-shadow: 0 1px 1px rgba(255,255,255,0.05);
+        }
+
+        .cylinder-shadow {
+            width: 100px;
+            height: 12px;
+            background: rgba(58, 53, 46, 0.15);
+            border-radius: 50%;
+            filter: blur(4px);
+            margin-top: 20px;
+            transition: all 0.5s ease;
+        }
+
+        /* 筒下警示小字 */
+        .warning-notes {
+            margin-top: 25px;
+            text-align: center;
+            line-height: 1.8;
+            color: #7A7063;
+            font-size: 13px;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        @keyframes shake {
+            0% { transform: rotate(0deg) translateY(0); }
+            15% { transform: rotate(-8deg) translateY(-4px); }
+            30% { transform: rotate(7deg) translateY(-2px); }
+            45% { transform: rotate(-5deg) translateY(-3px); }
+            60% { transform: rotate(4deg) translateY(-1px); }
+            75% { transform: rotate(-2deg) translateY(-1px); }
+            90% { transform: rotate(1deg) translateY(0); }
+            100% { transform: rotate(0deg) translateY(0); }
+        }
+
+        .shaking .cylinder { animation: shake 1.3s ease-in-out; }
+        .shaking .cylinder-shadow { transform: scaleX(0.8); opacity: 0.05; }
+
+        /* 遮罩層：出籤時的定境氛圍 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(246, 242, 236, 0.94); 
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* 具備動態展寬功能的竹籤樣式 */
+        .fortune-stick {
+            width: 75px; /* 初始寬度僅容納籤名 */
+            height: 420px;
+            background: linear-gradient(180deg, #F5EAD6 0%, #E6D5B8 100%);
+            border-radius: 8px;
+            box-shadow: 0 20px 45px rgba(97, 85, 69, 0.25), inset 0 0 12px rgba(255,255,255,0.6);
+            border: 1px solid #D1BF9D;
+            display: flex;
+            flex-direction: row-reverse; 
+            justify-content: center;
+            align-items: center;
+            padding: 30px 15px;
+            box-sizing: border-box;
+            gap: 0px; 
+            cursor: pointer;
+            transform: translateY(30px) scale(0.95);
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), width 0.5s cubic-bezier(0.25, 1, 0.5, 1), gap 0.5s;
+        }
+
+        /* 第二次點擊後，竹籤展開的狀態 */
+        .fortune-stick.revealed {
+            width: 160px; /* 展寬以容納兩行字 */
+            gap: 20px;
+        }
+
+        .overlay.show .fortune-stick {
+            transform: translateY(0) scale(1);
+        }
+
+        /* 籤面文字通用樣式 */
+        .stick-text-line {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            color: #2C2722;
+            opacity: 0;
+        }
+
+        /* 右側：籤名 */
+        .stick-name {
+            font-size: 26px;
+            letter-spacing: 10px;
+            font-weight: 600;
+        }
+
+        /* 左側：解釋（初始隱藏，觸發後浮現） */
+        .stick-explanation {
+            font-size: 20px;
+            letter-spacing: 6px;
+            font-weight: 400;
+            color: #4A4238;
+            display: none; 
+        }
+
+        /* 第一次出籤：籤名墨跡洇開 */
+        .overlay.show .stick-name {
+            animation: inkFadeIn 1.2s 0.3s forwards ease-out;
+        }
+
+        /* 第二次點擊：釋義大字緩緩浮現 */
+        .fortune-stick.revealed .stick-explanation {
+            display: block;
+            animation: inkFadeIn 0.8s forwards ease-out;
+        }
+
+        @keyframes inkFadeIn {
+            0% { opacity: 0; filter: blur(4px); }
+            100% { opacity: 0.9; filter: blur(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-pattern"></div>
+    <div class="mountain-line"></div>
+
+    <div class="container">
+        <div class="app-title">九觀智</div>
+
+        <div class="cylinder-wrapper" id="drawButton">
+            <div class="cylinder">
+                <div class="cylinder-text">九觀智</div>
+            </div>
+            <div class="cylinder-shadow"></div>
+        </div>
+
+        <div class="warning-notes">
+            <div>不要把「感覺」當成「觀智」</div>
+            <div>觀照結構（觀念、認知）的改變</div>
+        </div>
+    </div>
+
+    <div class="overlay" id="resultOverlay">
+        <div class="fortune-stick" id="fortuneStick">
+            <div class="stick-text-line stick-name" id="stickResult">名色分別智</div>
+            <div class="stick-text-line stick-explanation" id="stickExp">從「我」變成「名色」</div>
+        </div>
+    </div>
+
+    <script>
+        const wisdomData = [
+            { name: "名色分別智", exp: "從「我」變成「名色」" },
+            { name: "緣攝受智", exp: "從「我控制」變成「因緣生」" },
+            { name: "思惟智", exp: "從「事物」變成「三相」" },
+            { name: "生滅隨觀智", exp: "從「穩定存在」變成「生滅流」" },
+            { name: "壞滅隨觀智", exp: "從「生滅」偏向「壞滅」" },
+            { name: "怖畏智", exp: "從「可依靠」變成「不可靠、不可安住」" },
+            { name: "過患智", exp: "從「可愛、想要的」變成「有過患」" },
+            { name: "厭離智", exp: "從「想抓取」變成「自然沒興趣、不想要了」" },
+            { name: "欲解脫智", exp: "從「厭離」變成「想脫離執著、脫離我執的束縛」" }
+        ];
+
+        const drawButton = document.getElementById('drawButton');
+        const resultOverlay = document.getElementById('resultOverlay');
+        const fortuneStick = document.getElementById('fortuneStick');
+        const stickResult = document.getElementById('stickResult');
+        const stickExp = document.getElementById('stickExp');
+        
+        let isDrawing = false;
+        let currentStep = 0; // 0: 靜止, 1: 已出籤名, 2: 已展現釋義
+
+        // 點擊籤筒搖籤
+        drawButton.addEventListener('click', () => {
+            if (isDrawing || currentStep !== 0) return;
+            isDrawing = true;
+
+            drawButton.classList.add('shaking');
+
+            setTimeout(() => {
+                const randomItem = wisdomData[Math.floor(Math.random() * wisdomData.length)];
+                
+                stickResult.innerText = randomItem.name;
+                stickExp.innerText = randomItem.exp;
+                fortuneStick.classList.remove('revealed'); 
+                
+                resultOverlay.classList.add('show');
+                drawButton.classList.remove('shaking');
+                isDrawing = false;
+                currentStep = 1; 
+            }, 1300);
+        });
+
+        // 遮罩層內的動態點擊邏輯
+        resultOverlay.addEventListener('click', (e) => {
+            if (currentStep === 1 && fortuneStick.contains(e.target)) {
+                fortuneStick.classList.add('revealed'); 
+                currentStep = 2; 
+            } else {
+                resultOverlay.classList.remove('show');
+                setTimeout(() => {
+                    currentStep = 0;
+                }, 400);
+            }
+        });
+    </script>
+</body>
+</html>
