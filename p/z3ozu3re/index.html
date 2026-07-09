@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>小探险家的湖南之旅 · 完整版</title>
+    <style>
+        :root {
+            --primary: #c83c23;
+            --primary-light: #fdf2f0;
+            --secondary: #2c5e8a;
+            --accent: #d69e2e;
+            --bg: #f9f6f0;
+            --card-bg: #ffffff;
+            --text: #2d3748;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", sans-serif; background-color: var(--bg); color: var(--text); padding-bottom: 50px; line-height: 1.6; min-height: 100vh; overflow-x: hidden; }
+
+        .page-screen { display: none; }
+        .page-screen.active { display: block; }
+
+        /* 1. 翻页封面 */
+        #bookCoverScreen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #2a1b18; z-index: 1000; display: flex;
+            flex-direction: column; justify-content: space-between; align-items: center;
+            padding: 20px; transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.8s ease;
+        }
+        #bookCoverScreen.opened { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+
+        .cover-img-wrapper { width: 100%; max-width: 450px; flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 16px; }
+        .cover-img-wrapper img { width: 100%; height: 100%; object-fit: contain; }
+
+        .cover-form-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); width: 100%; max-width: 450px; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+        .cover-form-card h2 { font-size: 1.1rem; color: var(--primary); margin-bottom: 6px; font-weight: 800; }
+        .cover-form-card p { font-size: 0.8rem; color: #718096; margin-bottom: 12px; }
+
+        .name-input-box { display: flex; gap: 8px; justify-content: center; align-items: center; margin-bottom: 14px; }
+        .name-input-box input { width: 70%; padding: 10px 14px; border: 2px solid var(--primary); border-radius: 10px; font-size: 1rem; font-weight: bold; text-align: center; outline: none; color: var(--primary); }
+
+        .open-book-btn { width: 100%; background: linear-gradient(135deg, var(--primary), #dd6b20); color: white; border: none; padding: 14px; border-radius: 25px; font-size: 1.05rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(200, 60, 35, 0.3); transition: transform 0.1s ease; }
+        .open-book-btn:active { transform: scale(0.98); }
+
+        /* Header */
+        .cover-header { background: linear-gradient(135deg, var(--primary), #dd6b20); color: white; padding: 20px 16px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .cover-header h1 { font-size: 1.3rem; margin-bottom: 4px; font-weight: 800; }
+        .cover-header p { font-size: 0.85rem; opacity: 0.9; }
+
+        .user-title-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.25); backdrop-filter: blur(4px); padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; margin-bottom: 6px; font-weight: bold; }
+
+        /* 卡片通用 */
+        .container { padding: 0 16px; max-width: 600px; margin: 0 auto; }
+        .card { background: var(--card-bg); border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; margin-top: 16px; }
+        .card h2 { font-size: 1.05rem; color: var(--primary); margin-bottom: 14px; border-bottom: 2px dashed #fed7d7; padding-bottom: 8px; }
+
+        .info-box { background: #fffaf0; border-left: 4px solid var(--accent); padding: 10px 12px; border-radius: 8px; margin-bottom: 14px; font-size: 0.82rem; color: #744210; line-height: 1.5; }
+
+        /* 地图卡片 */
+        .map-card { background: var(--card-bg); border-radius: 16px; padding: 16px 18px; margin-bottom: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.04); border: 2px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s; }
+        .map-card:active { transform: scale(0.98); }
+        .map-card.main-route { border-left: 6px solid var(--primary); }
+        .map-card.extra-route { border-left: 6px solid var(--secondary); }
+
+        .card-info h3 { font-size: 1.02rem; color: #2d3748; margin-bottom: 4px; }
+        .card-info p { font-size: 0.82rem; color: #718096; }
+
+        .status-badge { font-size: 0.75rem; padding: 3px 8px; border-radius: 12px; font-weight: bold; display: inline-block; }
+        .status-badge.completed { background: #c6f6d5; color: #22543d; }
+        .status-badge.in-progress { background: #feebc8; color: #744210; }
+        .status-badge.not-started { background: #edf2f7; color: #a0aec0; }
+
+        .back-nav { display: flex; align-items: center; gap: 6px; color: var(--primary); font-weight: bold; font-size: 0.9rem; padding: 12px 16px 0; max-width: 600px; margin: 0 auto; cursor: pointer; }
+
+        /* 手绘主图 */
+        .day-main-img { width: 100%; height: 180px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 16px; background-size: cover; background-position: center; }
+
+        /* 表单与交互元素 */
+        .task-item { margin-bottom: 18px; }
+        .task-title { font-weight: bold; font-size: 0.92rem; margin-bottom: 8px; color: #2d3748; }
+        .check-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+        .check-btn { background: #f7fafc; border: 1px solid #cbd5e0; padding: 8px 14px; border-radius: 8px; font-size: 0.88rem; color: #4a5568; cursor: pointer; transition: transform 0.1s ease; }
+        .check-btn:active { transform: scale(0.95); }
+        .check-btn.checked { background: var(--primary-light); border-color: var(--primary); color: var(--primary); font-weight: bold; }
+
+        .match-row { display: flex; align-items: center; justify-content: space-between; background: #f7fafc; padding: 10px 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #e2e8f0; font-size: 0.88rem; }
+        .match-btn { background: #edf2f7; border: 1px solid #cbd5e0; border-radius: 6px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer; transition: transform 0.1s ease; }
+        .match-btn:active { transform: scale(0.95); }
+        .match-btn.found { background: #c6f6d5; color: #22543d; border-color: #38a169; font-weight: bold; }
+
+        .match-box { background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+        select { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e0; background: white; font-size: 0.85rem; outline: none; }
+
+        input[type="text"], input[type="number"], textarea { width: 100%; padding: 10px; border: 1.5px solid #cbd5e0; border-radius: 8px; font-size: 0.9rem; margin-top: 6px; outline: none; }
+        input[type="text"]:focus, textarea:focus { border-color: var(--primary); }
+
+        .secret-box { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+        .secret-input { width: 70px !important; text-align: center; font-weight: bold; }
+        .secret-btn { background: var(--secondary); color: white; border: none; padding: 10px 14px; border-radius: 8px; font-weight: bold; font-size: 0.85rem; cursor: pointer; transition: transform 0.1s ease; }
+        .secret-btn:active { transform: scale(0.95); }
+
+        .upload-wrapper { margin-top: 8px; }
+        .photo-upload-zone { border: 2px dashed var(--secondary); border-radius: 12px; padding: 14px; text-align: center; background: #ebf8ff; color: var(--secondary); font-size: 0.85rem; font-weight: bold; cursor: pointer; }
+        
+        .preview-container { display: none; margin-top: 10px; position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px solid var(--primary); }
+        .photo-preview { width: 100%; max-height: 260px; object-fit: cover; display: block; }
+        .preview-tools { display: flex; justify-content: space-between; align-items: center; background: rgba(45, 55, 72, 0.9); backdrop-filter: blur(6px); padding: 8px 12px; color: white; font-size: 0.8rem; }
+        .tool-btn { background: transparent; border: none; color: #feb2b2; cursor: pointer; font-size: 0.8rem; font-weight: bold; display: flex; align-items: center; gap: 4px; }
+        .tool-btn:active { opacity: 0.7; }
+
+        .route-switch { display: flex; gap: 10px; margin-bottom: 14px; }
+        .route-btn { flex: 1; padding: 10px; border: 2px solid var(--secondary); background: white; color: var(--secondary); border-radius: 10px; font-weight: bold; font-size: 0.85rem; cursor: pointer; text-align: center; }
+        .route-btn.active { background: var(--secondary); color: white; }
+
+        .letter-box { background: #fffaf0; border: 2px solid #fbd38d; border-radius: 12px; padding: 16px; margin-top: 10px; }
+        .total-progress-card { margin: -18px 16px 20px; background: white; padding: 14px 16px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: center; }
+        .progress-bar-container { background: #edf2f7; height: 12px; border-radius: 6px; overflow: hidden; margin-top: 6px; }
+        .progress-bar { background: linear-gradient(90deg, var(--accent), #38a169); height: 100%; width: 0%; transition: width 0.4s; }
+
+        .badge-query-btn { width: 100%; margin-top: 12px; background: #fffaf0; border: 2px solid var(--accent); color: #744210; padding: 10px; border-radius: 12px; font-size: 0.88rem; font-weight: bold; cursor: pointer; transition: transform 0.1s ease; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .badge-query-btn:active { transform: scale(0.98); }
+
+        /* 通关证书弹窗 */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-overlay.active { display: flex; }
+        .cert-card { background: #fffdf9; border: 6px double var(--accent); border-radius: 20px; padding: 24px; text-align: center; width: 100%; max-width: 420px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); position: relative; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .cert-badge { font-size: 3.5rem; margin-bottom: 10px; }
+        .cert-title { color: var(--primary); font-size: 1.35rem; font-weight: 800; margin-bottom: 8px; }
+        .cert-name { font-size: 1.2rem; font-weight: bold; color: var(--secondary); border-bottom: 2px solid var(--accent); display: inline-block; padding: 0 10px 2px; margin: 8px 0; }
+        .cert-desc { font-size: 0.85rem; color: #4a5568; line-height: 1.6; margin-bottom: 16px; text-align: justify; }
+        .cert-footer { font-size: 0.78rem; color: #a0aec0; border-top: 1px dashed #cbd5e0; padding-top: 12px; display: flex; justify-content: space-between; }
+        
+        .modal-actions { display: flex; gap: 10px; margin-top: 14px; }
+        .action-btn { flex: 1; padding: 10px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; border: none; cursor: pointer; transition: transform 0.1s ease; }
+        .action-btn:active { transform: scale(0.95); }
+        .action-btn.export-btn { background: var(--secondary); color: white; }
+        .action-btn.close-btn { background: var(--primary); color: white; }
+
+        /* 打印样式支持导出文档 */
+        @media print {
+            body { background: white; color: black; padding: 0; }
+            #bookCoverScreen, .cover-header, .total-progress-card, .back-nav, .modal-overlay, .photo-upload-zone, .preview-tools, .badge-query-btn, .secret-btn { display: none !important; }
+            .page-screen { display: block !important; }
+            .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+            .preview-container { display: block !important; border: 1px solid #aaa; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 通关荣耀证书弹窗 -->
+<div class="modal-overlay" id="certModal">
+    <div class="cert-card">
+        <div class="cert-badge">🏆</div>
+        <div class="cert-title">湖南研学大通关荣誉证书</div>
+        <p style="font-size:0.9rem; color:#718096;">亲爱的：</p>
+        <div class="cert-name" id="certUserName">小探险家</div>
+        <p class="cert-desc">在这次《小探险家的湖南之旅》研学探索中，你凭借敏锐的观察力、勇于探索的精神与满腔热忱，成功跨越长沙、韶山与张家界，圆满完成了所有主线研学任务！你不仅用双眼记录了湘江的壮阔与奇峰的秀丽，更用心体会了少年毛泽东“立志出乡关”的求索岁月。希望你在未来的日子里，继续带着这份好奇与觉察，知行合一，勇毅前行！</p>
+        <div style="font-weight:bold; color:var(--primary); font-size:0.95rem; margin-bottom:12px;">🎖️ 授予“湖南研学小达人”荣耀称号！</div>
+        <div class="cert-footer">
+            <span>📅 达成时间：<span id="certDate">2026-07-09</span></span>
+            <span>✍️ 签发：青春探险家小分队</span>
+        </div>
+        <div class="modal-actions">
+            <button class="action-btn export-btn" onclick="exportDocument()">📄 导出研学档案</button>
+            <button class="action-btn close-btn" onclick="closeCertModal()">收下勋章</button>
+        </div>
+    </div>
+</div>
+
+<!-- 1. 翻页封面屏幕 -->
+<div id="bookCoverScreen">
+    <div class="cover-img-wrapper">
+        <img src="https://pic1.imgdb.cn/item/6a4e4c6c1f387c02093900fb.png" alt="封面">
+    </div>
+    <div class="cover-form-card">
+        <h2>🗺️ 小探险家的湖南之旅</h2>
+        <p>输入你的名字，开启你的专属研学手册吧！</p>
+        <div class="name-input-box">
+            <input type="text" id="explorerNameInput" placeholder="请输入你的名字" value="小探险家">
+        </div>
+        <button class="open-book-btn" onclick="openBook()">📖 开启湖南探险之旅</button>
+    </div>
+</div>
+
+<!-- 2. 地图大主页 -->
+<div id="page-map" class="page-screen active">
+    <div class="cover-header">
+        <div class="user-title-badge">
+            <span>🕵️‍♂️ <span class="displayUserName">小探险家</span>的专属研学手册</span>
+            <span onclick="reEditName()" style="cursor:pointer; opacity:0.8; font-size:0.75rem;">✏️修改</span>
+        </div>
+        <h1>🚩 湖南研学路线地图</h1>
+        <p>长沙 ➔ 韶山 ➔ 张家界</p>
+    </div>
+
+    <div class="total-progress-card">
+        <div style="font-size:0.88rem; font-weight:bold; display:flex; justify-content:space-between;">
+            <span>🗺️ 主线完成度 (完成后即可通关)</span>
+            <span id="totalPercent">0%</span>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="totalBar"></div>
+        </div>
+        <button class="badge-query-btn" onclick="openCertBadgeDirectly()">
+            <span>🎖️ 查看我的研学通关勋章</span>
+        </button>
+    </div>
+
+    <div class="container">
+        <div style="font-weight:bold; color:var(--secondary); margin:16px 0 10px;">🚩 大团队主线路线 (Day 1 - Day 3)</div>
+        
+        <div class="map-card main-route" onclick="goToPage('page-day1')">
+            <div class="card-info">
+                <h3>Day 1 · 长沙橘子洲头</h3>
+                <p>看湘江诗句 · 青年毛泽东对话 · 韶山冲演出</p>
+            </div>
+            <div class="card-status">
+                <span class="status-badge" id="badge_d1">未开始</span>
+                <div style="font-size:0.8rem; font-weight:bold; color:#718096; text-align:right; margin-top:2px;" id="text_d1">0%</div>
+            </div>
+        </div>
+
+        <div class="map-card main-route" onclick="goToPage('page-day2')">
+            <div class="card-info">
+                <h3>Day 2 · 韶山冲寻宝</h3>
+                <p>铜像广场 · 石三伢子故居 · 纪念馆</p>
+            </div>
+            <div class="card-status">
+                <span class="status-badge" id="badge_d2">未开始</span>
+                <div style="font-size:0.8rem; font-weight:bold; color:#718096; text-align:right; margin-top:2px;" id="text_d2">0%</div>
+            </div>
+        </div>
+
+        <div class="map-card main-route" onclick="goToPage('page-day3')">
+            <div class="card-info">
+                <h3>Day 3 · 张家界奇峰 & 旅程总结</h3>
+                <p>百龙天梯 · 阿凡达悬浮山 · 终极致信总结</p>
+            </div>
+            <div class="card-status">
+                <span class="status-badge" id="badge_d3">未开始</span>
+                <div style="font-size:0.8rem; font-weight:bold; color:#718096; text-align:right; margin-top:2px;" id="text_d3">0%</div>
+            </div>
+        </div>
+
+        <div style="font-weight:bold; color:var(--secondary); margin:20px 0 10px;">🌟 隐藏支线地图 (Day 4)</div>
+
+        <div class="map-card extra-route" onclick="goToPage('page-day4')">
+            <div class="card-info">
+                <h3>Day 4 · 长沙古韵</h3>
+                <p>岳麓书院细节 · 省博文物对话 · 杜甫江阁</p>
+            </div>
+            <div class="card-status">
+                <span class="status-badge" id="badge_d4">未开始</span>
+                <div style="font-size:0.8rem; font-weight:bold; color:#718096; text-align:right; margin-top:2px;" id="text_d4">0%</div>
+            </div>
+        </div>
+
+        <div style="text-align:center; margin-top:24px; font-size:0.8rem; color:#a0aec0; text-decoration:underline; cursor:pointer;" onclick="resetAllData()">🔄 清空所有记录（测试重置）</div>
+    </div>
+</div>
+
+<!-- 3. Day 1 完整页面 -->
+<div id="page-day1" class="page-screen">
+    <div class="back-nav" onclick="goToPage('page-map')">⬅️ 返回路线地图</div>
+    <div class="container">
+        <div class="card">
+            <div class="day-main-img" style="background-image: url('https://pic1.imgdb.cn/item/6a4e55681f387c020939043f.png');"></div>
+            <h2>🗺️ Part 1：出发前的探险宣言</h2>
+            <div class="task-item">
+                <p class="task-title">🎯 我要去的地方（选中的打勾）：</p>
+                <div class="check-group" id="d1_group_dest">
+                    <button class="check-btn" onclick="toggleMulti(this, saveDay1)">长沙</button>
+                    <button class="check-btn" onclick="toggleMulti(this, saveDay1)">韶山</button>
+                    <button class="check-btn" onclick="toggleMulti(this, saveDay1)">张家界</button>
+                </div>
+            </div>
+            <div class="task-item">
+                <p class="task-title">我这次最想看的是：</p>
+                <input type="text" id="d1_most_want" placeholder="写下期待的事物..." oninput="saveDay1()">
+            </div>
+            <div class="task-item">
+                <p class="task-title">我给自己定的小目标（比如：在橘子洲头背一首毛主席的诗/认识一个新朋友）：</p>
+                <input type="text" id="d1_my_goal" placeholder="写下小目标..." oninput="saveDay1()">
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📍 第一站：橘子洲头</h2>
+            <div class="task-item">
+                <p class="task-title">👀 任务一：看湘江，找诗句</p>
+                <p style="font-size:0.85rem; color:#4a5568;">1. “漫江碧透，百舸争流”：</p>
+                <div style="margin-top:4px; font-size:0.85rem;">湘江的水是碧绿的吗？</div>
+                <div class="check-group" id="d1_group_river1">
+                    <button class="check-btn" onclick="selectSingle('d1_group_river1', this, saveDay1)">是</button>
+                    <button class="check-btn" onclick="selectSingle('d1_group_river1', this, saveDay1)">不是</button>
+                </div>
+                <div style="margin-top:8px; font-size:0.85rem;">江上有船吗？</div>
+                <div class="check-group" id="d1_group_river2">
+                    <button class="check-btn" onclick="selectSingle('d1_group_river2', this, saveDay1)">有</button>
+                    <button class="check-btn" onclick="selectSingle('d1_group_river2', this, saveDay1)">没有</button>
+                </div>
+
+                <p style="font-size:0.85rem; color:#4a5568; margin-top:10px;">2. “万山红遍，层林尽染”：7月的山是什么颜色？</p>
+                <input type="text" id="d1_mountain_color" placeholder="写下你看到的颜色..." oninput="saveDay1()">
+                <p style="font-size:0.85rem; color:#4a5568; margin-top:8px;">3. “鹰击长空，鱼翔浅底”：你看到鹰或鱼了吗？</p>
+                <input type="text" id="d1_eagle_fish" placeholder="写下你的发现..." oninput="saveDay1()">
+            </div>
+
+            <div class="task-item" style="border-top:1px dashed #e2e8f0; padding-top:12px;">
+                <p class="task-title">🧠 任务二：和青年毛泽东对话</p>
+                <p style="font-size:0.85rem; color:#4a5568;">你觉得他在看什么？</p>
+                <div class="check-group" id="d1_group_look" style="flex-direction:column;">
+                    <button class="check-btn" onclick="selectSingle('d1_group_look', this, saveDay1)">看湘江对岸的未来城市</button>
+                    <button class="check-btn" onclick="selectSingle('d1_group_look', this, saveDay1)">看他小时候走过的路</button>
+                    <button class="check-btn" onclick="selectSingle('d1_group_look', this, saveDay1)">看他心里装着的整个中国</button>
+                </div>
+            </div>
+
+            <div class="task-item">
+                <p class="task-title">📝 填空题（时光密码箱）：</p>
+                <div class="secret-box">
+                    高: <input type="number" id="d1_h" class="secret-input" placeholder="米" oninput="saveDay1()"> 米 (写《沁园春·长沙》时的年龄)
+                </div>
+                <div class="secret-box" style="margin-top:6px;">
+                    长: <input type="number" id="d1_l" class="secret-input" placeholder="米" oninput="saveDay1()"> 米 (享年岁数)
+                    <button class="secret-btn" onclick="checkD1Secret()">解锁密码</button>
+                </div>
+                <p id="d1_secret_res" style="font-size:0.85rem; margin-top:6px; font-weight:bold;"></p>
+            </div>
+
+            <div class="task-item">
+                <p class="task-title">🏷️ 现场打卡：和主席雕塑合影上传：</p>
+                <div class="upload-wrapper">
+                    <div class="photo-upload-zone" id="d1_zone2" onclick="document.getElementById('d1_photo2').click()">📷 点击上传和主席雕塑合影</div>
+                    <input type="file" id="d1_photo2" accept="image/*" style="display:none;" onchange="handleCompressUpload(this, 'd1_preview2', 'd1_box2', 'd1_zone2', 'd1_img2', saveDay1)">
+                    <div class="preview-container" id="d1_box2">
+                        <img id="d1_preview2" class="photo-preview" src="">
+                        <div class="preview-tools">
+                            <span>✨ 已保存到手册</span>
+                            <button class="tool-btn" onclick="removePhoto('d1_photo2', 'd1_preview2', 'd1_box2', 'd1_zone2', 'd1_img2', saveDay1)">🗑️ 删除重传</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🎬 Day 1 晚上：《最忆韶山冲》观演记录</h2>
+            
+            <div class="task-item">
+                <p class="task-title">🔊 1. 我看了一场关于毛泽东的演出。这场演出里，我听到的声音：（可以多选）</p>
+                <div class="check-group" id="d1_group_sound">
+                    <button class="check-btn" onclick="toggleMulti(this, saveDay1)">枪炮声（像打雷一样）</button>
+                    <button class="check-btn" onclick="toggleMulti(this, saveDay1)">乡音吆喝（湖南话）</button>
+                    <button class="check-btn" onclick="toggleMulti(this, saveDay1)">诗词吟诵声（朗诵毛主席诗词）</button>
+                    <button class="check-btn" onclick="toggleMulti(this, saveDay1)">音乐歌声（最好听的那一段）</button>
+                </div>
+                <input type="text" id="d1_sound_other" placeholder="其他听到的声音..." oninput="saveDay1()" style="margin-top:6px;">
+            </div>
+
+            <div class="task-item">
+                <p class="task-title">📷 2. 上传你印象最深或喜欢的的一幕剧照：</p>
+                <div class="upload-wrapper">
+                    <div class="photo-upload-zone" id="d1_zone3" onclick="document.getElementById('d1_photo3').click()">📷 上传最喜欢的一幕剧照</div>
+                    <input type="file" id="d1_photo3" accept="image/*" style="display:none;" onchange="handleCompressUpload(this, 'd1_preview3', 'd1_box3', 'd1_zone3', 'd1_img3', saveDay1)">
+                    <div class="preview-container" id="d1_box3">
+                        <img id="d1_preview3" class="photo-preview" src="">
+                        <div class="preview-tools">
+                            <span>✨ 已保存到手册</span>
+                            <button class="tool-btn" onclick="removePhoto('d1_photo3', 'd1_preview3', 'd1_box3', 'd1_zone3', 'd1_img3', saveDay1)">🗑️ 删除重传</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="task-item">
+                <p class="task-title">💬 3. 印象最深的一句话：</p>
+                <input type="text" id="d1_quote" placeholder="写下那句话..." oninput="saveDay1()">
+            </div>
+
+            <div class="task-item">
+                <p class="task-title">✨ 4. 如果用一个词形容这场演出，我会选：（打勾）</p>
+                <div class="check-group" id="d1_group_show">
+                    <button class="check-btn" onclick="selectSingle('d1_group_show', this, saveDay1)">震撼</button>
+                    <button class="check-btn" onclick="selectSingle('d1_group_show', this, saveDay1)">感动</button>
+                    <button class="check-btn" onclick="selectSingle('d1_group_show', this, saveDay1)">有趣</button>
+                    <button class="check-btn" onclick="selectSingle('d1_group_show', this, saveDay1)">想再看一遍</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 4. Day 2 完整页面 -->
+<div id="page-day2" class="page-screen">
+    <div class="back-nav" onclick="goToPage('page-map')">⬅️ 返回路线地图</div>
+    <div class="container">
+        <div class="card">
+            <div class="day-main-img" style="background-image: url('https://pic1.imgdb.cn/item/6a4e53f21f387c020939037d.png');"></div>
+            <h2>📍 第一站：铜像广场</h2>
+            <div class="task-item">
+                <p class="task-title">1. 铜像有多高？：</p>
+                <input type="text" id="d2_h" placeholder="写下高度（米）..." oninput="saveDay2()">
+            </div>
+            <div class="task-item">
+                <p class="task-title">2. 毛主席手里拿着什么？：</p>
+                <div class="check-group" id="d2_group_hand">
+                    <button class="check-btn" onclick="selectSingle('d2_group_hand', this, saveDay2)">书</button>
+                    <button class="check-btn" onclick="selectSingle('d2_group_hand', this, saveDay2)">帽子</button>
+                    <button class="check-btn" onclick="selectSingle('d2_group_hand', this, saveDay2)">拐杖</button>
+                </div>
+            </div>
+            <div class="task-item">
+                <p class="task-title">3. 他穿的是：</p>
+                <div class="check-group" id="d2_group_clothes">
+                    <button class="check-btn" onclick="selectSingle('d2_group_clothes', this, saveDay2)">军装</button>
+                    <button class="check-btn" onclick="selectSingle('d2_group_clothes', this, saveDay2)">中山装</button>
+                    <button class="check-btn" onclick="selectSingle('d2_group_clothes', this, saveDay2)">长袍</button>
+                </div>
+            </div>
+            <div class="task-item">
+                <p class="task-title">📷 铜像拍照/画作上传：</p>
+                <div class="upload-wrapper">
+                    <div class="photo-upload-zone" id="d2_zone1" onclick="document.getElementById('d2_photo1').click()">📷 上传照片</div>
+                    <input type="file" id="d2_photo1" accept="image/*" style="display:none;" onchange="handleCompressUpload(this, 'd2_preview1', 'd2_box1', 'd2_zone1', 'd2_img1', saveDay2)">
+                    <div class="preview-container" id="d2_box1">
+                        <img id="d2_preview1" class="photo-preview" src="">
+                        <div class="preview-tools">
+                            <span>✨ 已保存到手册</span>
+                            <button class="tool-btn" onclick="removePhoto('d2_photo1', 'd2_preview1', 'd2_box1', 'd2_zone1', 'd2_img1', saveDay2)">🗑️ 删除重传</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📍 第二站：毛泽东故居</h2>
+            <div class="info-box">💡 探险家小知识：大家叫他“石三伢子”哦！</div>
+            <div class="task-item">
+                <p class="task-title">1. 房子是什么颜色的墙？</p>
+                <div class="check-group" id="d2_group_wall">
+                    <button class="check-btn" onclick="selectSingle('d2_group_wall', this, saveDay2)">土黄色</button>
+                    <button class="check-btn" onclick="selectSingle('d2_group_wall', this, saveDay2)">灰白色</button>
+                </div>
+            </div>
+            <div class="task-item">
+                <p class="task-title">2. 屋顶盖的是：</p>
+                <div class="check-group" id="d2_group_roof">
+                    <button class="check-btn" onclick="selectSingle('d2_group_roof', this, saveDay2)">瓦片</button>
+                    <button class="check-btn" onclick="selectSingle('d2_group_roof', this, saveDay2)">茅草</button>
+                </div>
+            </div>
+            <div class="task-item">
+                <p class="task-title">📖 3. 寻找读书痕迹：你在故居里有没有找到能证明“毛主席喜欢读书”的东西？</p>
+                <input type="text" id="d2_read_proof" placeholder="写下你找到的证据..." oninput="saveDay2()">
+            </div>
+            <div class="task-item">
+                <p class="task-title">🔗 寻宝打勾：</p>
+                <div class="match-row"><span>🔥 厨房灶台</span><button class="match-btn" id="d2_m1" onclick="toggleMatch(this, saveDay2)">未找到</button></div>
+                <div class="match-row"><span>🌾 农具锄头</span><button class="match-btn" id="d2_m2" onclick="toggleMatch(this, saveDay2)">未找到</button></div>
+                <div class="match-row"><span>🕯️ 卧室油灯</span><button class="match-btn" id="d2_m3" onclick="toggleMatch(this, saveDay2)">未找到</button></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📍 第三站：毛泽东纪念馆</h2>
+            <div class="task-item">
+                <div class="match-row"><span>🧥 73个补丁的睡衣</span><button class="match-btn" id="d2_m4" onclick="toggleMatch(this, saveDay2)">未找到</button></div>
+                <div class="match-row"><span>📜 亲自写过的手稿</span><button class="match-btn" id="d2_m5" onclick="toggleMatch(this, saveDay2)">未找到</button></div>
+                <div class="match-row"><span>📚 读过的书</span><button class="match-btn" id="d2_m6" onclick="toggleMatch(this, saveDay2)">未找到</button></div>
+            </div>
+            <div class="task-item">
+                <p class="task-title">✨ 纪念馆里让我印象最深刻的一件东西是：</p>
+                <input type="text" id="d2_item" placeholder="文物名字..." oninput="saveDay2()">
+                <p style="font-size:0.85rem; color:#4a5568; margin-top:6px;">因为它：</p>
+                <textarea id="d2_item_why" rows="2" placeholder="写下原因..." oninput="saveDay2()"></textarea>
+            </div>
+
+            <div class="task-item" style="border-top:1px dashed #e2e8f0; padding-top:12px;">
+                <p class="task-title">📜 立志出乡关：</p>
+                <div class="info-box" style="margin-bottom:8px;">
+                    毛泽东17岁离开韶山时，给父亲写了一首诗：“孩儿立志出乡关，学不成名誓不还。”
+                </div>
+                <p style="font-size:0.85rem; color:#4a5568;">如果你要离开家去远方读书，你会对爸爸妈妈说什么？写一句话：</p>
+                <input type="text" id="d2_to_parents" placeholder="写下你想对爸爸妈妈说的话..." oninput="saveDay2()">
+            </div>
+
+            <div class="task-item">
+                <p class="task-title">🎨 画一画拍一拍你最喜欢的物品或景色（支持上传2张）：</p>
+                <div class="upload-wrapper">
+                    <div class="photo-upload-zone" id="d2_zone2" onclick="document.getElementById('d2_photo2').click()">📷 上传照片/画作 1</div>
+                    <input type="file" id="d2_photo2" accept="image/*" style="display:none;" onchange="handleCompressUpload(this, 'd2_preview2', 'd2_box2', 'd2_zone2', 'd2_img2', saveDay2)">
+                    <div class="preview-container" id="d2_box2">
+                        <img id="d2_preview2" class="photo-preview" src="">
+                        <div class="preview-tools">
+                            <span>✨ 照片1已保存</span>
+                            <button class="tool-btn" onclick="removePhoto('d2_photo2', 'd2_preview2', 'd2_box2', 'd2_zone2', 'd2_img2', saveDay2)">🗑️ 删除重传</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="upload-wrapper" style="margin-top:10px;">
+                    <div class="photo-upload-zone" id="d2_zone3" onclick="document.getElementById('d2_photo3').click()">📷 上传照片/画作 2</div>
+                    <input type="file" id="d2_photo3" accept="image/*" style="display:none;" onchange="handleCompressUpload(this, 'd2_preview3', 'd2_box3', 'd2_zone3', 'd2_img3', saveDay2)">
+                    <div class="preview-container" id="d2_box3">
+                        <img id="d2_preview3" class="photo-preview" src="">
+                        <div class="preview-tools">
+                            <span>✨ 照片2已保存</span>
+                            <button class="tool-btn" onclick="removePhoto('d2_photo3', 'd2_preview3', 'd2_box3', 'd2_zone3', 'd2_img3', saveDay2)">🗑️ 删除重传</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 5. Day 3 完整页面 (含终极总结) -->
+<div id="page-day3" class="page-screen">
+    <div class="back-nav" onclick="goToPage('page-map')">⬅️ 返回路线地图</div>
+    <div class="container">
+        <div class="card">
+            <div class="day-main-img" style="background-image: url('https://pic1.imgdb.cn/item/6a4e55e31f387c020939047b.png');"></div>
+            <h2>🚀 第一站：百龙天梯</h2>
+            <div class="info-box">百龙天梯被称为“世界第一梯”，从山下到山顶只需要88秒！坐电梯的时候，看着窗外——</div>
+            <div class="task-item">
+                <p class="task-title">✏️ 观察填空：</p>
+                <p style="font-size:0.85rem; color:#4a5568;">· 电梯上升的时候，你看到山在“往下掉”还是“往上长”？</p>
+                <input type="text" id="d3_feel" placeholder="写下感受..." oninput="saveDay3()">
+                <p style="font-size:0.85rem; color:#4a5568; margin-top:8px;">· 从电梯里看出去，外面的山峰像什么？</p>
+                <input type="text" id="d3_look_like" placeholder="写下你的想象..." oninput="saveDay3()">
+            </div>
+            <div class="task-item" style="border-top:1px dashed #e2e8f0; padding-top:10px;">
+                <p class="task-title">💡 想一想：你觉得电梯是怎么建在这么陡的山上的？猜一猜，打勾：</p>
+                <div class="check-group" id="d3_group_build">
+                    <button class="check-btn" onclick="selectSingle('d3_group_build', this, saveDay3)">直接从山脚挖上来的</button>
+                    <button class="check-btn" onclick="selectSingle('d3_group_build', this, saveDay3)">先从山顶往下建的</button>
+                    <button class="check-btn" onclick="selectSingle('d3_group_build', this, saveDay3)">先修了轨道再装电梯</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🎬 第二站：袁家界·寻找“哈利路亚山”</h2>
+            <div class="info-box">🎬 还记得《阿凡达》电影里的“悬浮山”吗？它的原型就是袁家界的“乾坤柱”（也叫“哈利路亚山”）！找到它，仔细看——</div>
+            <div class="task-item">
+                <p class="task-title">✏️ 观察填空：</p>
+                <p style="font-size:0.85rem; color:#4a5568;">· 乾坤柱的顶部是尖的还是平的？</p>
+                <input type="text" id="d3_top" placeholder="写下形状..." oninput="saveDay3()">
+                <p style="font-size:0.85rem; color:#4a5568; margin-top:6px;">· 山的表面是光滑的还是粗糙的？</p>
+                <input type="text" id="d3_smooth" placeholder="写下触感印象..." oninput="saveDay3()">
+                <p style="font-size:0.85rem; color:#4a5568; margin-top:6px;">· 你看到岩石上的纹路是横着的、竖着的，还是斜着的？</p>
+                <input type="text" id="d3_dir" placeholder="写下纹路方向..." oninput="saveDay3()">
+            </div>
+            <div class="task-item">
+                <p class="task-title">🎨 画一画拍一拍：把你看到的“哈利路亚山”画下来或者拍下来：</p>
+                <div class="upload-wrapper">
+                    <div class="photo-upload-zone" id="d3_zone1" onclick="document.getElementById('d3_photo1').click()">📷 上传“哈利路亚山”画作/照片</div>
+                    <input type="file" id="d3_photo1" accept="image/*" style="display:none;" onchange="handleCompressUpload(this, 'd3_preview1', 'd3_box1', 'd3_zone1', 'd3_img1', saveDay3)">
+                    <div class="preview-container" id="d3_box1">
+                        <img id="d3_preview1" class="photo-preview" src="">
+                        <div class="preview-tools">
+                            <span>✨ 已保存到手册</span>
+                            <button class="tool-btn" onclick="removePhoto('d3_photo1', 'd3_preview1', 'd3_box1', 'd3_zone1', 'd3_img1', saveDay3)">🗑️ 删除重传</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🌉 第三站：走天下第一桥</h2>
+            <div class="info-box">天下第一桥是一座天然形成的石桥，横跨两座山峰之间，距谷底约350米！</div>
+            <div class="task-item">
+                <p class="task-title">💡 想一想：你觉得这座“桥”是怎么形成的？是人工修的，还是大自然自己“造”的？打勾：</p>
+                <div class="check-group" id="d3_group_bridge">
+                    <button class="check-btn" onclick="selectSingle('d3_group_bridge', this, saveDay3)">人工修的</button>
+                    <button class="check-btn" onclick="selectSingle('d3_group_bridge', this, saveDay3)">大自然形成的</button>
+                </div>
+            </div>
+            <div class="task-item">
+                <p class="task-title">📷 把你在桥上看到的风景拍一拍：</p>
+                <div class="upload-wrapper">
+                    <div class="photo-upload-zone" id="d3_zone2" onclick="document.getElementById('d3_photo2').click()">📷 上传桥上风景照片</div>
+                    <input type="file" id="d3_photo2" accept="image/*" style="display:none;" onchange="handleCompressUpload(this, 'd3_preview2', 'd3_box2', 'd3_zone2', 'd3_img2', saveDay3)">
+                    <div class="preview-container" id="d3_box2">
+                        <img id="d3_preview2" class="photo-preview" src="">
+                        <div class="preview-tools">
+                            <span>✨ 已保存到手册</span>
+                            <button class="tool-btn" onclick="removePhoto('d3_photo2', 'd3_preview2', 'd3_box2', 'd3_zone2', 'd3_img2', saveDay3)">🗑️ 删除重传</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🔍 第四站：天子山当一回“山形侦探”</h2>
+            <div class="info-box">天子山被誉为“缩小的仙境，扩大的盆景”。站在观景台上，仔细看对面的山峰——</div>
+            <div class="task-item">
+                <div class="match-box">
+                    <div style="font-weight:bold; font-size:0.88rem; color:#2b6cb0;">🖊️ 御笔峰：</div>
+                    <select id="d3_select1" onchange="saveDay3()">
+                        <option value="">-- 请选择匹配形状 --</option>
+                        <option value="1">像一排笔插在笔架上</option>
+                        <option value="2">像一个仙女撒花瓣</option>
+                        <option value="3">像一大片石头森林</option>
+                    </select>
+                </div>
+                <div class="match-box">
+                    <div style="font-weight:bold; font-size:0.88rem; color:#2b6cb0;">🧚‍♀️ 仙女散花：</div>
+                    <select id="d3_select2" onchange="saveDay3()">
+                        <option value="">-- 请选择匹配形状 --</option>
+                        <option value="1">像一排笔插在笔架上</option>
+                        <option value="2">像一个仙女撒花瓣</option>
+                        <option value="3">像一大片石头森林</option>
+                    </select>
+                </div>
+                <div class="match-box">
+                    <div style="font-weight:bold; font-size:0.88rem; color:#2b6cb0;">🌲 西海石林：</div>
+                    <select id="d3_select3" onchange="saveDay3()">
+                        <option value="">-- 请选择匹配形状 --</option>
+                        <option value="1">像一排笔插在笔架上</option>
+                        <option value="2">像一个仙女撒花瓣</option>
+                        <option value="3">像一大片石头森林</option>
+                    </select>
+                </div>
+            </div>
+            <div class="task-item">
+                <p class="task-title">📷 拍一拍印象深刻的景色：</p>
+                <div class="upload-wrapper">
+                    <div class="photo-upload-zone" id="d3_zone3" onclick="document.getElementById('d3_photo3').click()">📷 上传天子山印象景色</div>
+                    <input type="file" id="d3_photo3" accept="image/*" style="display:none;" onchange="handleCompressUpload(this, 'd3_preview3', 'd3_box3', 'd3_zone3', 'd3_img3', saveDay3)">
+                    <div class="preview-container" id="d3_box3">
+                        <img id="d3_preview3" class="photo-preview" src="">
+                        <div class="preview-tools">
+                            <span>✨ 已保存到手册</span>
+                            <button class="tool-btn" onclick="removePhoto('d3_photo3', 'd3_preview3', 'd3_box3', 'd3_zone3', 'd3_img3', saveDay3)">🗑️ 删除重传</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主线终极回顾与致信 (原 Day 5 整合至此) -->
+        <div class="card" style="border: 2px solid var(--accent);">
+            <h2>🎉 主线终点：湖南之旅回顾与致信</h2>
+            <div class="task-item">
+                <p class="task-title">✏️ 1. 最让我“哇”的一声的是：</p>
+                <input type="text" id="d3_wow" placeholder="写下惊叹瞬间..." oninput="saveDay3()">
+                <p class="task-title" style="margin-top:8px;">✏️ 2. 最让我哈哈大笑的是：</p>
+                <input type="text" id="d3_laugh" placeholder="写下快乐瞬间..." oninput="saveDay3()">
+            </div>
+            <div class="task-item">
+                <p class="task-title">💌 给少年毛泽东（石三伢子）写一封信：</p>
+                <div class="letter-box">
+                    <p style="font-size:0.88rem; font-weight:bold; color:#744210;">亲爱的石三伢子：</p>
+                    <textarea id="d3_letter" rows="3" placeholder="写下你想对少年毛泽东说的话..." oninput="saveDay3()"></textarea>
+                </div>
+            </div>
+            <div class="task-item">
+                <p class="task-title">🎨 上传本次旅行最喜欢的照片：</p>
+                <div class="upload-wrapper">
+                    <div class="photo-upload-zone" id="d3_zone4" onclick="document.getElementById('d3_photo4').click()">📷 上传本次旅行最喜欢的照片</div>
+                    <input type="file" id="d3_photo4" accept="image/*" style="display:none;" onchange="handleCompressUpload(this, 'd3_preview4', 'd3_box4', 'd3_zone4', 'd3_img4', saveDay3)">
+                    <div class="preview-container" id="d3_box4">
+                        <img id="d3_preview4" class="photo-preview" src="">
+                        <div class="preview-tools">
+                            <span>✨ 终极照片已保存</span>
+                            <button class="tool-btn" onclick="removePhoto('d3_photo4', 'd3_preview4', 'd3_box4', 'd3_zone4', 'd3_img4', saveDay3)">🗑️ 删除重传</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 6. Day 4 隐藏支线完整页面 -->
+<div id="page-day4" class="page-screen">
+    <div class="back-nav" onclick="goToPage('page-map')">⬅️ 返回路线地图</div>
+    <div class="container">
+        <div class="card">
+            <div class="day-main-img" style="background-image: url('https://pic1.imgdb.cn/item/6a4e57441f387c0209390562.png');"></div>
+            <h2>🏛️ 第一站：岳麓书院细节侦探</h2>
+            <div class="info-box">书院里藏着很多有趣的细节，仔细找找——</div>
+            <div class="task-item">
+                <p class="task-title">✏️ 观察填空：</p>
+                <p style="font-size:0.85rem; color:#4a5568;">· 大门口的石狮子，左边那只脚下踩的是什么？</p>
+                <input type="text" id="d4_lion_left" placeholder="踩的东西..." oninput="saveDay4()">
+                <p style="font-size:0.85rem; color:#4a5568; margin-top:6px;">· 右边的石狮子脚下踩的是什么？</p>
+                <input type="text" id="d4_lion_right" placeholder="踩的东西..." oninput="saveDay4()">
+            </div>
+            <div class="task-item">
+                <p class="task-title">☯️ 书院里有没有看到“八卦”图案？</p>
+                <div class="check-group" id="d4_group_bagua">
+                    <button class="check-btn" onclick="selectSingle('d4_group_bagua', this, saveDay4)">有</button>
+                    <button class="check-btn" onclick="selectSingle('d4_group_bagua', this, saveDay4)">没有</button>
+                </div>
+            </div>
+            <div class="task-item">
+                <p class="task-title">📷 上传书院的照片：</p>
+                <div class="upload-wrapper">
+                    <div class="photo-upload-zone" id="d4_zone1" onclick="document.getElementById('d4_photo1').click()">📷 上传书院照片</div>
+                    <input type="file" id="d4_photo1" accept="image/*" style="display:none;" onchange="handleCompressUpload(this, 'd4_preview1', 'd4_box1', 'd4_zone1', 'd4_img1', saveDay4)">
+                    <div class="preview-container" id="d4_box1">
+                        <img id="d4_preview1" class="photo-preview" src="">
+                        <div class="preview-tools">
+                            <span>✨ 已保存到手册</span>
+                            <button class="tool-btn" onclick="removePhoto('d4_photo1', 'd4_preview1', 'd4_box1', 'd4_zone1', 'd4_img1', saveDay4)">🗑️ 删除重传</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🖼️ 第二站：湖南省博物馆 (奇迹寻宝)</h2>
+            <div class="task-item">
+                <p class="task-title">✅ 寻宝打勾：</p>
+                <div class="match-row"><span>💃 辛追夫人 (沉睡2000多年，皮肤仍有弹性)</span><button class="match-btn" id="d4_m1" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
+                <div class="match-row"><span>📜 T形帛画 (分天上、人间、地下三个世界)</span><button class="match-btn" id="d4_m2" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
+                <div class="match-row"><span>🪶 素纱襌衣 (仅48-49克，比鸡蛋还轻)</span><button class="match-btn" id="d4_m3" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
+                <div class="match-row"><span>🥣 千年藕片汤 (出土时碗里还有藕片)</span><button class="match-btn" id="d4_m4" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
+                <div class="match-row"><span>🗿 人面纹方鼎 (鼎的四面都有脸)</span><button class="match-btn" id="d4_m5" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
+            </div>
+            <div class="task-item" style="border-top:1px dashed #e2e8f0; padding-top:10px;">
+                <p class="task-title">🧠 如果文物会说话：</p>
+                <div class="info-box">选一件你最喜欢的文物，想象一下——如果它能开口说话，它会告诉你什么？</div>
+                <p style="font-size:0.85rem; color:#4a5568;">我选的文物是：</p>
+                <input type="text" id="d4_relic_name" placeholder="文物名称..." oninput="saveDay4()">
+                <p style="font-size:0.85rem; color:#4a5568; margin-top:6px;">它会说：</p>
+                <textarea id="d4_relic_speak" rows="2" placeholder="写下它想说的话..." oninput="saveDay4()"></textarea>
+            </div>
+            <div class="task-item">
+                <p class="task-title">🎨 把这件文物画下来或拍下来：</p>
+                <div class="upload-wrapper">
+                    <div class="photo-upload-zone" id="d4_zone2" onclick="document.getElementById('d4_photo2').click()">📷 上传文物画作/照片</div>
+                    <input type="file" id="d4_photo2" accept="image/*" style="display:none;" onchange="handleCompressUpload(this, 'd4_preview2', 'd4_box2', 'd4_zone2', 'd4_img2', saveDay4)">
+                    <div class="preview-container" id="d4_box2">
+                        <img id="d4_preview2" class="photo-preview" src="">
+                        <div class="preview-tools">
+                            <span>✨ 已保存到手册</span>
+                            <button class="tool-btn" onclick="removePhoto('d4_photo2', 'd4_preview2', 'd4_box2', 'd4_zone2', 'd4_img2', saveDay4)">🗑️ 删除重传</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🌙 第三站：杜甫江阁路线选择</h2>
+            <div class="route-switch">
+                <div class="route-btn active" id="d4_btn_went" onclick="switchD4Route('went')">🌙 今晚去了</div>
+                <div class="route-btn" id="d4_btn_not" onclick="switchD4Route('not')">🏠 没去/遥想</div>
+            </div>
+            <div id="d4_box_went">
+                <p style="font-size:0.88rem; font-weight:bold;">💭 想一想：</p>
+                <p style="font-size:0.85rem; color:#4a5568;">杜甫当年在湘江上漂泊的时候，他看到的江水和现在你看到的江水，有什么一样？有什么不一样？</p>
+                <textarea id="d4_river_think" rows="2" placeholder="写下你的思考..." oninput="saveDay4()"></textarea>
+            </div>
+            <div id="d4_box_not" style="display:none;">
+                <div class="info-box">杜甫晚年曾在湘江上漂泊，最后病逝在湘江的一条船上。他写了很多关于湖南的诗。</div>
+                <p style="font-size:0.88rem; font-weight:bold;">我认识的杜甫：</p>
+                <p style="font-size:0.85rem; color:#4a5568; margin-top:4px;">· 我背过的杜甫的诗：</p>
+                <input type="text" id="d4_poem" placeholder="写下诗句..." oninput="saveDay4()">
+                <p style="font-size:0.85rem; color:#4a5568; margin-top:6px;">· 如果见到杜甫，我想问他：</p>
+                <input type="text" id="d4_ask_dufu" placeholder="你想问杜甫的话..." oninput="saveDay4()">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let hasShownCert = false;
+
+    function goToPage(pageId) {
+        document.querySelectorAll('.page-screen').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    function openBook() {
+        let name = document.getElementById('explorerNameInput').value.trim() || '小探险家';
+        localStorage.setItem('explorer_name', name);
+        document.querySelectorAll('.displayUserName').forEach(e => e.innerText = name);
+        document.getElementById('bookCoverScreen').classList.add('opened');
+    }
+
+    function reEditName() { document.getElementById('bookCoverScreen').classList.remove('opened'); }
+
+    function toggleMulti(btn, callback) { 
+        btn.classList.toggle('checked'); 
+        if(callback) callback(); 
+    }
+
+    function selectSingle(groupId, btn, callback) {
+        let parent = document.getElementById(groupId);
+        parent.querySelectorAll('.check-btn').forEach(b => b.classList.remove('checked'));
+        btn.classList.add('checked');
+        if(callback) callback();
+    }
+
+    function toggleMatch(btn, callback) {
+        if(btn.classList.contains('found')) { btn.classList.remove('found'); btn.innerText = "未找到"; }
+        else { btn.classList.add('found'); btn.innerText = "✅ 已找到"; }
+        if(callback) callback();
+    }
+
+    function checkD1Secret() {
+        let h = document.getElementById('d1_h').value;
+        let l = document.getElementById('d1_l').value;
+        let res = document.getElementById('d1_secret_res');
+        if(h == '32' && l == '83') { res.style.color = "#38a169"; res.innerText = "🎉 解密成功！高32米，长83米！"; }
+        else { res.style.color = "#e53e3e"; res.innerText = "❌ 提示：写诗年龄是32，享年岁数是83！"; }
+        saveDay1();
+    }
+
+    function switchD4Route(type) {
+        if(type === 'went') {
+            document.getElementById('d4_btn_went').classList.add('active');
+            document.getElementById('d4_btn_not').classList.remove('active');
+            document.getElementById('d4_box_went').style.display = 'block';
+            document.getElementById('d4_box_not').style.display = 'none';
+        } else {
+            document.getElementById('d4_btn_not').classList.add('active');
+            document.getElementById('d4_btn_went').classList.remove('active');
+            document.getElementById('d4_box_not').style.display = 'block';
+            document.getElementById('d4_box_went').style.display = 'none';
+        }
+        saveDay4();
+    }
+
+    function handleCompressUpload(input, imgId, boxId, zoneId, storageKey, callback) {
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let img = new Image();
+                img.onload = function() {
+                    let canvas = document.createElement('canvas');
+                    let ctx = canvas.getContext('2d');
+                    let scale = Math.min(800 / img.width, 1);
+                    canvas.width = img.width * scale;
+                    canvas.height = img.height * scale;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    let base64 = canvas.toDataURL('image/jpeg', 0.65);
+
+                    document.getElementById(imgId).src = base64;
+                    document.getElementById(boxId).style.display = 'block';
+                    if(zoneId && document.getElementById(zoneId)) document.getElementById(zoneId).style.display = 'none';
+                    localStorage.setItem(storageKey, base64);
+                    if(callback) callback();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function removePhoto(inputId, imgId, boxId, zoneId, storageKey, callback) {
+        if(confirm("确定要删除这张照片并重新上传吗？")) {
+            document.getElementById(inputId).value = '';
+            document.getElementById(imgId).src = '';
+            document.getElementById(boxId).style.display = 'none';
+            if(zoneId && document.getElementById(zoneId)) document.getElementById(zoneId).style.display = 'block';
+            localStorage.removeItem(storageKey);
+            if(callback) callback();
+        }
+    }
+
+    function saveDay1() {
+        let dests = [];
+        document.querySelectorAll('#d1_group_dest .check-btn.checked').forEach(b => dests.push(b.innerText));
+        let sounds = [];
+        document.querySelectorAll('#d1_group_sound .check-btn.checked').forEach(b => sounds.push(b.innerText));
+
+        let data = {
+            dests: dests,
+            sounds: sounds,
+            soundOther: document.getElementById('d1_sound_other').value,
+            river1: getSingleVal('d1_group_river1'),
+            river2: getSingleVal('d1_group_river2'),
+            look: getSingleVal('d1_group_look'),
+            show: getSingleVal('d1_group_show'),
+            want: document.getElementById('d1_most_want').value,
+            goal: document.getElementById('d1_my_goal').value,
+            color: document.getElementById('d1_mountain_color').value,
+            ef: document.getElementById('d1_eagle_fish').value,
+            h: document.getElementById('d1_h').value,
+            l: document.getElementById('d1_l').value,
+            quote: document.getElementById('d1_quote').value
+        };
+        localStorage.setItem('day1_data', JSON.stringify(data));
+        updateProgress();
+    }
+
+    function saveDay2() {
+        let data = {
+            hand: getSingleVal('d2_group_hand'),
+            clothes: getSingleVal('d2_group_clothes'),
+            wall: getSingleVal('d2_group_wall'),
+            roof: getSingleVal('d2_group_roof'),
+            readProof: document.getElementById('d2_read_proof').value,
+            itemWhy: document.getElementById('d2_item_why').value,
+            toParents: document.getElementById('d2_to_parents').value,
+            m1: getMatchVal('d2_m1'), m2: getMatchVal('d2_m2'), m3: getMatchVal('d2_m3'),
+            m4: getMatchVal('d2_m4'), m5: getMatchVal('d2_m5'), m6: getMatchVal('d2_m6'),
+            h: document.getElementById('d2_h').value,
+            item: document.getElementById('d2_item').value
+        };
+        localStorage.setItem('day2_data', JSON.stringify(data));
+        updateProgress();
+    }
+
+    function saveDay3() {
+        let data = {
+            feel: document.getElementById('d3_feel').value,
+            lookLike: document.getElementById('d3_look_like').value,
+            top: document.getElementById('d3_top').value,
+            smooth: document.getElementById('d3_smooth').value,
+            dir: document.getElementById('d3_dir').value,
+            build: getSingleVal('d3_group_build'),
+            bridge: getSingleVal('d3_group_bridge'),
+            s1: document.getElementById('d3_select1').value,
+            s2: document.getElementById('d3_select2').value,
+            s3: document.getElementById('d3_select3').value,
+            wow: document.getElementById('d3_wow').value,
+            laugh: document.getElementById('d3_laugh').value,
+            letter: document.getElementById('d3_letter').value
+        };
+        localStorage.setItem('day3_data', JSON.stringify(data));
+        updateProgress();
+    }
+
+    function saveDay4() {
+        let data = {
+            m1: getMatchVal('d4_m1'), m2: getMatchVal('d4_m2'), m3: getMatchVal('d4_m3'),
+            m4: getMatchVal('d4_m4'), m5: getMatchVal('d4_m5'),
+            bagua: getSingleVal('d4_group_bagua'),
+            lionLeft: document.getElementById('d4_lion_left').value,
+            lionRight: document.getElementById('d4_lion_right').value,
+            rName: document.getElementById('d4_relic_name').value,
+            rSpeak: document.getElementById('d4_relic_speak').value,
+            riverThink: document.getElementById('d4_river_think').value,
+            poem: document.getElementById('d4_poem').value,
+            askDufu: document.getElementById('d4_ask_dufu').value
+        };
+        localStorage.setItem('day4_data', JSON.stringify(data));
+        updateProgress();
+    }
+
+    function getSingleVal(groupId) {
+        return document.querySelector('#' + groupId + ' .check-btn.checked')?.innerText || '';
+    }
+
+    function getMatchVal(btnId) {
+        return document.getElementById(btnId)?.classList.contains('found') ? 'found' : '';
+    }
+
+    function updateProgress() {
+        let p1 = calcProgress('day1_data', ['d1_img2', 'd1_img3'], 9);
+        let p2 = calcProgress('day2_data', ['d2_img1', 'd2_img2', 'd2_img3'], 10);
+        let p3 = calcProgress('day3_data', ['d3_img1', 'd3_img2', 'd3_img3', 'd3_img4'], 12);
+        let p4 = calcProgress('day4_data', ['d4_img1', 'd4_img2'], 8);
+
+        setBadge('d1', p1); setBadge('d2', p2); setBadge('d3', p3); setBadge('d4', p4);
+
+        // 主线仅由 Day 1 ~ Day 3 决定
+        let total = Math.round((p1 + p2 + p3) / 3);
+        document.getElementById('totalBar').style.width = total + '%';
+        document.getElementById('totalPercent').innerText = total + '%';
+
+        if(total >= 100 && !hasShownCert) {
+            hasShownCert = true;
+            showCertModal();
+        }
+    }
+
+    function calcProgress(dataKey, imgKeys, totalCount) {
+        let count = 0;
+        let data = localStorage.getItem(dataKey);
+        if(data) {
+            let obj = JSON.parse(data);
+            for(let k in obj) {
+                if(Array.isArray(obj[k]) && obj[k].length > 0) count++;
+                else if(typeof obj[k] === 'string' && obj[k].trim() !== '') count++;
+            }
+        }
+        imgKeys.forEach(k => { if(localStorage.getItem(k)) count++; });
+        return Math.min(Math.round((count / totalCount) * 100), 100);
+    }
+
+    function setBadge(id, percent) {
+        let badge = document.getElementById('badge_' + id);
+        let text = document.getElementById('text_' + id);
+        text.innerText = percent + '%';
+        if(percent >= 100) { badge.innerText = "已通关"; badge.className = "status-badge completed"; }
+        else if(percent > 0) { badge.innerText = "探索中"; badge.className = "status-badge in-progress"; }
+        else { badge.innerText = "未开始"; badge.className = "status-badge not-started"; }
+    }
+
+    function openCertBadgeDirectly() {
+        let p1 = calcProgress('day1_data', ['d1_img2', 'd1_img3'], 9);
+        let p2 = calcProgress('day2_data', ['d2_img1', 'd2_img2', 'd2_img3'], 10);
+        let p3 = calcProgress('day3_data', ['d3_img1', 'd3_img2', 'd3_img3', 'd3_img4'], 12);
+        let total = Math.round((p1 + p2 + p3) / 3);
+
+        if(total >= 100) {
+            showCertModal();
+        } else {
+            alert(`目前主线完成度为 ${total}%，请先完成 Day 1 ~ Day 3 的主线研学任务再来查看勋章吧！加油！`);
+        }
+    }
+
+    function showCertModal() {
+        let name = localStorage.getItem('explorer_name') || '小探险家';
+        document.getElementById('certUserName').innerText = name;
+        
+        let now = new Date();
+        document.getElementById('certDate').innerText = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+        document.getElementById('certModal').classList.add('active');
+    }
+
+    function closeCertModal() {
+        document.getElementById('certModal').classList.remove('active');
+    }
+
+    function exportDocument() {
+        alert("准备为你导出研学手册打印/PDF文档！在弹出的打印窗口中，将目标选择为【另存为 PDF】即可存为电脑/手机本地文档。");
+        window.print();
+    }
+
+    function resetAllData() {
+        if(confirm("确定要清空所有记录吗？")) {
+            localStorage.clear();
+            location.reload();
+        }
+    }
+
+    window.onload = function() {
+        let name = localStorage.getItem('explorer_name');
+        if(name) {
+            document.getElementById('explorerNameInput').value = name;
+            document.querySelectorAll('.displayUserName').forEach(e => e.innerText = name);
+            document.getElementById('bookCoverScreen').classList.add('opened');
+        }
+
+        restoreDay1(); restoreDay2(); restoreDay3(); restoreDay4();
+
+        // 恢复图片
+        restoreImg('d1_img2', 'd1_preview2', 'd1_box2', 'd1_zone2');
+        restoreImg('d1_img3', 'd1_preview3', 'd1_box3', 'd1_zone3');
+        restoreImg('d2_img1', 'd2_preview1', 'd2_box1', 'd2_zone1');
+        restoreImg('d2_img2', 'd2_preview2', 'd2_box2', 'd2_zone2');
+        restoreImg('d2_img3', 'd2_preview3', 'd2_box3', 'd2_zone3');
+        restoreImg('d3_img1', 'd3_preview1', 'd3_box1', 'd3_zone1');
+        restoreImg('d3_img2', 'd3_preview2', 'd3_box2', 'd3_zone2');
+        restoreImg('d3_img3', 'd3_preview3', 'd3_box3', 'd3_zone3');
+        restoreImg('d3_img4', 'd3_preview4', 'd3_box4', 'd3_zone4');
+        restoreImg('d4_img1', 'd4_preview1', 'd4_box1', 'd4_zone1');
+        restoreImg('d4_img2', 'd4_preview2', 'd4_box2', 'd4_zone2');
+
+        updateProgress();
+    };
+
+    function restoreDay1() {
+        let saved = localStorage.getItem('day1_data'); if(!saved) return;
+        let obj = JSON.parse(saved);
+        if(obj.dests) document.querySelectorAll('#d1_group_dest .check-btn').forEach(b => { if(obj.dests.includes(b.innerText)) b.classList.add('checked'); });
+        if(obj.sounds) document.querySelectorAll('#d1_group_sound .check-btn').forEach(b => { if(obj.sounds.includes(b.innerText)) b.classList.add('checked'); });
+        if(obj.soundOther) document.getElementById('d1_sound_other').value = obj.soundOther;
+        restoreSingleGroup('d1_group_river1', obj.river1);
+        restoreSingleGroup('d1_group_river2', obj.river2);
+        restoreSingleGroup('d1_group_look', obj.look);
+        restoreSingleGroup('d1_group_show', obj.show);
+        if(obj.want) document.getElementById('d1_most_want').value = obj.want;
+        if(obj.goal) document.getElementById('d1_my_goal').value = obj.goal;
+        if(obj.color) document.getElementById('d1_mountain_color').value = obj.color;
+        if(obj.ef) document.getElementById('d1_eagle_fish').value = obj.ef;
+        if(obj.h) document.getElementById('d1_h').value = obj.h;
+        if(obj.l) document.getElementById('d1_l').value = obj.l;
+        if(obj.quote) document.getElementById('d1_quote').value = obj.quote;
+    }
+
+    function restoreDay2() {
+        let saved = localStorage.getItem('day2_data'); if(!saved) return;
+        let obj = JSON.parse(saved);
+        restoreSingleGroup('d2_group_hand', obj.hand);
+        restoreSingleGroup('d2_group_clothes', obj.clothes);
+        restoreSingleGroup('d2_group_wall', obj.wall);
+        restoreSingleGroup('d2_group_roof', obj.roof);
+        restoreMatchBtn('d2_m1', obj.m1); restoreMatchBtn('d2_m2', obj.m2); restoreMatchBtn('d2_m3', obj.m3);
+        restoreMatchBtn('d2_m4', obj.m4); restoreMatchBtn('d2_m5', obj.m5); restoreMatchBtn('d2_m6', obj.m6);
+        if(obj.h) document.getElementById('d2_h').value = obj.h;
+        if(obj.readProof) document.getElementById('d2_read_proof').value = obj.readProof;
+        if(obj.item) document.getElementById('d2_item').value = obj.item;
+        if(obj.itemWhy) document.getElementById('d2_item_why').value = obj.itemWhy;
+        if(obj.toParents) document.getElementById('d2_to_parents').value = obj.toParents;
+    }
+
+    function restoreDay3() {
+        let saved = localStorage.getItem('day3_data'); if(!saved) return;
+        let obj = JSON.parse(saved);
+        restoreSingleGroup('d3_group_build', obj.build);
+        restoreSingleGroup('d3_group_bridge', obj.bridge);
+        if(obj.feel) document.getElementById('d3_feel').value = obj.feel;
+        if(obj.lookLike) document.getElementById('d3_look_like').value = obj.lookLike;
+        if(obj.top) document.getElementById('d3_top').value = obj.top;
+        if(obj.smooth) document.getElementById('d3_smooth').value = obj.smooth;
+        if(obj.dir) document.getElementById('d3_dir').value = obj.dir;
+        if(obj.s1) document.getElementById('d3_select1').value = obj.s1;
+        if(obj.s2) document.getElementById('d3_select2').value = obj.s2;
+        if(obj.s3) document.getElementById('d3_select3').value = obj.s3;
+        if(obj.wow) document.getElementById('d3_wow').value = obj.wow;
+        if(obj.laugh) document.getElementById('d3_laugh').value = obj.laugh;
+        if(obj.letter) document.getElementById('d3_letter').value = obj.letter;
+    }
+
+    function restoreDay4() {
+        let saved = localStorage.getItem('day4_data'); if(!saved) return;
+        let obj = JSON.parse(saved);
+        restoreMatchBtn('d4_m1', obj.m1); restoreMatchBtn('d4_m2', obj.m2); restoreMatchBtn('d4_m3', obj.m3);
+        restoreMatchBtn('d4_m4', obj.m4); restoreMatchBtn('d4_m5', obj.m5);
+        restoreSingleGroup('d4_group_bagua', obj.bagua);
+        if(obj.lionLeft) document.getElementById('d4_lion_left').value = obj.lionLeft;
+        if(obj.lionRight) document.getElementById('d4_lion_right').value = obj.lionRight;
+        if(obj.rName) document.getElementById('d4_relic_name').value = obj.rName;
+        if(obj.rSpeak) document.getElementById('d4_relic_speak').value = obj.rSpeak;
+        if(obj.riverThink) document.getElementById('d4_river_think').value = obj.riverThink;
+        if(obj.poem) document.getElementById('d4_poem').value = obj.poem;
+        if(obj.askDufu) document.getElementById('d4_ask_dufu').value = obj.askDufu;
+    }
+
+    function restoreSingleGroup(groupId, value) {
+        if(!value) return;
+        document.querySelectorAll('#' + groupId + ' .check-btn').forEach(b => {
+            if(b.innerText === value) b.classList.add('checked');
+        });
+    }
+
+    function restoreMatchBtn(btnId, value) {
+        let btn = document.getElementById(btnId);
+        if(value === 'found' && btn) {
+            btn.classList.add('found');
+            btn.innerText = "✅ 已找到";
+        }
+    }
+
+    function restoreImg(key, imgId, boxId, zoneId) {
+        let base64 = localStorage.getItem(key);
+        if(base64) {
+            document.getElementById(imgId).src = base64;
+            document.getElementById(boxId).style.display = 'block';
+            if(zoneId && document.getElementById(zoneId)) document.getElementById(zoneId).style.display = 'none';
+        }
+    }
+</script>
+
+</body>
+</html>
