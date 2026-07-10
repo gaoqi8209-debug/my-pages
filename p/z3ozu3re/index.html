@@ -150,7 +150,6 @@
 </head>
 <body>
 
-<!-- 通关荣耀证书弹窗 -->
 <div class="modal-overlay" id="certModal">
     <div class="cert-card">
         <div class="cert-badge">🏆</div>
@@ -170,10 +169,8 @@
     </div>
 </div>
 
-<!-- 1. 翻页封面屏幕 -->
 <div id="bookCoverScreen">
     <div class="cover-img-wrapper">
-        <!-- 这里已成功替换为您提供的新小尺寸封面链接，并加入了保底防卡死机制 -->
         <img src="https://pic1.imgdb.cn/item/6a506b081d3a568cca1314c8.jpg" alt="封面" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1544085311-11a028465b03?auto=format&fit=crop&w=600&q=80';">
     </div>
     <div class="cover-form-card">
@@ -186,7 +183,6 @@
     </div>
 </div>
 
-<!-- 2. 地图大主页 -->
 <div id="page-map" class="page-screen active">
     <div class="cover-header">
         <div class="user-title-badge">
@@ -263,7 +259,6 @@
     </div>
 </div>
 
-<!-- 3. Day 1 完整页面 -->
 <div id="page-day1" class="page-screen">
     <div class="back-nav" onclick="goToPage('page-map')">⬅️ 返回路线地图</div>
     <div class="container">
@@ -326,7 +321,7 @@
                     高: <input type="number" id="d1_h" class="secret-input" placeholder="米" oninput="saveDay1()"> 米 (写《沁园春·长沙》时的年龄)
                 </div>
                 <div class="secret-box" style="margin-top:6px;">
-                    长: <input type="number" id="d1_l" class="secret-input" placeholder="米" oninput="saveDay1()">米 (享年岁数)
+                    长: <input type="number" id="d1_l" class="secret-input" placeholder="米" oninput="saveDay1()"> 米 (享年岁数)
                     <button class="secret-btn" onclick="checkD1Secret()">解锁密码</button>
                 </div>
                 <p id="d1_secret_res" style="font-size:0.85rem; margin-top:6px; font-weight:bold;"></p>
@@ -395,7 +390,6 @@
     </div>
 </div>
 
-<!-- 4. Day 2 完整页面 -->
 <div id="page-day2" class="page-screen">
     <div class="back-nav" onclick="goToPage('page-map')">⬅️ 返回路线地图</div>
     <div class="container">
@@ -520,7 +514,6 @@
     </div>
 </div>
 
-<!-- 5. Day 3 完整页面 (含终极总结) -->
 <div id="page-day3" class="page-screen">
     <div class="back-nav" onclick="goToPage('page-map')">⬅️ 返回路线地图</div>
     <div class="container">
@@ -647,7 +640,6 @@
             </div>
         </div>
 
-        <!-- 主线终极回顾与致信 (原 Day 5 整合至此) -->
         <div class="card" style="border: 2px solid var(--accent);">
             <h2>🎉 主线终点：湖南之旅回顾与致信</h2>
             <div class="task-item">
@@ -681,7 +673,6 @@
     </div>
 </div>
 
-<!-- 6. Day 4 隐藏支线完整页面 -->
 <div id="page-day4" class="page-screen">
     <div class="back-nav" onclick="goToPage('page-map')">⬅️ 返回路线地图</div>
     <div class="container">
@@ -1005,6 +996,7 @@
         else { badge.innerText = "未开始"; badge.className = "status-badge not-started"; }
     }
 
+    // 优化的核心入口逻辑
     function openCertBadgeDirectly() {
         let p1 = calcProgress('day1_data', ['d1_img2', 'd1_img3'], 9);
         let p2 = calcProgress('day2_data', ['d2_img1', 'd2_img2', 'd2_img3'], 10);
@@ -1012,7 +1004,7 @@
         let total = Math.round((p1 + p2 + p3) / 3);
 
         if(total >= 100) {
-            showCertModal();
+            showCertModal(); // 通关后点击，变成永久的证书与导出传送门
         } else {
             alert(`目前主线完成度为 ${total}%，请先完成 Day 1 ~ Day 3 的主线研学任务再来查看勋章吧！加油！`);
         }
