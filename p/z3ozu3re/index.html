@@ -160,7 +160,7 @@
         <p class="cert-desc">在这次《小探险家的湖南之旅》研学探索中，你凭借敏锐的观察力、勇于探索的精神与满腔热忱，成功跨越长沙、韶山与张家界，圆满完成了所有主线研学任务！你不仅用双眼记录了湘江的壮阔与奇峰的秀丽，更用心体会了少年毛泽东“立志出乡关”的求索岁月。希望你在未来的日子里，继续带着这份好奇与觉察，知行合一，勇毅前行！</p>
         <div style="font-weight:bold; color:var(--primary); font-size:0.95rem; margin-bottom:12px;">🎖️ 授予“湖南研学小达人”荣耀称号！</div>
         <div class="cert-footer">
-            <span>📅 达成时间：<span id="certDate">2026-07-09</span></span>
+            <span>📅 达成时间：<span id="certDate">2026-07-10</span></span>
             <span>✍️ 签发：青春探险家小分队</span>
         </div>
         <div class="modal-actions">
@@ -173,7 +173,7 @@
 <!-- 1. 翻页封面屏幕 -->
 <div id="bookCoverScreen">
     <div class="cover-img-wrapper">
-        <img src="https://pic1.imgdb.cn/item/6a4e4c6c1f387c02093900fb.png" alt="封面">
+        <img src="https://pic1.imgdb.cn/item/6a4e4c6c1f387c0209390fb.png" alt="封面">
     </div>
     <div class="cover-form-card">
         <h2>🗺️ 小探险家的湖南之旅</h2>
@@ -226,7 +226,7 @@
         <div class="map-card main-route" onclick="goToPage('page-day2')">
             <div class="card-info">
                 <h3>Day 2 · 韶山冲寻宝</h3>
-                <p>铜像广场 · 石三伢子故居 · 纪念馆</p>
+                <p>铜像广场 · 毛泽东故居 · 纪念馆</p>
             </div>
             <div class="card-status">
                 <span class="status-badge" id="badge_d2">未开始</span>
@@ -842,11 +842,12 @@
                 let img = new Image();
                 img.onload = function() {
                     let canvas = document.createElement('canvas');
-                    let ctx = canvas.getContext('2d');
+                    let ctx = canvas.createElement('canvas').getContext('2d');
+                    let ctxCanvas = canvas.getContext('2d');
                     let scale = Math.min(800 / img.width, 1);
                     canvas.width = img.width * scale;
                     canvas.height = img.height * scale;
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    ctxCanvas.drawImage(img, 0, 0, canvas.width, canvas.height);
                     let base64 = canvas.toDataURL('image/jpeg', 0.65);
 
                     document.getElementById(imgId).src = base64;
