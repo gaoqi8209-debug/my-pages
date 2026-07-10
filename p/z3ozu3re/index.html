@@ -138,7 +138,7 @@
         .action-btn.export-btn { background: var(--secondary); color: white; }
         .action-btn.close-btn { background: var(--primary); color: white; }
 
-        /* 纯净导出预览视图 */
+        /* 纯净长图导出视图 (优化排版：保留原有手绘主图与上传图，隐去多余按钮) */
         body.export-mode { background: #ffffff !important; padding: 20px 16px !important; }
         body.export-mode #bookCoverScreen,
         body.export-mode .cover-header,
@@ -158,6 +158,8 @@
         body.export-mode .check-btn.checked { display: inline-block !important; background: #e2e8f0 !important; border-color: #a0aec0 !important; color: #2d3748 !important; pointer-events: none; }
         body.export-mode .match-btn { display: none !important; }
         body.export-mode .match-btn.found { display: inline-block !important; background: #c6f6d5 !important; color: #22543d !important; border: none !important; pointer-events: none; }
+        /* 核心调整：确保手绘主图在导出模式下完美展现 */
+        body.export-mode .day-main-img { display: block !important; opacity: 1 !important; visibility: visible !important; }
 
         .export-exit-banner { display: none; position: fixed; top: 0; left: 0; width: 100%; background: #2d3748; color: white; padding: 12px; text-align: center; font-size: 0.88rem; font-weight: bold; z-index: 5000; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
         body.export-mode .export-exit-banner { display: block; }
@@ -175,7 +177,7 @@
 <body>
 
 <div class="export-exit-banner" id="exitBanner">
-    📱 现已生成纯净版研学档案！手机端长按截屏或保存即可。<button class="exit-btn" onclick="exitExportMode()">返回手册修改</button>
+    📱 现已生成纯净版研学档案！手绘图、照片及文字全备，手机端长按截屏或保存即可。<button class="exit-btn" onclick="exitExportMode()">返回手册修改</button>
 </div>
 
 <div class="modal-overlay" id="certModal">
@@ -291,7 +293,7 @@
     <div class="back-nav" onclick="goToPage('page-map')">⬅️ 返回路线地图</div>
     <div class="container">
         <div class="card">
-            <div class="day-main-img" style="background-image: url('https://images.unsplash.com/photo-1508847154043-be12a3bc4af1?auto=format&fit=crop&w=600&q=80');"></div>
+            <div class="day-main-img" style="background-image: url('https://pic1.imgdb.cn/item/6a4e55681f387c020939043f.png');"></div>
             <h2>🗺️ Part 1：出发前的探险宣言</h2>
             <div class="task-item">
                 <p class="task-title">🎯 我要去的地方（选中的打勾）：</p>
@@ -422,7 +424,7 @@
     <div class="back-nav" onclick="goToPage('page-map')">⬅️ 返回路线地图</div>
     <div class="container">
         <div class="card">
-            <div class="day-main-img" style="background-image: url('https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&w=600&q=80');"></div>
+            <div class="day-main-img" style="background-image: url('https://pic1.imgdb.cn/item/6a4e53f21f387c020939037d.png');"></div>
             <h2>📍 第一站：铜像广场</h2>
             <div class="task-item">
                 <p class="task-title">1. 铜像有多高？：</p>
@@ -546,7 +548,7 @@
     <div class="back-nav" onclick="goToPage('page-map')">⬅️ 返回路线地图</div>
     <div class="container">
         <div class="card">
-            <div class="day-main-img" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80');"></div>
+            <div class="day-main-img" style="background-image: url('https://pic1.imgdb.cn/item/6a4e55e31f387c020939047b.png');"></div>
             <h2>🚀 第一站：百龙天梯</h2>
             <div class="info-box">百龙天梯被称为“世界第一梯”，从山下到山顶只需要88秒！坐电梯的时候，看着窗外——</div>
             <div class="task-item">
@@ -676,520 +678,9 @@
                 <p class="task-title" style="margin-top:8px;">✏️ 2. 最让我哈哈大笑的是：</p>
                 <input type="text" id="d3_laugh" placeholder="写下快乐瞬间..." oninput="saveDay3()">
             </div>
-            <div class="task-item">
-                <p class="task-title">💌 给少年毛泽东（石三伢子）写一封信：</p>
-                <div class="letter-box">
+            <div class="letter-box">
                     <p style="font-size:0.88rem; font-weight:bold; color:#744210;">亲爱的石三伢子：</p>
                     <textarea id="d3_letter" rows="3" placeholder="写下你想对少年毛泽东说的话..." oninput="saveDay3()"></textarea>
                 </div>
             </div>
             <div class="task-item">
-                <p class="task-title">🎨 上传本次旅行最喜欢的照片：</p>
-                <div class="upload-wrapper">
-                    <div class="photo-upload-zone" id="d3_zone4" onclick="document.getElementById('d3_photo4').click()">📷 上传本次旅行最喜欢的照片</div>
-                    <input type="file" id="d3_photo4" accept="image/*" style="display:none;" onchange="handleCompressUpload(this, 'd3_preview4', 'd3_box4', 'd3_zone4', 'd3_img4', saveDay3)">
-                    <div class="preview-container" id="d3_box4">
-                        <img id="d3_preview4" class="photo-preview" src="">
-                        <div class="preview-tools">
-                            <span>✨ 终极照片已保存</span>
-                            <button class="tool-btn" onclick="removePhoto('d3_photo4', 'd3_preview4', 'd3_box4', 'd3_zone4', 'd3_img4', saveDay3)">🗑️ 删除重传</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="page-day4" class="page-screen">
-    <div class="back-nav" onclick="goToPage('page-map')">⬅️ 返回路线地图</div>
-    <div class="container">
-        <div class="card">
-            <div class="day-main-img" style="background-image: url('https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=600&q=80');"></div>
-            <h2>🏛️ 第一站：岳麓书院细节侦探</h2>
-            <div class="info-box">书院里藏着很多有趣的细节，仔细找找——</div>
-            <div class="task-item">
-                <p class="task-title">✏️ 观察填空：</p>
-                <p style="font-size:0.85rem; color:#4a5568;">· 大门口的石狮子，左边那只脚下踩的是什么？</p>
-                <input type="text" id="d4_lion_left" placeholder="踩的东西..." oninput="saveDay4()">
-                <p style="font-size:0.85rem; color:#4a5568; margin-top:6px;">· 右边的石狮子脚下踩的是什么？</p>
-                <input type="text" id="d4_lion_right" placeholder="踩的东西..." oninput="saveDay4()">
-            </div>
-            <div class="task-item">
-                <p class="task-title">☯️ 书院里有没有看到“八卦”图案？</p>
-                <div class="check-group" id="d4_group_bagua">
-                    <button class="check-btn" onclick="selectSingle('d4_group_bagua', this, saveDay4)">有</button>
-                    <button class="check-btn" onclick="selectSingle('d4_group_bagua', this, saveDay4)">没有</button>
-                </div>
-            </div>
-            <div class="task-item">
-                <p class="task-title">📷 上传书院的照片：</p>
-                <div class="upload-wrapper">
-                    <div class="photo-upload-zone" id="d4_zone1" onclick="document.getElementById('d4_photo1').click()">📷 上传书院照片</div>
-                    <input type="file" id="d4_photo1" accept="image/*" style="display:none;" onchange="handleCompressUpload(this, 'd4_preview1', 'd4_box1', 'd4_zone1', 'd4_img1', saveDay4)">
-                    <div class="preview-container" id="d4_box1">
-                        <img id="d4_preview1" class="photo-preview" src="">
-                        <div class="preview-tools">
-                            <span>✨ 已保存到手册</span>
-                            <button class="tool-btn" onclick="removePhoto('d4_photo1', 'd4_preview1', 'd4_box1', 'd4_zone1', 'd4_img1', saveDay4)">🗑️ 删除重传</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>🖼️ 第二站：湖南省博物馆 (奇迹寻宝)</h2>
-            <div class="task-item">
-                <p class="task-title">✅ 寻宝打勾：</p>
-                <div class="match-row"><span>💃 辛追夫人 (沉睡2000多年，皮肤仍有弹性)</span><button class="match-btn" id="d4_m1" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
-                <div class="match-row"><span>📜 T形帛画 (分天上、人间、地下三个世界)</span><button class="match-btn" id="d4_m2" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
-                <div class="match-row"><span>🪶 素纱襌衣 (仅48-49克，比鸡蛋还轻)</span><button class="match-btn" id="d4_m3" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
-                <div class="match-row"><span>🥣 千年藕片汤 (出土时碗里还有藕片)</span><button class="match-btn" id="d4_m4" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
-                <div class="match-row"><span>🗿 人面纹方鼎 (鼎的四面都有脸)</span><button class="match-btn" id="d4_m5" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
-            </div>
-            <div class="task-item" style="border-top:1px dashed #e2e8f0; padding-top:10px;">
-                <p class="task-title">🧠 如果文物会说话：</p>
-                <div class="info-box">选一件你最喜欢的文物，想象一下——如果它能开口说话，它会告诉你什么？</div>
-                <p style="font-size:0.85rem; color:#4a5568;">我选的文物是：</p>
-                <input type="text" id="d4_relic_name" placeholder="文物名称..." oninput="saveDay4()">
-                <p style="font-size:0.85rem; color:#4a5568; margin-top:6px;">它会说：</p>
-                <textarea id="d4_relic_speak" rows="2" placeholder="写下它想说的话..." oninput="saveDay4()"></textarea>
-            </div>
-            <div class="task-item">
-                <p class="task-title">🎨 把这件文物画下来或拍下来：</p>
-                <div class="upload-wrapper">
-                    <div class="photo-upload-zone" id="d4_zone2" onclick="document.getElementById('d4_photo2').click()">📷 上传文物画作/照片</div>
-                    <input type="file" id="d4_photo2" accept="image/*" style="display:none;" onchange="handleCompressUpload(this, 'd4_preview2', 'd4_box2', 'd4_zone2', 'd4_img2', saveDay4)">
-                    <div class="preview-container" id="d4_box2">
-                        <img id="d4_preview2" class="photo-preview" src="">
-                        <div class="preview-tools">
-                            <span>✨ 已保存到手册</span>
-                            <button class="tool-btn" onclick="removePhoto('d4_photo2', 'd4_preview2', 'd4_box2', 'd4_zone2', 'd4_img2', saveDay4)">🗑️ 删除重传</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>🌙 第三站：杜甫江阁路线选择</h2>
-            <div class="route-switch">
-                <div class="route-btn active" id="d4_btn_went" onclick="switchD4Route('went')">🌙 今晚去了</div>
-                <div class="route-btn" id="d4_btn_not" onclick="switchD4Route('not')">🏠 没去/遥想</div>
-            </div>
-            <div id="d4_box_went">
-                <p style="font-size:0.88rem; font-weight:bold;">💭 想一想：</p>
-                <p style="font-size:0.85rem; color:#4a5568;">杜甫当年在湘江上漂泊的时候，他看到的江水和现在你看到的江水，有什么一样？有什么不一样？</p>
-                <textarea id="d4_river_think" rows="2" placeholder="写下你的思考..." oninput="saveDay4()"></textarea>
-            </div>
-            <div id="d4_box_not" style="display:none;">
-                <div class="info-box">杜甫晚年曾在湘江上漂泊，最后病逝在湘江的一条船上。他写了很多关于湖南的诗。</div>
-                <p style="font-size:0.88rem; font-weight:bold;">我认识的杜甫：</p>
-                <p style="font-size:0.85rem; color:#4a5568; margin-top:4px;">· 我背过的杜甫的诗：</p>
-                <input type="text" id="d4_poem" placeholder="写下诗句..." oninput="saveDay4()">
-                <p style="font-size:0.85rem; color:#4a5568; margin-top:6px;">· 如果见到杜甫，我想问他：</p>
-                <input type="text" id="d4_ask_dufu" placeholder="你想问杜甫的话..." oninput="saveDay4()">
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    let hasShownCert = false;
-
-    function goToPage(pageId) {
-        document.querySelectorAll('.page-screen').forEach(p => p.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-        window.scrollTo(0, 0);
-    }
-
-    function openBook() {
-        let name = document.getElementById('explorerNameInput').value.trim() || '小探险家';
-        localStorage.setItem('explorer_name', name);
-        document.querySelectorAll('.displayUserName').forEach(e => e.innerText = name);
-        document.getElementById('bookCoverScreen').classList.add('opened');
-    }
-
-    function reEditName() { document.getElementById('bookCoverScreen').classList.remove('opened'); }
-
-    function toggleMulti(btn, callback) { 
-        btn.classList.toggle('checked'); 
-        if(callback) callback(); 
-    }
-
-    function selectSingle(groupId, btn, callback) {
-        let parent = document.getElementById(groupId);
-        parent.querySelectorAll('.check-btn').forEach(b => b.classList.remove('checked'));
-        btn.classList.add('checked');
-        if(callback) callback();
-    }
-
-    function toggleMatch(btn, callback) {
-        if(btn.classList.contains('found')) { btn.classList.remove('found'); btn.innerText = "未找到"; }
-        else { btn.classList.add('found'); btn.innerText = "✅ 已找到"; }
-        if(callback) callback();
-    }
-
-    function checkD1Secret() {
-        let h = document.getElementById('d1_h').value;
-        let l = document.getElementById('d1_l').value;
-        let res = document.getElementById('d1_secret_res');
-        if(h == '32' && l == '83') { res.style.color = "#38a169"; res.innerText = "🎉 解密成功！高32米，长83米！"; }
-        else { res.style.color = "#e53e3e"; res.innerText = "❌ 提示：写诗年龄是32，享年岁数是83！"; }
-        saveDay1();
-    }
-
-    function switchD4Route(type) {
-        if(type === 'went') {
-            document.getElementById('d4_btn_went').classList.add('active');
-            document.getElementById('d4_btn_not').classList.remove('active');
-            document.getElementById('d4_box_went').style.display = 'block';
-            document.getElementById('d4_box_not').style.display = 'none';
-        } else {
-            document.getElementById('d4_btn_not').classList.add('active');
-            document.getElementById('d4_btn_went').classList.remove('active');
-            document.getElementById('d4_box_not').style.display = 'block';
-            document.getElementById('d4_box_went').style.display = 'none';
-        }
-        saveDay4();
-    }
-
-    function handleCompressUpload(input, imgId, boxId, zoneId, storageKey, callback) {
-        if (input.files && input.files[0]) {
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                let img = new Image();
-                img.onload = function() {
-                    let canvas = document.createElement('canvas');
-                    let scale = Math.min(800 / img.width, 1);
-                    canvas.width = img.width * scale;
-                    canvas.height = img.height * scale;
-                    
-                    let ctxCanvas = canvas.getContext('2d');
-                    ctxCanvas.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    let base64 = canvas.toDataURL('image/jpeg', 0.65);
-
-                    document.getElementById(imgId).src = base64;
-                    document.getElementById(boxId).style.display = 'block';
-                    if(zoneId && document.getElementById(zoneId)) document.getElementById(zoneId).style.display = 'none';
-                    localStorage.setItem(storageKey, base64);
-                    if(callback) callback();
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function removePhoto(inputId, imgId, boxId, zoneId, storageKey, callback) {
-        if(confirm("确定要删除这张照片并重新上传吗？")) {
-            document.getElementById(inputId).value = '';
-            document.getElementById(imgId).src = '';
-            document.getElementById(boxId).style.display = 'none';
-            if(zoneId && document.getElementById(zoneId)) document.getElementById(zoneId).style.display = 'block';
-            localStorage.removeItem(storageKey);
-            if(callback) callback();
-        }
-    }
-
-    function saveDay1() {
-        let dests = [];
-        document.querySelectorAll('#d1_group_dest .check-btn.checked').forEach(b => dests.push(b.innerText));
-        let sounds = [];
-        document.querySelectorAll('#d1_group_sound .check-btn.checked').forEach(b => sounds.push(b.innerText));
-
-        let data = {
-            dests: dests,
-            sounds: sounds,
-            soundOther: document.getElementById('d1_sound_other').value,
-            river1: getSingleVal('d1_group_river1'),
-            river2: getSingleVal('d1_group_river2'),
-            look: getSingleVal('d1_group_look'),
-            show: getSingleVal('d1_group_show'),
-            want: document.getElementById('d1_most_want').value,
-            goal: document.getElementById('d1_my_goal').value,
-            color: document.getElementById('d1_mountain_color').value,
-            ef: document.getElementById('d1_eagle_fish').value,
-            h: document.getElementById('d1_h').value,
-            l: document.getElementById('d1_l').value,
-            quote: document.getElementById('d1_quote').value
-        };
-        localStorage.setItem('day1_data', JSON.stringify(data));
-        updateProgress();
-    }
-
-    function saveDay2() {
-        let data = {
-            hand: getSingleVal('d2_group_hand'),
-            clothes: getSingleVal('d2_group_clothes'),
-            wall: getSingleVal('d2_group_wall'),
-            roof: getSingleVal('d2_group_roof'),
-            readProof: document.getElementById('d2_read_proof').value,
-            itemWhy: document.getElementById('d2_item_why').value,
-            toParents: document.getElementById('d2_to_parents').value,
-            m1: getMatchVal('d2_m1'), m2: getMatchVal('d2_m2'), m3: getMatchVal('d2_m3'),
-            m4: getMatchVal('d2_m4'), m5: getMatchVal('d2_m5'), m6: getMatchVal('d2_m6'),
-            h: document.getElementById('d2_h').value,
-            item: document.getElementById('d2_item').value
-        };
-        localStorage.setItem('day2_data', JSON.stringify(data));
-        updateProgress();
-    }
-
-    function saveDay3() {
-        let data = {
-            feel: document.getElementById('d3_feel').value,
-            lookLike: document.getElementById('d3_look_like').value,
-            top: document.getElementById('d3_top').value,
-            smooth: document.getElementById('d3_smooth').value,
-            dir: document.getElementById('d3_dir').value,
-            build: getSingleVal('d3_group_build'),
-            bridge: getSingleVal('d3_group_bridge'),
-            s1: document.getElementById('d3_select1').value,
-            s2: document.getElementById('d3_select2').value,
-            s3: document.getElementById('d3_select3').value,
-            wow: document.getElementById('d3_wow').value,
-            laugh: document.getElementById('d3_laugh').value,
-            letter: document.getElementById('d3_letter').value
-        };
-        localStorage.setItem('day3_data', JSON.stringify(data));
-        updateProgress();
-    }
-
-    function saveDay4() {
-        let data = {
-            m1: getMatchVal('d4_m1'), m2: getMatchVal('d4_m2'), m3: getMatchVal('d4_m3'),
-            m4: getMatchVal('d4_m4'), m5: getMatchVal('d4_m5'),
-            bagua: getSingleVal('d4_group_bagua'),
-            lionLeft: document.getElementById('d4_lion_left').value,
-            lionRight: document.getElementById('d4_lion_right').value,
-            rName: document.getElementById('d4_relic_name').value,
-            rSpeak: document.getElementById('d4_relic_speak').value,
-            riverThink: document.getElementById('d4_river_think').value,
-            poem: document.getElementById('d4_poem').value,
-            askDufu: document.getElementById('d4_ask_dufu').value
-        };
-        localStorage.setItem('day4_data', JSON.stringify(data));
-        updateProgress();
-    }
-
-    function getSingleVal(groupId) {
-        return document.querySelector('#' + groupId + ' .check-btn.checked')?.innerText || '';
-    }
-
-    function getMatchVal(btnId) {
-        return document.getElementById(btnId)?.classList.contains('found') ? 'found' : '';
-    }
-
-    function updateProgress() {
-        let p1 = calcProgress('day1_data', ['d1_img2', 'd1_img3'], 9);
-        let p2 = calcProgress('day2_data', ['d2_img1', 'd2_img2', 'd2_img3'], 10);
-        let p3 = calcProgress('day3_data', ['d3_img1', 'd3_img2', 'd3_img3', 'd3_img4'], 12);
-        let p4 = calcProgress('day4_data', ['d4_img1', 'd4_img2'], 8);
-
-        setBadge('d1', p1); setBadge('d2', p2); setBadge('d3', p3); setBadge('d4', p4);
-
-        let total = Math.round((p1 + p2 + p3) / 3);
-        document.getElementById('totalBar').style.width = total + '%';
-        document.getElementById('totalPercent').innerText = total + '%';
-
-        if(total >= 100 && !hasShownCert) {
-            hasShownCert = true;
-            showCertModal();
-        }
-    }
-
-    function calcProgress(dataKey, imgKeys, totalCount) {
-        let count = 0;
-        let data = localStorage.getItem(dataKey);
-        if(data) {
-            let obj = JSON.parse(data);
-            for(let k in obj) {
-                if(Array.isArray(obj[k]) && obj[k].length > 0) count++;
-                else if(typeof obj[k] === 'string' && obj[k].trim() !== '') count++;
-            }
-        }
-        imgKeys.forEach(k => { if(localStorage.getItem(k)) count++; });
-        return Math.min(Math.round((count / totalCount) * 100), 100);
-    }
-
-    function setBadge(id, percent) {
-        let badge = document.getElementById('badge_' + id);
-        let text = document.getElementById('text_' + id);
-        text.innerText = percent + '%';
-        if(percent >= 100) { badge.innerText = "已通关"; badge.className = "status-badge completed"; }
-        else if(percent > 0) { badge.innerText = "探索中"; badge.className = "status-badge in-progress"; }
-        else { badge.innerText = "未开始"; badge.className = "status-badge not-started"; }
-    }
-
-    function openCertBadgeDirectly() {
-        let p1 = calcProgress('day1_data', ['d1_img2', 'd1_img3'], 9);
-        let p2 = calcProgress('day2_data', ['d2_img1', 'd2_img2', 'd2_img3'], 10);
-        let p3 = calcProgress('day3_data', ['d3_img1', 'd3_img2', 'd3_img3', 'd3_img4'], 12);
-        let total = Math.round((p1 + p2 + p3) / 3);
-
-        if(total >= 100) {
-            showCertModal();
-        } else {
-            alert(`目前主线完成度为 ${total}%，请先完成 Day 1 ~ Day 3 的主线研学任务再来查看勋章吧！加油！`);
-        }
-    }
-
-    function showCertModal() {
-        let name = localStorage.getItem('explorer_name') || '小探险家';
-        document.getElementById('certUserName').innerText = name;
-        
-        let now = new Date();
-        document.getElementById('certDate').innerText = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-        document.getElementById('certModal').classList.add('active');
-    }
-
-    function closeCertModal() {
-        document.getElementById('certModal').classList.remove('active');
-    }
-
-    // 优化的手机端友好导出函数
-    function exportDocument() {
-        closeCertModal();
-        document.body.classList.add('export-mode');
-        window.scrollTo(0, 0);
-        
-        // 电脑端仍保留自动调起打印保底
-        if(!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-            setTimeout(() => { window.print(); }, 500);
-        }
-    }
-
-    function exitExportMode() {
-        document.body.classList.remove('export-mode');
-        goToPage('page-map');
-    }
-
-    function resetAllData() {
-        if(confirm("确定要清空所有记录吗？")) {
-            localStorage.clear();
-            location.reload();
-        }
-    }
-
-    window.onload = function() {
-        let name = localStorage.getItem('explorer_name');
-        if(name) {
-            document.getElementById('explorerNameInput').value = name;
-            document.querySelectorAll('.displayUserName').forEach(e => e.innerText = name);
-            document.getElementById('bookCoverScreen').classList.add('opened');
-        }
-
-        restoreDay1(); restoreDay2(); restoreDay3(); restoreDay4();
-
-        restoreImg('d1_img2', 'd1_preview2', 'd1_box2', 'd1_zone2');
-        restoreImg('d1_img3', 'd1_preview3', 'd1_box3', 'd1_zone3');
-        restoreImg('d2_img1', 'd2_preview1', 'd2_box1', 'd2_zone1');
-        restoreImg('d2_img2', 'd2_preview2', 'd2_box2', 'd2_zone2');
-        restoreImg('d2_img3', 'd2_preview3', 'd2_box3', 'd2_zone3');
-        restoreImg('d3_img1', 'd3_preview1', 'd3_box1', 'd3_zone1');
-        restoreImg('d3_img2', 'd3_preview2', 'd3_box2', 'd3_zone2');
-        restoreImg('d3_img3', 'd3_preview3', 'd3_box3', 'd3_zone3');
-        restoreImg('d3_img4', 'd3_preview4', 'd3_box4', 'd3_zone4');
-        restoreImg('d4_img1', 'd4_preview1', 'd4_box1', 'd4_zone1');
-        restoreImg('d4_img2', 'd4_preview2', 'd4_box2', 'd4_zone2');
-
-        updateProgress();
-    };
-
-    function restoreDay1() {
-        let saved = localStorage.getItem('day1_data'); if(!saved) return;
-        let obj = JSON.parse(saved);
-        if(obj.dests) document.querySelectorAll('#d1_group_dest .check-btn').forEach(b => { if(obj.dests.includes(b.innerText)) b.classList.add('checked'); });
-        if(obj.sounds) document.querySelectorAll('#d1_group_sound .check-btn').forEach(b => { if(obj.sounds.includes(b.innerText)) b.classList.add('checked'); });
-        if(obj.soundOther) document.getElementById('d1_sound_other').value = obj.soundOther;
-        restoreSingleGroup('d1_group_river1', obj.river1);
-        restoreSingleGroup('d1_group_river2', obj.river2);
-        restoreSingleGroup('d1_group_look', obj.look);
-        restoreSingleGroup('d1_group_show', obj.show);
-        if(obj.want) document.getElementById('d1_most_want').value = obj.want;
-        if(obj.goal) document.getElementById('d1_my_goal').value = obj.goal;
-        if(obj.color) document.getElementById('d1_mountain_color').value = obj.color;
-        if(obj.ef) document.getElementById('d1_eagle_fish').value = obj.ef;
-        if(obj.h) document.getElementById('d1_h').value = obj.h;
-        if(obj.l) document.getElementById('d1_l').value = obj.l;
-        if(obj.quote) document.getElementById('d1_quote').value = obj.quote;
-    }
-
-    function restoreDay2() {
-        let saved = localStorage.getItem('day2_data'); if(!saved) return;
-        let obj = JSON.parse(saved);
-        restoreSingleGroup('d2_group_hand', obj.hand);
-        restoreSingleGroup('d2_group_clothes', obj.clothes);
-        restoreSingleGroup('d2_group_wall', obj.wall);
-        restoreSingleGroup('d2_group_roof', obj.roof);
-        restoreMatchBtn('d2_m1', obj.m1); restoreMatchBtn('d2_m2', obj.m2); restoreMatchBtn('d2_m3', obj.m3);
-        restoreMatchBtn('d2_m4', obj.m4); restoreMatchBtn('d2_m5', obj.m5); restoreMatchBtn('d2_m6', obj.m6);
-        if(obj.h) document.getElementById('d2_h').value = obj.h;
-        if(obj.readProof) document.getElementById('d2_read_proof').value = obj.readProof;
-        if(obj.item) document.getElementById('d2_item').value = obj.item;
-        if(obj.itemWhy) document.getElementById('d2_item_why').value = obj.itemWhy;
-        if(obj.toParents) document.getElementById('d2_to_parents').value = obj.toParents;
-    }
-
-    function restoreDay3() {
-        let saved = localStorage.getItem('day3_data'); if(!saved) return;
-        let obj = JSON.parse(saved);
-        restoreSingleGroup('d3_group_build', obj.build);
-        restoreSingleGroup('d3_group_bridge', obj.bridge);
-        if(obj.feel) document.getElementById('d3_feel').value = obj.feel;
-        if(obj.lookLike) document.getElementById('d3_look_like').value = obj.lookLike;
-        if(obj.top) document.getElementById('d3_top').value = obj.top;
-        if(obj.smooth) document.getElementById('d3_smooth').value = obj.smooth;
-        if(obj.dir) document.getElementById('d3_dir').value = obj.dir;
-        if(obj.s1) document.getElementById('d3_select1').value = obj.s1;
-        if(obj.s2) document.getElementById('d3_select2').value = obj.s2;
-        if(obj.s3) document.getElementById('d3_select3').value = obj.s3;
-        if(obj.wow) document.getElementById('d3_wow').value = obj.wow;
-        if(obj.laugh) document.getElementById('d3_laugh').value = obj.laugh;
-        if(obj.letter) document.getElementById('d3_letter').value = obj.letter;
-    }
-
-    function restoreDay4() {
-        let saved = localStorage.getItem('day4_data'); if(!saved) return;
-        let obj = JSON.parse(saved);
-        restoreMatchBtn('d4_m1', obj.m1); restoreMatchBtn('d4_m2', obj.m2); restoreMatchBtn('d4_m3', obj.m3);
-        restoreMatchBtn('d4_m4', obj.m4); restoreMatchBtn('d4_m5', obj.m5);
-        restoreSingleGroup('d4_group_bagua', obj.bagua);
-        if(obj.lionLeft) document.getElementById('d4_lion_left').value = obj.lionLeft;
-        if(obj.lionRight) document.getElementById('d4_lion_right').value = obj.lionRight;
-        if(obj.rName) document.getElementById('d4_relic_name').value = obj.rName;
-        if(obj.rSpeak) document.getElementById('d4_relic_speak').value = obj.rSpeak;
-        if(obj.riverThink) document.getElementById('d4_river_think').value = obj.riverThink;
-        if(obj.poem) document.getElementById('d4_poem').value = obj.poem;
-        if(obj.askDufu) document.getElementById('d4_ask_dufu').value = obj.askDufu;
-    }
-
-    function restoreSingleGroup(groupId, value) {
-        if(!value) return;
-        document.querySelectorAll('#' + groupId + ' .check-btn').forEach(b => {
-            if(b.innerText === value) b.classList.add('checked');
-        });
-    }
-
-    function restoreMatchBtn(btnId, value) {
-        let btn = document.getElementById(btnId);
-        if(value === 'found' && btn) {
-            btn.classList.add('found');
-            btn.innerText = "✅ 已找到";
-        }
-    }
-
-    function restoreImg(key, imgId, boxId, zoneId) {
-        let base64 = localStorage.getItem(key);
-        if(base64) {
-            document.getElementById(imgId).src = base64;
-            document.getElementById(boxId).style.display = 'block';
-            if(zoneId && document.getElementById(zoneId)) document.getElementById(zoneId).style.display = 'none';
-        }
-    }
-</script>
-
-</body>
-</html>
