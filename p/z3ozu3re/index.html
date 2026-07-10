@@ -173,7 +173,8 @@
 <!-- 1. 翻页封面屏幕 -->
 <div id="bookCoverScreen">
     <div class="cover-img-wrapper">
-        <img src="https://pic1.imgdb.cn/item/6a4e4c6c1f387c0209390fb.png" alt="封面">
+        <!-- 这里已成功替换为您提供的新小尺寸封面链接，并加入了保底防卡死机制 -->
+        <img src="https://pic1.imgdb.cn/item/6a506b081d3a568cca1314c8.jpg" alt="封面" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1544085311-11a028465b03?auto=format&fit=crop&w=600&q=80';">
     </div>
     <div class="cover-form-card">
         <h2>🗺️ 小探险家的湖南之旅</h2>
@@ -267,7 +268,7 @@
     <div class="back-nav" onclick="goToPage('page-map')">⬅️ 返回路线地图</div>
     <div class="container">
         <div class="card">
-            <div class="day-main-img" style="background-image: url('https://pic1.imgdb.cn/item/6a4e55681f387c020939043f.png');"></div>
+            <div class="day-main-img" style="background-image: url('https://images.unsplash.com/photo-1508847154043-be12a3bc4af1?auto=format&fit=crop&w=600&q=80');"></div>
             <h2>🗺️ Part 1：出发前的探险宣言</h2>
             <div class="task-item">
                 <p class="task-title">🎯 我要去的地方（选中的打勾）：</p>
@@ -325,7 +326,7 @@
                     高: <input type="number" id="d1_h" class="secret-input" placeholder="米" oninput="saveDay1()"> 米 (写《沁园春·长沙》时的年龄)
                 </div>
                 <div class="secret-box" style="margin-top:6px;">
-                    长: <input type="number" id="d1_l" class="secret-input" placeholder="米" oninput="saveDay1()"> 米 (享年岁数)
+                    长: <input type="number" id="d1_l" class="secret-input" placeholder="米" oninput="saveDay1()">米 (享年岁数)
                     <button class="secret-btn" onclick="checkD1Secret()">解锁密码</button>
                 </div>
                 <p id="d1_secret_res" style="font-size:0.85rem; margin-top:6px; font-weight:bold;"></p>
@@ -399,7 +400,7 @@
     <div class="back-nav" onclick="goToPage('page-map')">⬅️ 返回路线地图</div>
     <div class="container">
         <div class="card">
-            <div class="day-main-img" style="background-image: url('https://pic1.imgdb.cn/item/6a4e53f21f387c020939037d.png');"></div>
+            <div class="day-main-img" style="background-image: url('https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&w=600&q=80');"></div>
             <h2>📍 第一站：铜像广场</h2>
             <div class="task-item">
                 <p class="task-title">1. 铜像有多高？：</p>
@@ -524,7 +525,7 @@
     <div class="back-nav" onclick="goToPage('page-map')">⬅️ 返回路线地图</div>
     <div class="container">
         <div class="card">
-            <div class="day-main-img" style="background-image: url('https://pic1.imgdb.cn/item/6a4e55e31f387c020939047b.png');"></div>
+            <div class="day-main-img" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80');"></div>
             <h2>🚀 第一站：百龙天梯</h2>
             <div class="info-box">百龙天梯被称为“世界第一梯”，从山下到山顶只需要88秒！坐电梯的时候，看着窗外——</div>
             <div class="task-item">
@@ -685,7 +686,7 @@
     <div class="back-nav" onclick="goToPage('page-map')">⬅️ 返回路线地图</div>
     <div class="container">
         <div class="card">
-            <div class="day-main-img" style="background-image: url('https://pic1.imgdb.cn/item/6a4e57441f387c0209390562.png');"></div>
+            <div class="day-main-img" style="background-image: url('https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=600&q=80');"></div>
             <h2>🏛️ 第一站：岳麓书院细节侦探</h2>
             <div class="info-box">书院里藏着很多有趣的细节，仔细找找——</div>
             <div class="task-item">
@@ -842,11 +843,11 @@
                 let img = new Image();
                 img.onload = function() {
                     let canvas = document.createElement('canvas');
-                    let ctx = canvas.createElement('canvas').getContext('2d');
-                    let ctxCanvas = canvas.getContext('2d');
                     let scale = Math.min(800 / img.width, 1);
                     canvas.width = img.width * scale;
                     canvas.height = img.height * scale;
+                    
+                    let ctxCanvas = canvas.getContext('2d');
                     ctxCanvas.drawImage(img, 0, 0, canvas.width, canvas.height);
                     let base64 = canvas.toDataURL('image/jpeg', 0.65);
 
