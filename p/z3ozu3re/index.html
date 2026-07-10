@@ -131,7 +131,11 @@
         .cert-pure-toggle input { cursor: pointer; width: auto !important; margin: 0 !important; }
 
         .cert-badge { font-size: 3.5rem; margin-bottom: 10px; }
-        .cert-title { color: var(--primary); font-size: 1.35rem; font-weight: 800; margin-bottom: 8px; }
+        
+        /* 证书标题换行为优美的两排结构 */
+        .cert-title { color: var(--primary); font-size: 1.35rem; font-weight: 800; margin-bottom: 8px; line-height: 1.4; }
+        .cert-title span { display: block; }
+        
         .cert-name { font-size: 1.2rem; font-weight: bold; color: var(--secondary); border-bottom: 2px solid var(--accent); display: inline-block; padding: 0 10px 2px; margin: 8px 0; }
         .cert-desc { font-size: 0.85rem; color: #4a5568; line-height: 1.6; margin-bottom: 16px; text-align: justify; }
         .cert-footer { font-size: 0.78rem; color: #a0aec0; border-top: 1px dashed #cbd5e0; padding-top: 12px; display: flex; justify-content: space-between; }
@@ -149,11 +153,19 @@
         }
 
         /* 专属长卷卷首大图：默认状态隐藏，仅在导出长卷模式下浮现 */
-        .export-roll-header { display: none; width: 100%; max-width: 600px; margin: 0 auto 16px; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .export-roll-header { display: none; width: 100%; max-width: 600px; margin: 0 auto; overflow: hidden; }
         .export-roll-header img { width: 100%; height: auto; display: block; }
 
+        /* 随长卷页面自然滚动的提示卡片横幅（方式一） */
+        .export-roll-banner {
+            display: none; width: 100%; max-width: 600px; margin: 0 auto 16px;
+            background: #2d3748; color: white; padding: 14px 16px; text-align: center;
+            font-size: 0.88rem; font-weight: bold; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
         /* 纯净长图导出视图 (优化排版：保留原有手绘主图与上传图，隐去多余按钮) */
-        body.export-mode { background: #ffffff !important; padding: 20px 16px !important; }
+        body.export-mode { background: #ffffff !important; padding: 0 0 20px !important; }
         body.export-mode #bookCoverScreen,
         body.export-mode .cover-header,
         body.export-mode .total-progress-card,
@@ -166,8 +178,10 @@
         body.export-mode select,
         body.export-mode .route-switch { display: none !important; }
         
-        /* 核心微调：让封面大图在长卷最上方浮现出来 */
+        /* 方式一核心：大图完全置顶，操作横幅紧随其下，全部自然滚动 */
         body.export-mode .export-roll-header { display: block !important; }
+        body.export-mode .export-roll-banner { display: block !important; }
+        body.export-mode .container { padding: 0 16px !important; }
 
         body.export-mode .page-screen { display: block !important; margin-bottom: 30px; }
         body.export-mode .card { box-shadow: none !important; border: 1px dashed #cbd5e0 !important; margin-top: 10px !important; }
@@ -178,14 +192,10 @@
         body.export-mode .match-btn.found { display: inline-block !important; background: #c6f6d5 !important; color: #22543d !important; border: none !important; pointer-events: none; }
         body.export-mode .day-main-img { display: block !important; opacity: 1 !important; visibility: visible !important; }
 
-        .export-exit-banner { display: none; position: fixed; top: 0; left: 0; width: 100%; background: #2d3748; color: white; padding: 12px; text-align: center; font-size: 0.88rem; font-weight: bold; z-index: 5000; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-        body.export-mode .export-exit-banner { display: block; }
-        .exit-btn { background: var(--primary); color: white; border: none; padding: 4px 12px; border-radius: 6px; margin-left: 10px; cursor: pointer; font-size: 0.8rem; }
-
         @media print {
             body { background: white; color: black; padding: 0; }
-            #bookCoverScreen, .cover-header, .total-progress-card, .back-nav, .modal-overlay, .photo-upload-zone, .preview-tools, .badge-query-btn, .secret-btn, .export-exit-banner { display: none !important; }
-            .export-roll-header { display: block !important; }
+            #bookCoverScreen, .cover-header, .total-progress-card, .back-nav, .modal-overlay, .photo-upload-zone, .preview-tools, .badge-query-btn, .secret-btn { display: none !important; }
+            .export-roll-header, .export-roll-banner { display: block !important; }
             .page-screen { display: block !important; }
             .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
             .preview-container { display: block !important; border: 1px solid #aaa; }
@@ -194,13 +204,11 @@
 </head>
 <body>
 
-<div class="export-exit-banner" id="exitBanner">
-    📱 专属“湘聚韶华”游学画卷已生成。此页可下拉，看到全部的文字、手绘与行学照片。手机端可截屏保存，圆满留念。<button class="exit-btn" onclick="exitExportMode()">返回手册修改</button>
-</div>
-
-<!-- 专供长卷顶部的卷首画面展示（仅在导出模式下生效） -->
 <div class="export-roll-header" id="rollHeaderImage">
-    <img src="https://pic1.imgdb.cn/item/6a50f0eab5d53aca2a2db3d9.jpg" alt="湘聚韶华游学画卷卷首">
+    <img src="https://pic1.imgdb.cn/item/6a50fd9db5d53aca2a2ddb2e.jpg" alt="“湘聚韶华”游学画卷卷首">
+</div>
+<div class="export-roll-banner" id="exitBanner">
+    📱 专属“湘聚韶华”游学画卷已生成。此页可下拉，看到全部的文字、手绘与行学照片。手机端可截屏保存，圆满留念。<button class="exit-btn" onclick="exitExportMode()" style="background: var(--primary); color: white; border: none; padding: 4px 12px; border-radius: 6px; margin-left: 10px; cursor: pointer; font-size: 0.8rem;">返回手册修改</button>
 </div>
 
 <div class="modal-overlay" id="certModal">
@@ -210,7 +218,10 @@
         </div>
         
         <div class="cert-badge">🏆</div>
-        <div class="cert-title">“湘聚韶华”湖南游学之旅通关荣誉证书</div>
+        <div class="cert-title">
+            <span>“湘聚韶华”湖南游学</span>
+            <span>通关荣誉证书</span>
+        </div>
         <p style="font-size:0.9rem; color:#718096; text-align: left;">亲爱的：</p>
         <div class="cert-name" id="certUserName">小探险家</div>
         <p class="cert-desc">在这次《小探险家的湖南之旅》研学探索中，你凭借敏锐的观察力、勇于探索的精神与满腔热忱，成功跨越长沙、韶山与张家界，圆满完成了所有主线研学任务！你不仅用双眼记录了湘江的壮阔与奇峰的秀丽，更用心体会了少年毛泽东“立志出乡关”的求索岁月。希望你在未来的日子里，继续带着这份好奇与觉察，知行合一，勇毅前行！</p>
@@ -228,8 +239,7 @@
 
 <div id="bookCoverScreen">
     <div class="cover-img-wrapper">
-        <!-- 点开的首屏封面图片：已圆满替换为你最新的艺术主图 -->
-        <img src="https://pic1.imgdb.cn/item/6a50f0eab5d53aca2a2db3d9.jpg" alt="“湘聚韶华”封面" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1544085311-11a028465b03?auto=format&fit=crop&w=600&q=80';">
+        <img src="https://pic1.imgdb.cn/item/6a50fd9db5d53aca2a2ddb2e.jpg" alt="“湘聚韶华”封面" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1544085311-11a028465b03?auto=format&fit=crop&w=600&q=80';">
     </div>
     <div class="cover-form-card">
         <h2>🗺️ “湘聚韶华”湖南游学之旅</h2>
@@ -523,7 +533,7 @@
             <h2>📍 第三站：毛泽东纪念馆</h2>
             <div class="task-item">
                 <div class="match-row"><span>🧥 73个补丁的睡衣</span><button class="match-btn" id="d2_m4" onclick="toggleMatch(this, saveDay2)">未找到</button></div>
-                <div class="match-row"><span>📜 亲自写过的手稿</span><button class="match-btn" id="d2_m5" onclick="toggleMatch(this, saveDay2)">未找到</button></div>
+                <div class="match-row"><span>📜 亲自写过的手稿</span><button class="match-btn" id="d2_m4" onclick="toggleMatch(this, saveDay2)">未找到</button></div>
                 <div class="match-row"><span>📚 读过的书</span><button class="match-btn" id="d2_m6" onclick="toggleMatch(this, saveDay2)">未找到</button></div>
             </div>
             <div class="task-item">
@@ -578,7 +588,6 @@
         <div class="card">
             <div class="day-main-img" style="background-image: url('https://pic1.imgdb.cn/item/6a4e55e31f387c020939047b.png');"></div>
             <h2>🚀 第一站：百龙天梯</h2>
-            <div class="info-box">百龙天梯被称为“世界第一梯”，从山下到山顶只需要88秒！坐电梯的时候，看着窗外——</div>
             <div class="task-item">
                 <p class="task-title">✏️ 观察填空：</p>
                 <p style="font-size:0.85rem; color:#4a5568;">· 电梯上升的时候，你看到山在“往下掉”还是“往上长”？</p>
@@ -598,7 +607,6 @@
 
         <div class="card">
             <h2>🎬 第二站：袁家界·寻找“哈利路亚山”</h2>
-            <div class="info-box">🎬 还记得《阿凡达》电影里的“悬浮山”吗？它的原型就是袁家界的“乾坤柱”（也叫“哈利路亚山”）！找到它，仔细看——</div>
             <div class="task-item">
                 <p class="task-title">✏️ 观察填空：</p>
                 <p style="font-size:0.85rem; color:#4a5568;">· 乾坤柱的顶部是尖的还是平的？</p>
@@ -626,7 +634,6 @@
 
         <div class="card">
             <h2>🌉 第三站：走天下第一桥</h2>
-            <div class="info-box">天下第一桥是一座天然形成的石桥，横跨两座山峰之间，距谷底约350米！</div>
             <div class="task-item">
                 <p class="task-title">💡 想一想：你觉得这座“桥”是怎么形成的？是人工修的，还是大自然自己“造”的？打勾：</p>
                 <div class="check-group" id="d3_group_bridge">
@@ -652,7 +659,6 @@
 
         <div class="card">
             <h2>🔍 第四站：天子山当一回“山形侦探”</h2>
-            <div class="info-box">天子山被誉为“缩小的仙境，扩大的盆景”。站在观景台上，仔细看对面的山峰——</div>
             <div class="task-item">
                 <div class="match-box">
                     <div style="font-weight:bold; font-size:0.88rem; color:#2b6cb0;">🖊️ 御笔峰：</div>
@@ -734,7 +740,6 @@
         <div class="card">
             <div class="day-main-img" style="background-image: url('https://pic1.imgdb.cn/item/6a4e57441f387c0209390562.png');"></div>
             <h2>🏛️ 第一站：岳麓书院细节侦探</h2>
-            <div class="info-box">书院里藏着很多有趣的细节，仔细找找——</div>
             <div class="task-item">
                 <p class="task-title">✏️ 观察填空：</p>
                 <p style="font-size:0.85rem; color:#4a5568;">· 大门口的石狮子，左边那只脚下踩的是什么？</p>
@@ -769,15 +774,14 @@
             <h2>🖼️ 第二站：湖南省博物馆 (奇迹寻宝)</h2>
             <div class="task-item">
                 <p class="task-title">✅ 寻宝打勾：</p>
-                <div class="match-row"><span>💃 辛追夫人 (沉睡2000多年，皮肤仍有弹性)</span><button class="match-btn" id="d4_m1" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
-                <div class="match-row"><span>📜 T形帛画 (分天上、人间、地下三个世界)</span><button class="match-btn" id="d4_m2" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
-                <div class="match-row"><span>🪶 素纱襌衣 (仅48-49克，比鸡蛋还轻)</span><button class="match-btn" id="d4_m3" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
-                <div class="match-row"><span>🥣 千年藕片汤 (出土时碗里还有藕片)</span><button class="match-btn" id="d4_m4" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
-                <div class="match-row"><span>🗿 人面纹方鼎 (鼎的四面都有脸)</span><button class="match-btn" id="d4_m5" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
+                <div class="match-row"><span>💃 辛追夫人</span><button class="match-btn" id="d4_m1" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
+                <div class="match-row"><span>📜 T形帛画</span><button class="match-btn" id="d4_m2" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
+                <div class="match-row"><span>🪶 素纱襌衣</span><button class="match-btn" id="d4_m3" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
+                <div class="match-row"><span>🥣 千年藕片汤</span><button class="match-btn" id="d4_m4" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
+                <div class="match-row"><span>🗿 人面纹方鼎</span><button class="match-btn" id="d4_m5" onclick="toggleMatch(this, saveDay4)">未找到</button></div>
             </div>
             <div class="task-item" style="border-top:1px dashed #e2e8f0; padding-top:10px;">
                 <p class="task-title">🧠 如果文物会说话：</p>
-                <div class="info-box">选一件你最喜欢的文物，想象一下——如果它能开口说话，它会告诉你什么？</div>
                 <p style="font-size:0.85rem; color:#4a5568;">我选的文物 is：</p>
                 <input type="text" id="d4_relic_name" placeholder="文物名称..." oninput="saveDay4()">
                 <p style="font-size:0.85rem; color:#4a5568; margin-top:6px;">它会说：</p>
@@ -806,13 +810,10 @@
                 <div class="route-btn" id="d4_btn_not" onclick="switchD4Route('not')">🏠 没去/遥想</div>
             </div>
             <div id="d4_box_went">
-                <p style="font-size:0.88rem; font-weight:bold;">💭 想一想：</p>
                 <p style="font-size:0.85rem; color:#4a5568;">杜甫当年在湘江上漂泊的时候，他看到的江水和现在你看到的江水，有什么一样？有什么不一样？</p>
                 <textarea id="d4_river_think" rows="2" placeholder="写下你的思考..." oninput="saveDay4()"></textarea>
             </div>
             <div id="d4_box_not" style="display:none;">
-                <div class="info-box">杜甫晚年曾在湘江上漂泊，最后病逝在湘江的一条船上。他写了很多关于湖南的诗。</div>
-                <p style="font-size:0.88rem; font-weight:bold;">我认识的杜甫：</p>
                 <p style="font-size:0.85rem; color:#4a5568; margin-top:4px;">· 我背过的杜甫的诗：</p>
                 <input type="text" id="d4_poem" placeholder="写下诗句..." oninput="saveDay4()">
                 <p style="font-size:0.85rem; color:#4a5568; margin-top:6px;">· 如果见到杜甫，我想问他：</p>
