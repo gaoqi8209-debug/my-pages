@@ -138,10 +138,34 @@
         .action-btn.export-btn { background: var(--secondary); color: white; }
         .action-btn.close-btn { background: var(--primary); color: white; }
 
-        /* 打印样式支持导出文档 */
+        /* 纯净导出预览视图 */
+        body.export-mode { background: #ffffff !important; padding: 20px 16px !important; }
+        body.export-mode #bookCoverScreen,
+        body.export-mode .cover-header,
+        body.export-mode .total-progress-card,
+        body.export-mode .back-nav,
+        body.export-mode .modal-overlay,
+        body.export-mode .photo-upload-zone,
+        body.export-mode .preview-tools,
+        body.export-mode .badge-query-btn,
+        body.export-mode .secret-btn,
+        body.export-mode select,
+        body.export-mode .route-switch { display: none !important; }
+        body.export-mode .page-screen { display: block !important; margin-bottom: 30px; }
+        body.export-mode .card { box-shadow: none !important; border: 1px dashed #cbd5e0 !important; margin-top: 10px !important; }
+        body.export-mode input, body.export-mode textarea { border: none !important; background: transparent !important; font-weight: bold; color: #2d3748; padding: 0 !important; margin-top: 4px !important; pointer-events: none; resize: none; }
+        body.export-mode .check-btn { display: none !important; }
+        body.export-mode .check-btn.checked { display: inline-block !important; background: #e2e8f0 !important; border-color: #a0aec0 !important; color: #2d3748 !important; pointer-events: none; }
+        body.export-mode .match-btn { display: none !important; }
+        body.export-mode .match-btn.found { display: inline-block !important; background: #c6f6d5 !important; color: #22543d !important; border: none !important; pointer-events: none; }
+
+        .export-exit-banner { display: none; position: fixed; top: 0; left: 0; width: 100%; background: #2d3748; color: white; padding: 12px; text-align: center; font-size: 0.88rem; font-weight: bold; z-index: 5000; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        body.export-mode .export-exit-banner { display: block; }
+        .exit-btn { background: var(--primary); color: white; border: none; padding: 4px 12px; border-radius: 6px; margin-left: 10px; cursor: pointer; font-size: 0.8rem; }
+
         @media print {
             body { background: white; color: black; padding: 0; }
-            #bookCoverScreen, .cover-header, .total-progress-card, .back-nav, .modal-overlay, .photo-upload-zone, .preview-tools, .badge-query-btn, .secret-btn { display: none !important; }
+            #bookCoverScreen, .cover-header, .total-progress-card, .back-nav, .modal-overlay, .photo-upload-zone, .preview-tools, .badge-query-btn, .secret-btn, .export-exit-banner { display: none !important; }
             .page-screen { display: block !important; }
             .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
             .preview-container { display: block !important; border: 1px solid #aaa; }
@@ -149,6 +173,10 @@
     </style>
 </head>
 <body>
+
+<div class="export-exit-banner" id="exitBanner">
+    📱 现已生成纯净版研学档案！手机端长按截屏或保存即可。<button class="exit-btn" onclick="exitExportMode()">返回手册修改</button>
+</div>
 
 <div class="modal-overlay" id="certModal">
     <div class="cert-card">
@@ -962,7 +990,6 @@
 
         setBadge('d1', p1); setBadge('d2', p2); setBadge('d3', p3); setBadge('d4', p4);
 
-        // 主线仅由 Day 1 ~ Day 3 决定
         let total = Math.round((p1 + p2 + p3) / 3);
         document.getElementById('totalBar').style.width = total + '%';
         document.getElementById('totalPercent').innerText = total + '%';
@@ -996,7 +1023,6 @@
         else { badge.innerText = "未开始"; badge.className = "status-badge not-started"; }
     }
 
-    // 优化的核心入口逻辑
     function openCertBadgeDirectly() {
         let p1 = calcProgress('day1_data', ['d1_img2', 'd1_img3'], 9);
         let p2 = calcProgress('day2_data', ['d2_img1', 'd2_img2', 'd2_img3'], 10);
@@ -1004,7 +1030,7 @@
         let total = Math.round((p1 + p2 + p3) / 3);
 
         if(total >= 100) {
-            showCertModal(); // 通关后点击，变成永久的证书与导出传送门
+            showCertModal();
         } else {
             alert(`目前主线完成度为 ${total}%，请先完成 Day 1 ~ Day 3 的主线研学任务再来查看勋章吧！加油！`);
         }
@@ -1023,9 +1049,21 @@
         document.getElementById('certModal').classList.remove('active');
     }
 
+    // 优化的手机端友好导出函数
     function exportDocument() {
-        alert("准备为你导出研学手册打印/PDF文档！在弹出的打印窗口中，将目标选择为【另存为 PDF】即可存为电脑/手机本地文档。");
-        window.print();
+        closeCertModal();
+        document.body.classList.add('export-mode');
+        window.scrollTo(0, 0);
+        
+        // 电脑端仍保留自动调起打印保底
+        if(!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            setTimeout(() => { window.print(); }, 500);
+        }
+    }
+
+    function exitExportMode() {
+        document.body.classList.remove('export-mode');
+        goToPage('page-map');
     }
 
     function resetAllData() {
@@ -1045,7 +1083,6 @@
 
         restoreDay1(); restoreDay2(); restoreDay3(); restoreDay4();
 
-        // 恢复图片
         restoreImg('d1_img2', 'd1_preview2', 'd1_box2', 'd1_zone2');
         restoreImg('d1_img3', 'd1_preview3', 'd1_box3', 'd1_zone3');
         restoreImg('d2_img1', 'd2_preview1', 'd2_box1', 'd2_zone1');
