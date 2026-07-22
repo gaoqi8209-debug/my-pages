@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>八正道与转心实修 · 借物修心觉察签</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        inkDark: '#0F1012',
+                        inkCard: '#181A1D',
+                        goldLight: '#E5C383',
+                        goldMain: '#D4A359',
+                        goldDark: '#8C6730',
+                        cinnabar: '#9E2A2B',
+                        textLight: '#F0F2F5',
+                        textMuted: '#8C92A0',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: radial-gradient(circle at center, #1A1C20 0%, #0F1012 100%);
+            color: #F0F2F5;
+            font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        @keyframes sealGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 8px rgba(158, 42, 43, 0.4)) drop-shadow(0 0 15px rgba(212, 163, 89, 0.2));
+                transform: scale(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 16px rgba(158, 42, 43, 0.8)) drop-shadow(0 0 25px rgba(229, 195, 131, 0.4));
+                transform: scale(1.02);
+            }
+        }
+
+        .seal-glow {
+            animation: sealGlow 3.5s infinite ease-in-out;
+        }
+
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.34, 1.4, 0.64, 1);
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        .corner-decoration {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-color: #D4A359;
+            border-style: solid;
+            pointer-events: none;
+        }
+        .corner-tl { top: 8px; left: 8px; border-width: 2px 0 0 2px; }
+        .corner-tr { top: 8px; right: 8px; border-width: 2px 2px 0 0; }
+        .corner-bl { bottom: 8px; left: 8px; border-width: 0 0 2px 2px; }
+        .corner-br { bottom: 8px; right: 8px; border-width: 0 2px 2px 0; }
+
+        #toast {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between items-center px-4 py-6 max-w-md mx-auto relative select-none">
+
+    <!-- 顶部 Header -->
+    <header class="text-center mt-1 w-full">
+        <div class="text-[11px] font-medium tracking-widest text-goldMain uppercase mb-1">
+            ✦ 三十七道品 ✦
+        </div>
+
+        <div class="flex items-center justify-center mb-1">
+            <h1 class="text-2xl font-bold tracking-widest text-goldLight drop-shadow">八 正 道</h1>
+        </div>
+
+        <p class="text-xs text-textMuted tracking-widest mt-0.5">借物修心 · 看清贪嗔痴 · 建立离苦回路</p>
+        
+        <div class="mt-2 py-1.5 px-3 bg-inkCard/90 rounded-2xl border border-goldMain/30 inline-block shadow-inner max-w-[95%]">
+            <p class="text-[11px] text-goldLight/90 leading-relaxed">
+                每日对境抽签修持，点击下方按钮一键复制模板发群打卡！
+            </p>
+        </div>
+    </header>
+
+    <!-- 中部：卡片展示区 -->
+    <main class="w-full my-auto py-3 perspective-1000 flex justify-center">
+        <div id="cardContainer" class="w-full h-[450px] relative transform-style-3d cursor-pointer" onclick="handleCardClick()">
+            
+            <!-- 正面 -->
+            <div class="absolute inset-0 w-full h-full rounded-2xl bg-gradient-to-b from-[#1C1E22] to-[#121316] border-2 border-goldMain/50 backface-hidden flex flex-col items-center justify-between p-6 text-center shadow-2xl overflow-hidden">
+                <div class="corner-decoration corner-tl"></div>
+                <div class="corner-decoration corner-tr"></div>
+                <div class="corner-decoration corner-bl"></div>
+                <div class="corner-decoration corner-br"></div>
+
+                <div class="text-[11px] tracking-widest text-goldMain uppercase border-b border-goldMain/20 pb-1 w-full">
+                    ✦ 正思维 · 正业 · 正语 ✦
+                </div>
+
+                <div class="my-auto relative flex items-center justify-center">
+                    <svg class="w-48 h-48 seal-glow" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="25" y="25" width="150" height="150" stroke="#D4A359" stroke-width="1.2" rx="4"/>
+                        <rect x="35" y="35" width="130" height="130" stroke="#8C6730" stroke-width="0.8" rx="2"/>
+                        <rect x="25" y="25" width="150" height="150" stroke="#D4A359" stroke-width="1" transform="rotate(45 100 100)"/>
+                        
+                        <circle cx="100" cy="100" r="58" stroke="#E5C383" stroke-width="1" stroke-dasharray="6 3"/>
+                        <circle cx="100" cy="100" r="48" stroke="#D4A359" stroke-width="1.2"/>
+                        
+                        <rect x="76" y="76" width="48" height="48" fill="#9E2A2B" fill-opacity="0.25" stroke="#9E2A2B" stroke-width="1.8" rx="6"/>
+                        <rect x="80" y="80" width="40" height="40" stroke="#E5C383" stroke-width="0.8" rx="4"/>
+                        
+                        <text x="100" y="107" font-family="serif" font-size="22" font-weight="bold" fill="#E5C383" text-anchor="middle">觉</text>
+                    </svg>
+                </div>
+
+                <div class="w-full">
+                    <p class="text-xs text-goldLight tracking-widest font-medium">培养新习惯，建立新回路</p>
+                    <p class="text-[10px] text-textMuted mt-1">点击卡片或点击下方按钮抽签</p>
+                </div>
+            </div>
+
+            <!-- 背面 -->
+            <div class="absolute inset-0 w-full h-full rounded-2xl bg-[#15171A] border-2 border-goldMain/60 rotate-y-180 backface-hidden flex flex-col justify-between p-5 shadow-2xl overflow-y-auto">
+                <div class="corner-decoration corner-tl"></div>
+                <div class="corner-decoration corner-tr"></div>
+                <div class="corner-decoration corner-bl"></div>
+                <div class="corner-decoration corner-br"></div>
+
+                <div>
+                    <div class="flex items-center justify-between pb-2 border-b border-goldMain/20">
+                        <span id="cardCategory" class="text-xs font-bold px-3 py-1 rounded-full bg-goldMain/15 text-goldLight border border-goldMain/30">
+                            --
+                        </span>
+                        <span id="cardNo" class="text-[10px] text-textMuted tracking-wider">NO.01 / 14</span>
+                    </div>
+                    
+                    <h2 id="cardTitle" class="text-base font-bold text-goldLight mt-2 mb-2 tracking-wide">
+                        --
+                    </h2>
+
+                    <div class="mb-2.5">
+                        <p class="text-[10px] font-semibold text-goldMain uppercase tracking-wider mb-0.5">【教理原理】</p>
+                        <p id="cardPrinciple" class="text-[11px] text-textMuted leading-relaxed bg-inkDark/70 p-2 rounded border border-goldMain/10">
+                            --
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="text-[10px] font-semibold text-goldLight uppercase tracking-wider mb-0.5">【今日唯一对境任务】</p>
+                        <div id="cardTask" class="text-xs text-textLight leading-relaxed bg-inkDark/90 p-2.5 rounded-lg border border-goldMain/30 shadow-inner font-medium">
+                            --
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-2 border-t border-dashed border-goldMain/20 text-[10px] text-center text-goldMain/70 tracking-widest mt-2">
+                    借假修真 · 直面内心 · 离苦得乐
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- 底部按钮 -->
+    <footer class="w-full space-y-2.5 mb-1">
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="drawRandomCard()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-goldMain to-goldDark text-inkDark font-bold text-sm shadow-lg active:scale-95 transition-all flex items-center justify-center space-x-1.5 border border-goldLight/30">
+                <span>🎲</span>
+                <span>随缘抽签</span>
+            </button>
+            <button onclick="drawDailyCard()" class="w-full py-3 px-4 rounded-xl bg-inkCard border border-goldMain/40 text-goldLight font-medium text-sm shadow-md active:scale-95 transition-all flex items-center justify-center space-x-1.5">
+                <span>📅</span>
+                <span>每日一签</span>
+            </button>
+        </div>
+
+        <button id="copyBtn" onclick="copyTemplate()" class="hidden w-full py-3 px-4 rounded-xl bg-gradient-to-r from-goldLight via-goldMain to-goldDark text-inkDark font-bold text-sm shadow-xl active:scale-95 transition-all flex items-center justify-center space-x-2 border border-goldLight/50">
+            <span>📋</span>
+            <span>一键复制打卡模板</span>
+        </button>
+    </footer>
+
+    <!-- Toast 弹窗 -->
+    <div id="toast" class="fixed top-12 left-1/2 -translate-x-1/2 bg-goldMain text-inkDark font-semibold text-xs px-5 py-3 rounded-full shadow-2xl opacity-0 pointer-events-none text-center max-w-[85%] z-50 border border-goldLight">
+        已复制打卡模板，快去微信群发文字分享心得吧！
+    </div>
+
+    <script>
+        // 彻底拆解为 14 张单一指令卡
+        const cardsData = [
+            // --- 1. 八正道：正语 ---
+            { 
+                category: "🗣️ 八正道·正语", 
+                title: "【察两舌·只讲客观事实】", 
+                principle: "正语者，谓远离妄语、离间语、粗恶语、绮语。大的口业容易发现，真正要觉察的是暗藏在话里的微细心念。【练习】：说话前先停一秒，觉察自己的动机；减少不需要的废话。", 
+                task: "【今日任务】：开口前强制暂停一秒，觉察自己是否有“暗藏损人利己”或“只顾表现自己”的心念。今天只讲客观事实。" 
+            },
+            { 
+                category: "🗣️ 八正道·正语", 
+                title: "【察妄语·对治生存焦虑】", 
+                principle: "正语者，谓远离妄语、离间语、粗恶语、绮语。大的口业容易发现，真正要觉察的是暗藏在话里的微细心念。【练习】：说话前先停一秒，觉察自己的动机；减少不需要的废话。", 
+                task: "【今日任务】：在商务沟通或日常对话中，直视自己是否因“生存焦虑”或“匮乏感”而想说慌、夸大。今天坚持讲诚实话。" 
+            },
+            { 
+                category: "🗣️ 八正道·正语", 
+                title: "【察绮语·随喜赞叹他人】", 
+                principle: "正语者，谓远离妄语、离间语、粗恶语、绮语。大的口业容易发现，真正要觉察的是暗藏在话里的微细心念。【练习】：说话前先停一秒，觉察自己的动机；多看别人的优点并随喜赞叹。", 
+                task: "【今日任务】：觉察大脑想聊八卦、废话填补内心空虚的念头，立刻止住。今天找到一个人，真心地做一次随喜赞叹。" 
+            },
+            { 
+                category: "🗣️ 八正道·正语", 
+                title: "【察恶语·停止冷讽挖苦】", 
+                principle: "正语者，谓远离妄语、离间语、粗恶语、绮语。大的口业容易发现，真正要觉察的是暗藏在话里的微细心念。【练习】：说话前先停一秒，觉察自己的动机；减少不需要的废话。", 
+                task: "【今日任务】：觉察自己是否讲着温柔的话却暗藏讽刺、挖苦对方的心。今天坚决不说一句伤害或背地议论他人的话。" 
+            },
+
+            // --- 2. 八正道：正业 ---
+            { 
+                category: "📱 八正道·正业", 
+                title: "【清理算法·少看 15 分钟手机】", 
+                principle: "正业是正确的行为，也就是清净业。内外是一如的，外境干净，内心就会得到清洗，生命就会朝清净的方向走。", 
+                task: "【今日任务】：查看历史记录，主动向算法点击「不感兴趣、不要推荐」。今天比平时少用 15 分钟手机，斩断无意义资讯捆绑。" 
+            },
+            { 
+                category: "📱 八正道·正业", 
+                title: "【清理联络簿·带着慈悲善断】", 
+                principle: "正业是正确的行为，也就是清净业。内外是一如的，外境干净，内心就会得到清洗，生命就会朝清净的方向走。", 
+                task: "【今日任务】：打开手机通讯录，带着慈悲与感恩心默默感谢缘分，删除 3 个没有必要、已无交集的联络人，随手清干净。" 
+            },
+            { 
+                category: "📱 八正道·正业", 
+                title: "【卸载应用·斩断虚荣诱惑】", 
+                principle: "正业是正确的行为，也就是清净业。内外是一如的，外境干净，内心就会得到清洗，生命就会朝清净的方向走。", 
+                task: "【今日任务】：果断卸载手机里 1 个不再需要、或诱发虚荣心/浪费时间的 APP，清理诱惑大脑的短影音与消息推送。" 
+            },
+
+            // --- 3. 八正道：正思维 ---
+            { 
+                category: "👚 八正道·正思维", 
+                title: "【对治贪念·处置高价闲置衣物】", 
+                principle: "不是为了清理而清理，是为了借物修心；被遗忘的角落中，看清贪嗔痴，对症下药。【要求】：局部空间清理，藉由物品回看自己的心。", 
+                task: "【今日任务】：翻出当年跟风买下、标签未拆或极少穿的高价衣物。直视当年为了“肉身被赞美”产生的虚荣与执著（观身不净），妥善送人或处理。" 
+            },
+            { 
+                category: "👚 八正道·正思维", 
+                title: "【对治我执·清理囤积杂物】", 
+                principle: "不是为了清理而清理，是为了借物修心；被遗忘的角落中，看清贪嗔痴，对症下药。【要求】：局部空间清理，藉由物品回看自己的心。", 
+                task: "【今日任务】：在角落找一件很久没用、当下也用不到，但丢掉却喊“万一以后要用呢”的杂物。直视不安与匮乏感，认清它不代表“我”（观法无我），果断扔掉。" 
+            },
+
+            // --- 4. 三十七道品：转心实修 ---
+            { 
+                category: "🧘 三十七道品·转心实修", 
+                title: "【心散乱对治·练习「定」】", 
+                principle: "外境或许有错，但痛苦绝对来自于我执。修持不为强求事事变好，只为大量减少痛苦。功课核心在于建立“离苦回路”。", 
+                task: "【今日任务】：今天当感到心念散乱、浮躁无法专注时，不纠缠外境，立刻直面心念，练习 3 分钟“定”（专注于呼吸或眼前当下物，让心沉静）。" 
+            },
+            { 
+                category: "🧘 三十七道品·转心实修", 
+                title: "【太紧绷对治·练习「轻安」】", 
+                principle: "外境或许有错，但痛苦绝对来自于我执。修持不为强求事事变好，只为大量减少痛苦。功课核心在于建立“离苦回路”。", 
+                task: "【今日任务】：今天当感到身心紧张、太拼太累时，不纠缠外境，立刻直面紧绷，练习 3 分钟“轻安”（深呼深吸，放松肩膀与面部肌肉）。" 
+            },
+            { 
+                category: "🧘 三十七道品·转心实修", 
+                title: "【微记录实修·发语音转文字】", 
+                principle: "功课的核心在于每天培养新习惯，让它慢慢变成你大脑的新回路——“离苦回路”。", 
+                task: "【今日任务】：今天每转心/觉察一次，立刻用手机工具发送一段“语音转文字”记录下当时的心念，晚上回顾一次。" 
+            },
+            { 
+                category: "🧘 三十七道品·转心实修", 
+                title: "【微记录实修·贴修心便笺】", 
+                principle: "功课的核心在于每天培养新习惯，让它慢慢变成你大脑的新回路——“离苦回路”。", 
+                task: "【今日任务】：在工位或书桌不显眼处贴一张专用的“修心便笺”，今天每转心一次，在上面随时写下一个关键词记录。" 
+            },
+            { 
+                category: "🧘 三十七道品·转心实修", 
+                title: "【微记录实修·拨念珠/计数器】", 
+                principle: "功课的核心在于每天培养新习惯，让它慢慢变成你大脑的新回路——“离苦回路”。", 
+                task: "【今日任务】：随身或案头放一串念珠/计数器。今天每成功转心一次，拨一颗珠子或按一下计数器，晚上统计转心次数。" 
+            }
+        ];
+
+        let currentCard = null;
+        let isFlipped = false;
+
+        function handleCardClick() {
+            if (!isFlipped) {
+                drawRandomCard();
+            }
+        }
+
+        function updateCardDOM(card, index) {
+            currentCard = card;
+            document.getElementById('cardCategory').innerText = card.category;
+            document.getElementById('cardNo').innerText = `NO.${(index + 1).toString().padStart(2, '0')} / 14`;
+            document.getElementById('cardTitle').innerText = card.title;
+            document.getElementById('cardPrinciple').innerText = card.principle;
+            document.getElementById('cardTask').innerText = card.task;
+        }
+
+        function showCard() {
+            const container = document.getElementById('cardContainer');
+            const copyBtn = document.getElementById('copyBtn');
+
+            if (!isFlipped) {
+                container.classList.add('rotate-y-180');
+                isFlipped = true;
+            }
+            copyBtn.classList.remove('hidden');
+        }
+
+        function drawRandomCard() {
+            const randomIndex = Math.floor(Math.random() * cardsData.length);
+            const selectedCard = cardsData[randomIndex];
+
+            if (isFlipped) {
+                const container = document.getElementById('cardContainer');
+                container.classList.remove('rotate-y-180');
+                isFlipped = false;
+                setTimeout(() => {
+                    updateCardDOM(selectedCard, randomIndex);
+                    showCard();
+                }, 400);
+            } else {
+                updateCardDOM(selectedCard, randomIndex);
+                showCard();
+            }
+        }
+
+        function drawDailyCard() {
+            const today = new Date();
+            const dayOfMonth = today.getDate();
+            const dailyIndex = (dayOfMonth - 1) % cardsData.length;
+            const selectedCard = cardsData[dailyIndex];
+
+            if (isFlipped) {
+                const container = document.getElementById('cardContainer');
+                container.classList.remove('rotate-y-180');
+                isFlipped = false;
+                setTimeout(() => {
+                    updateCardDOM(selectedCard, dailyIndex);
+                    showCard();
+                }, 400);
+            } else {
+                updateCardDOM(selectedCard, dailyIndex);
+                showCard();
+            }
+        }
+
+        function copyTemplate() {
+            if (!currentCard) return;
+
+            const copyText = `🪞【八正道 · 借物修心觉察打卡】
+抽取签卡：${currentCard.title}（${currentCard.category}）
+【今日任务】：${currentCard.task}
+
+--- ✍️ 我的三句话觉察 ---
+【境·对境修持】：今天在（请填写：如练习轻安/说话前/清理杂物时）
+【觉·微细心念】：觉察到自己升起了（请填写：如紧张紧绷/证明欲望/匮乏感）
+【转·转心离苦】：通过（请填写：停一秒/呼气放松/果断丢弃），心念转为（请填写：清凉/轻松/放下的安详）
+------------------------
+✦ 借假修真 · 培养新习惯 · 建立新回路 ✦`;
+
+            navigator.clipboard.writeText(copyText).then(() => {
+                showToast("已复制打卡模板，快去微信群发文字分享心得吧！");
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = copyText;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast("已复制打卡模板，快去微信群发文字分享心得吧！");
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
