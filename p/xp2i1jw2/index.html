@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>365能歌善舞 · 境中观察</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mandalaDark: '#0E1821',   // 深绀青背景
+                        mandalaCard: '#13222F',   // 卡片深色底
+                        goldLight: '#F2D388',     // 明亮琥珀金
+                        goldMain: '#C59B27',      // 经典法器金
+                        goldDark: '#8A6A1A',      // 暗金边框
+                        textLight: '#E6E8E6',     // 月白文字
+                        textMuted: '#9CA3AF',     // 寂静灰
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 页面基础 */
+        body {
+            background: radial-gradient(circle at center, #172837 0%, #080E14 100%);
+            color: #E6E8E6;
+            font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 曼陀罗图腾金光呼吸效 */
+        @keyframes mandalaGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(197, 155, 39, 0.4)) drop-shadow(0 0 20px rgba(197, 155, 39, 0.2));
+                transform: scale(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 20px rgba(242, 211, 136, 0.8)) drop-shadow(0 0 35px rgba(197, 155, 39, 0.5));
+                transform: scale(1.02);
+            }
+        }
+
+        .mandala-glow {
+            animation: mandalaGlow 4s infinite ease-in-out;
+        }
+
+        /* 3D 卡片翻转效果 */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.34, 1.4, 0.64, 1);
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* 古朴边角装点 */
+        .corner-decoration {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-color: #C59B27;
+            border-style: solid;
+            pointer-events: none;
+        }
+        .corner-tl { top: 8px; left: 8px; border-width: 2px 0 0 2px; }
+        .corner-tr { top: 8px; right: 8px; border-width: 2px 2px 0 0; }
+        .corner-bl { bottom: 8px; left: 8px; border-width: 0 0 2px 2px; }
+        .corner-br { bottom: 8px; right: 8px; border-width: 0 2px 2px 0; }
+
+        /* Toast 弹窗动画 */
+        #toast {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between items-center px-4 py-6 max-w-md mx-auto relative select-none">
+
+    <!-- 顶部 Header -->
+    <header class="text-center mt-2 w-full">
+        <!-- 最上方活动阶段标记 -->
+        <div class="text-[11px] font-medium tracking-widest text-goldMain uppercase mb-1">
+            ✦ 365能歌善舞 · 第三个月 ✦
+        </div>
+
+        <!-- 主标题：境中观察（已彻底去掉粉色莲花符号，纯净金字） -->
+        <div class="flex items-center justify-center mb-1">
+            <h1 class="text-2xl font-bold tracking-widest text-goldLight drop-shadow">境 中 观 察</h1>
+        </div>
+
+        <!-- 副标题 -->
+        <p class="text-xs text-textMuted tracking-widest mt-0.5">借红尘百态为镜 · 照见起心动念</p>
+        
+        <!-- 通关规则说明 -->
+        <div class="mt-3 py-2 px-3 bg-mandalaCard/80 rounded-2xl border border-goldMain/30 inline-block shadow-inner max-w-[95%]">
+            <p class="text-[11px] text-goldLight/90 leading-relaxed">
+                全月任选场景完成 <span class="font-bold text-goldLight">≥3 次</span>，并发群觉察+舞/诵<span class="font-bold text-goldLight">≥210秒</span>，即可圆满通关！
+            </p>
+        </div>
+    </header>
+
+    <!-- 中部：曼陀罗卡片展示区 -->
+    <main class="w-full my-auto py-4 perspective-1000 flex justify-center">
+        <div id="cardContainer" class="w-full h-[410px] relative transform-style-3d cursor-pointer" onclick="handleCardClick()">
+            
+            <!-- 正面：未翻开（密藏曼陀罗法器样式） -->
+            <div class="absolute inset-0 w-full h-full rounded-2xl bg-gradient-to-b from-[#162736] to-[#0D1620] border-2 border-goldMain/60 backface-hidden flex flex-col items-center justify-between p-6 text-center shadow-2xl overflow-hidden">
+                
+                <!-- 四角古朴花纹边框 -->
+                <div class="corner-decoration corner-tl"></div>
+                <div class="corner-decoration corner-tr"></div>
+                <div class="corner-decoration corner-bl"></div>
+                <div class="corner-decoration corner-br"></div>
+
+                <!-- 顶部标语修改：诸行无常 诸法无我 涅槃寂静 -->
+                <div class="text-[11px] tracking-widest text-goldMain uppercase border-b border-goldMain/30 pb-1 w-full">
+                    ✦ 诸行无常 · 诸法无我 · 涅槃寂静 ✦
+                </div>
+
+                <!-- 核心：SVG 曼陀罗矢量图腾与呼吸灯效果 -->
+                <div class="my-auto relative flex items-center justify-center">
+                    <svg class="w-48 h-48 mandala-glow" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- 外层同心光环与齿轮纹 -->
+                        <circle cx="100" cy="100" r="95" stroke="#C59B27" stroke-width="1.5" stroke-dasharray="4 2"/>
+                        <circle cx="100" cy="100" r="88" stroke="#F2D388" stroke-width="1"/>
+                        <circle cx="100" cy="100" r="82" stroke="#8A6A1A" stroke-width="0.8"/>
+                        
+                        <!-- 正方形四门城池框 -->
+                        <rect x="42" y="42" width="116" height="116" stroke="#F2D388" stroke-width="1.2" transform="rotate(0 100 100)"/>
+                        <rect x="42" y="42" width="116" height="116" stroke="#C59B27" stroke-width="0.8" transform="rotate(45 100 100)"/>
+                        
+                        <!-- 内层莲花瓣花纹 -->
+                        <circle cx="100" cy="100" r="48" stroke="#F2D388" stroke-width="1"/>
+                        <path d="M100 52 C110 75 125 90 148 100 C125 110 110 125 100 148 C90 125 75 110 52 100 C75 90 90 75 100 52 Z" stroke="#C59B27" stroke-width="1.2" fill="rgba(197,155,39,0.05)"/>
+                        <path d="M100 62 C108 80 120 92 138 100 C120 108 108 120 100 138 C92 120 80 108 62 100 C80 92 92 80 100 62 Z" stroke="#F2D388" stroke-width="0.8" transform="rotate(45 100 100)"/>
+
+                        <!-- 核心觉性空圆 -->
+                        <circle cx="100" cy="100" r="20" fill="url(#centerGlow)" stroke="#F2D388" stroke-width="1.5"/>
+                        <circle cx="100" cy="100" r="8" fill="#F2D388"/>
+
+                        <!-- 渐变定义 -->
+                        <defs>
+                            <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#F2D388" stop-opacity="1"/>
+                                <stop offset="100%" stop-color="#C59B27" stop-opacity="0.2"/>
+                            </radialGradient>
+                        </defs>
+                    </svg>
+                </div>
+
+                <!-- 底部文案：观境照心 · 开启灵感 -->
+                <div class="w-full">
+                    <p class="text-xs text-goldLight tracking-widest font-medium">观境照心 · 开启灵感</p>
+                    <p class="text-[10px] text-textMuted mt-1">点击卡片或点击下方按钮抽签</p>
+                </div>
+            </div>
+
+            <!-- 背面：已翻开（卡片对境内容） -->
+            <div class="absolute inset-0 w-full h-full rounded-2xl bg-[#111C26] border-2 border-goldMain/70 rotate-y-180 backface-hidden flex flex-col justify-between p-6 shadow-2xl overflow-y-auto">
+                <div class="corner-decoration corner-tl"></div>
+                <div class="corner-decoration corner-tr"></div>
+                <div class="corner-decoration corner-bl"></div>
+                <div class="corner-decoration corner-br"></div>
+
+                <div>
+                    <!-- 维度分类与编号 -->
+                    <div class="flex items-center justify-between pb-3 border-b border-goldMain/20">
+                        <span id="cardCategory" class="text-xs font-bold px-3 py-1 rounded-full bg-goldMain/20 text-goldLight border border-goldMain/40">
+                            --
+                        </span>
+                        <span id="cardNo" class="text-[10px] text-textMuted tracking-wider">NO.01 / 15</span>
+                    </div>
+                    
+                    <!-- 卡片名称 -->
+                    <h2 id="cardTitle" class="text-xl font-bold text-goldLight mt-4 mb-3 tracking-wide">
+                        --
+                    </h2>
+
+                    <!-- 修持指引 -->
+                    <div class="mb-4">
+                        <p class="text-xs font-semibold text-goldMain uppercase tracking-wider mb-1">【场域指引】</p>
+                        <p id="cardGuide" class="text-xs text-textLight leading-relaxed bg-mandalaDark/90 p-3 rounded-lg border border-goldMain/20 shadow-inner">
+                            --
+                        </p>
+                    </div>
+
+                    <!-- 觉察钩子 -->
+                    <div>
+                        <p class="text-xs font-semibold text-goldLight uppercase tracking-wider mb-1">【觉察】</p>
+                        <p id="cardHook" class="text-xs text-textMuted italic leading-relaxed pl-1">
+                            --
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 底部标语 -->
+                <div class="pt-3 border-t border-dashed border-goldMain/20 text-[10px] text-center text-goldMain/70 tracking-widest">
+                    松静自然 · 照见起心动念
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- 底部：操作按钮区 -->
+    <footer class="w-full space-y-3 mb-2">
+        <!-- 主抽卡按钮组 -->
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="drawRandomCard()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-goldMain to-goldDark text-mandalaDark font-bold text-sm shadow-lg active:scale-95 transition-all flex items-center justify-center space-x-1.5 border border-goldLight/40">
+                <span>🎲</span>
+                <span>随缘抽卡</span>
+            </button>
+            <button onclick="drawDailyCard()" class="w-full py-3 px-4 rounded-xl bg-mandalaCard border border-goldMain/50 text-goldLight font-medium text-sm shadow-md active:scale-95 transition-all flex items-center justify-center space-x-1.5">
+                <span>📅</span>
+                <span>每日一签</span>
+            </button>
+        </div>
+
+        <!-- 一键复制打卡模板按钮 -->
+        <button id="copyBtn" onclick="copyTemplate()" class="hidden w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-goldLight via-goldMain to-goldDark text-mandalaDark font-bold text-sm shadow-xl active:scale-95 transition-all flex items-center justify-center space-x-2 border border-goldLight/60">
+            <span>📋</span>
+            <span>一键复制打卡模板</span>
+        </button>
+    </footer>
+
+    <!-- Toast 提示框 -->
+    <div id="toast" class="fixed top-12 left-1/2 -translate-x-1/2 bg-goldMain text-mandalaDark font-semibold text-xs px-5 py-3 rounded-full shadow-2xl opacity-0 pointer-events-none text-center max-w-[85%] z-50 border border-goldLight">
+        已复制打卡模板，快去微信群发文字与照片/视频吧！
+    </div>
+
+    <!-- JS 逻辑处理 -->
+    <script>
+        const cardsData = [
+            // 1. 🌪️ 破我执境
+            { 
+                category: "🌪️ 破我执境", 
+                title: "【人流微舞/默诵卡】", 
+                guide: "在地铁站角落、公园步道或商场开阔处，极轻柔地随呼吸起舞（觉之舞）或低声默诵（觉之诵） 5 分钟。", 
+                hook: "照见旁人经过或注视时，体内的紧绷感在哪里？能否在眼光中学会真正放松？" 
+            },
+            { 
+                category: "🌪️ 破我执境", 
+                title: "【至亲展现卡】", 
+                guide: "在家人、孩子或至亲面前，不受“好看与否”的包袱束缚，自如地跳一段觉之舞或唱诵 3 分钟。", 
+                hook: "在最熟悉的人面前展现修持状态，内心升起的是局促、害羞还是坦然自适？" 
+            },
+            { 
+                category: "🌪️ 破我执境", 
+                title: "【办公隙地卡】", 
+                guide: "在办公室茶水间、空置会议室或楼梯间隙，趁隙做 3 分钟极度放松的觉之舞摇摆或低吟觉之诵。", 
+                hook: "从严肃繁忙的职场身份中秒拔出来，身心能否瞬间松下来归位？" 
+            },
+
+            // 2. ⚡ 烦恼转念境
+            { 
+                category: "⚡ 烦恼转念境", 
+                title: "【家务疲惫卡】", 
+                guide: "拖完地、洗完碗、照顾完家人身体极其疲惫的当下，不随顺惰性，立刻开启 5 分钟觉之舞或觉之诵。", 
+                hook: "观察身体的“累”与心念的“烦/惰性”是如何剥离的，如何在舞蹈唱诵中重新放松复元。" 
+            },
+            { 
+                category: "⚡ 烦恼转念境", 
+                title: "【怒气止息卡】", 
+                guide: "遭遇不顺心、生嗔恨心或跟人争执后，找个角落立刻做 5 分钟觉之舞拉伸或吟唱觉之诵。", 
+                hook: "带着情绪起舞/唱诵时，体会紧绷的身体是如何在觉察中慢慢松开、情绪熄灭的。" 
+            },
+            { 
+                category: "⚡ 烦恼转念境", 
+                title: "【深夜熄灯卡】", 
+                guide: "临睡前熄灭所有灯光，在极致的黑暗与宁静中，随心起舞 5 分钟或低声唱诵。", 
+                hook: "剥离外界所有光影与视线后，只留下纯粹的身体流动与觉性。" 
+            },
+
+            // 3. ⏳ 无常流转境
+            { 
+                category: "⏳ 无常流转境", 
+                title: "【噪音和合卡】", 
+                guide: "在装修声、车水马龙或嘈杂背景音中，不带排斥地做觉之舞或唱诵 5 分钟。", 
+                hook: "身体是否因噪音而紧绷？能否把噪音当成衬托内心宁静与舞姿的背景音？" 
+            },
+            { 
+                category: "⏳ 无常流转境", 
+                title: "【无聊等待卡】", 
+                guide: "在排队、等车或等人的延误空挡里，不看手机，做极其细微的身体律动（觉之舞）或心诵（觉之诵）。", 
+                hook: "把焦躁的“等待时间”，转化为随时随地放松身心的“修持时刻”。" 
+            },
+
+            // 4. 🌿 天地和合境
+            { 
+                category: "🌿 天地和合境", 
+                title: "【天地共舞卡】", 
+                guide: "在草地、大树下或户外开阔处，脱鞋触地，顺应风声与树影，随心跳一段 5 分钟觉之舞。", 
+                hook: "体会身体融入天地自然时的放松、清凉与“无我”感。" 
+            },
+            { 
+                category: "🌿 天地和合境", 
+                title: "【水边观心卡】", 
+                guide: "在河边、湖边或喷泉旁，看着水流，配合水声的节奏进行觉之诵唱诵或舞蹈 5 分钟。", 
+                hook: "声音与舞姿是否如水流般“生灭不住”，不留痕迹？" 
+            },
+            { 
+                category: "🌿 天地和合境", 
+                title: "【高处远眺卡】", 
+                guide: "在楼顶露台、山顶或高层窗前，面向远方开阔处，舒展肢体起舞或发声唱诵 5 分钟。", 
+                hook: "视野变大时，身体的紧绷感与红尘琐事是否随之消融？" 
+            },
+            { 
+                category: "🌿 天地和合境", 
+                title: "【沐风听雨卡】", 
+                guide: "在风吹过或下雨时，站在窗前或伞下，全身心感受风雨之势起舞或唱诵 5 分钟。", 
+                hook: "不排斥天气的好坏，心如虚空般接纳一切自然声音。" 
+            },
+
+            // 5. 🎁 欢喜利他境
+            { 
+                category: "🎁 欢喜利他境", 
+                title: "【喜悦祝福卡】", 
+                guide: "在广场、医院附近或十字路口角落，带着无私的祝福心，默诵觉之诵或轻柔舞蹈 5 分钟。", 
+                hook: "心量拓宽、用舞蹈与唱诵祝福他人时，体内升起的欢喜与满足。" 
+            },
+            { 
+                category: "🎁 欢喜利他境", 
+                title: "【默默赞叹卡】", 
+                guide: "观察一位正在辛勤工作的人（如清洁工、外卖员），配合他的劳动节奏，默诵觉之诵 5 分钟。", 
+                hook: "将敬意与清净能量送给他人，感受自他一体的温暖。" 
+            },
+            { 
+                category: "🎁 欢喜利他境", 
+                title: "【回向大千卡】", 
+                guide: "完成一段觉之舞或觉之诵后，将身心放松的清净能量，默默回向给所有受苦的人。", 
+                hook: "打破个人小我的局限，融入大我的无量慈悲中。" 
+            }
+        ];
+
+        let currentCard = null;
+        let isFlipped = false;
+
+        function handleCardClick() {
+            if (!isFlipped) {
+                drawRandomCard();
+            }
+        }
+
+        function updateCardDOM(card, index) {
+            currentCard = card;
+            document.getElementById('cardCategory').innerText = card.category;
+            document.getElementById('cardNo').innerText = `NO.${(index + 1).toString().padStart(2, '0')} / 15`;
+            document.getElementById('cardTitle').innerText = card.title;
+            document.getElementById('cardGuide').innerText = card.guide;
+            document.getElementById('cardHook').innerText = card.hook;
+        }
+
+        function showCard() {
+            const container = document.getElementById('cardContainer');
+            const copyBtn = document.getElementById('copyBtn');
+
+            if (!isFlipped) {
+                container.classList.add('rotate-y-180');
+                isFlipped = true;
+            }
+            copyBtn.classList.remove('hidden');
+        }
+
+        function drawRandomCard() {
+            const randomIndex = Math.floor(Math.random() * cardsData.length);
+            const selectedCard = cardsData[randomIndex];
+
+            if (isFlipped) {
+                const container = document.getElementById('cardContainer');
+                container.classList.remove('rotate-y-180');
+                isFlipped = false;
+                setTimeout(() => {
+                    updateCardDOM(selectedCard, randomIndex);
+                    showCard();
+                }, 400);
+            } else {
+                updateCardDOM(selectedCard, randomIndex);
+                showCard();
+            }
+        }
+
+        function drawDailyCard() {
+            const today = new Date();
+            const dayOfMonth = today.getDate();
+            const dailyIndex = (dayOfMonth - 1) % cardsData.length;
+            const selectedCard = cardsData[dailyIndex];
+
+            if (isFlipped) {
+                const container = document.getElementById('cardContainer');
+                container.classList.remove('rotate-y-180');
+                isFlipped = false;
+                setTimeout(() => {
+                    updateCardDOM(selectedCard, dailyIndex);
+                    showCard();
+                }, 400);
+            } else {
+                updateCardDOM(selectedCard, dailyIndex);
+                showCard();
+            }
+        }
+
+        function copyTemplate() {
+            if (!currentCard) return;
+
+            const copyText = `🪞【红尘对境 · 觉察打卡】
+卡片：${currentCard.title}（${currentCard.category}）
+指引：${currentCard.guide}
+
+--- ✍️ 我的三句话觉察 ---
+境：今天在（请填写：如公园树下/繁重家务后）修持 5 分钟
+起：刚开始升起了（请填写：如害羞/烦躁）的念头
+转：修持后，心念转为（请填写：如坦然/清凉）
+------------------------`;
+
+            navigator.clipboard.writeText(copyText).then(() => {
+                showToast("已复制打卡模板，快去微信群发文字与照片/视频吧！");
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = copyText;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast("已复制打卡模板，快去微信群发文字与照片/视频吧！");
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
