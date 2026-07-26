@@ -90,16 +90,16 @@
     <header class="text-center mt-2 w-full">
         <!-- 最上方活动阶段标记 -->
         <div class="text-[11px] font-medium tracking-widest text-goldMain uppercase mb-1">
-            ✦ 365能歌善舞 · 第三个月 ✦
+            ✦ 365能歌善舞 · 境中观察 ✦
         </div>
 
         <!-- 主标题：境中观察 -->
         <div class="flex items-center justify-center mb-1">
-            <h1 class="text-2xl font-bold tracking-widest text-goldLight drop-shadow">境 中 观 察</h1>
+            <h1 class="text-2xl font-bold tracking-widest text-goldLight drop-shadow">境 中 觀 察</h1>
         </div>
 
         <!-- 副标题 -->
-        <p class="text-xs text-textMuted tracking-widest mt-0.5">借红尘百态为镜 · 照见起心动念</p>
+        <p class="text-xs text-textMuted tracking-widest mt-0.5">借红尘百态为镜 · 借歌舞唱诵破执</p>
         
         <!-- 通关规则说明 -->
         <div class="mt-3 py-2 px-3 bg-mandalaCard/80 rounded-2xl border border-goldMain/30 inline-block shadow-inner max-w-[95%]">
@@ -111,7 +111,7 @@
 
     <!-- 中部：曼陀罗卡片展示区 -->
     <main class="w-full my-auto py-4 perspective-1000 flex justify-center">
-        <div id="cardContainer" class="w-full h-[410px] relative transform-style-3d cursor-pointer" onclick="handleCardClick()">
+        <div id="cardContainer" class="w-full h-[430px] relative transform-style-3d cursor-pointer" onclick="handleCardClick()">
             
             <!-- 正面：未翻开（密藏曼陀罗法器样式） -->
             <div class="absolute inset-0 w-full h-full rounded-2xl bg-gradient-to-b from-[#162736] to-[#0D1620] border-2 border-goldMain/60 backface-hidden flex flex-col items-center justify-between p-6 text-center shadow-2xl overflow-hidden">
@@ -169,7 +169,7 @@
 
                 <div>
                     <!-- 维度分类与编号 -->
-                    <div class="flex items-center justify-between pb-3 border-b border-goldMain/20">
+                    <div class="flex items-center justify-between pb-2.5 border-b border-goldMain/20">
                         <span id="cardCategory" class="text-xs font-bold px-3 py-1 rounded-full bg-goldMain/20 text-goldLight border border-goldMain/40">
                             --
                         </span>
@@ -177,21 +177,28 @@
                     </div>
                     
                     <!-- 卡片名称 -->
-                    <h2 id="cardTitle" class="text-xl font-bold text-goldLight mt-4 mb-3 tracking-wide">
+                    <h2 id="cardTitle" class="text-lg font-bold text-goldLight mt-3 mb-2 tracking-wide">
                         --
                     </h2>
 
-                    <!-- 修持指引 -->
-                    <div class="mb-4">
-                        <p class="text-xs font-semibold text-goldMain uppercase tracking-wider mb-1">【场域指引】</p>
-                        <p id="cardGuide" class="text-xs text-textLight leading-relaxed bg-mandalaDark/90 p-3 rounded-lg border border-goldMain/20 shadow-inner">
+                    <!-- 课程教理/修持工具标签 -->
+                    <div class="mb-3">
+                        <span id="cardCore" class="inline-block text-[11px] text-goldLight bg-goldMain/15 px-2.5 py-0.5 rounded border border-goldMain/30 font-medium">
+                            --
+                        </span>
+                    </div>
+
+                    <!-- 场域指引 -->
+                    <div class="mb-3">
+                        <p class="text-[11px] font-semibold text-goldMain uppercase tracking-wider mb-1">【场域指引】</p>
+                        <p id="cardGuide" class="text-xs text-textLight leading-relaxed bg-mandalaDark/90 p-2.5 rounded-lg border border-goldMain/20 shadow-inner">
                             --
                         </p>
                     </div>
 
                     <!-- 觉察钩子 -->
                     <div>
-                        <p class="text-xs font-semibold text-goldLight uppercase tracking-wider mb-1">【觉察】</p>
+                        <p class="text-[11px] font-semibold text-goldLight uppercase tracking-wider mb-1">【觉之照见】</p>
                         <p id="cardHook" class="text-xs text-textMuted italic leading-relaxed pl-1">
                             --
                         </p>
@@ -199,7 +206,7 @@
                 </div>
 
                 <!-- 底部标语 -->
-                <div class="pt-3 border-t border-dashed border-goldMain/20 text-[10px] text-center text-goldMain/70 tracking-widest">
+                <div class="pt-2 border-t border-dashed border-goldMain/20 text-[10px] text-center text-goldMain/70 tracking-widest">
                     松静自然 · 照见起心动念
                 </div>
             </div>
@@ -239,101 +246,116 @@
             // 1. 🌪️ 破我执境
             { 
                 category: "🌪️ 破我执境", 
-                title: "【人流微舞/默诵卡】", 
+                title: "【人流微舞/默诵卡】",
+                core: "✦ 修持工具：名色分别智 · 舍觉支 ✦",
                 guide: "在地铁站角落、公园步道或商场开阔处，极轻柔地随呼吸起舞（觉之舞）或低声默诵（觉之诵） 5 分钟。", 
-                hook: "照见旁人经过或注视时，体内的紧绷感在哪里？能否在眼光中学会真正放松？" 
+                hook: "察觉旁人眼光时，体内的紧绷感在哪里？看清“被看的身体”与“知道的觉性”，在目光中练习【舍觉支】与真正的放松。" 
             },
             { 
                 category: "🌪️ 破我执境", 
                 title: "【至亲展现卡】", 
-                guide: "在家人、孩子或至亲面前，不受“好看与否”的包袱束缚，自如地跳一段觉之舞或唱诵 3 分钟。", 
-                hook: "在最熟悉的人面前展现修持状态，内心升起的是局促、害羞还是坦然自适？" 
+                core: "✦ 修持工具：观法无我 · 因缘算法 ✦",
+                guide: "在家人、孩子面前，不受“好看与否”的包袱束缚，自如地跳一段觉之舞或唱诵 3 分钟。", 
+                hook: "在最熟悉的人面前展现，升起的是局促还是坦然？认出“想在家人面前维持某种形象”也是一种我执，随之放下。" 
             },
             { 
                 category: "🌪️ 破我执境", 
                 title: "【办公隙地卡】", 
-                guide: "在办公室茶水间、空置会议室或楼梯间隙，趁隙做 3 分钟极度放松的觉之舞摇摆或低吟觉之诵。", 
-                hook: "从严肃繁忙的职场身份中秒拔出来，身心能否瞬间松下来归位？" 
+                core: "✦ 修持工具：一秒钟三摩地 · 放松觉 ✦",
+                guide: "在茶水间、空置会议室或楼梯间隙，趁隙做 3 分钟极度放松的觉之舞摇摆或低吟。", 
+                hook: "从严肃繁忙的职场身份与“大脑广播”中秒拔出来，感受身心瞬间归位、如无风油灯般的短暂安详。" 
             },
 
             // 2. ⚡ 烦恼转念境
             { 
                 category: "⚡ 烦恼转念境", 
                 title: "【家务疲惫卡】", 
-                guide: "拖完地、洗完碗、照顾完家人身体极其疲惫的当下，不随顺惰性，立刻开启 5 分钟觉之舞或觉之诵。", 
-                hook: "观察身体的“累”与心念的“烦/惰性”是如何剥离的，如何在舞蹈唱诵中重新放松复元。" 
+                core: "✦ 修持工具：名色剥离 · 轻安觉支 ✦",
+                guide: "拖完地、洗完碗或照顾完家人极度疲惫时，不随顺惰性，立刻开启 5 分钟觉之舞或唱诵。", 
+                hook: "观察身体的“累”（色法）与心念的“烦”（名法）是如何剥离的，用轻柔舞姿与唱诵快速卸下心理重担。" 
             },
             { 
                 category: "⚡ 烦恼转念境", 
                 title: "【怒气止息卡】", 
-                guide: "遭遇不顺心、生嗔恨心或跟人争执后，找个角落立刻做 5 分钟觉之舞拉伸或吟唱觉之诵。", 
-                hook: "带着情绪起舞/唱诵时，体会紧绷的身体是如何在觉察中慢慢松开、情绪熄灭的。" 
+                core: "✦ 修持工具：因缘算法 · 舍/轻安觉支 ✦",
+                guide: "辅导作业或跟家人争执火冒三丈时，找个角落立刻做 5 分钟拉伸舞或吟唱，拉开距离。", 
+                hook: "认出怒火来自“想主宰对方”的控制欲。对方是独立个体，行为受制于因缘。用【舍觉支】冷冷旁观，不随之抓狂。" 
             },
             { 
                 category: "⚡ 烦恼转念境", 
                 title: "【深夜熄灯卡】", 
+                core: "✦ 修持工具：观心无常 · 大脑广播 ✦",
                 guide: "临睡前熄灭所有灯光，在极致的黑暗与宁静中，随心起舞 5 分钟或低声唱诵。", 
-                hook: "剥离外界所有光影与视线后，只留下纯粹的身体流动与觉性。" 
+                hook: "失眠或脑中翻滚碎碎念时，像听广播一样看着念头飘过，不评判不跟随，只留纯粹的舞动与觉性。" 
             },
 
             // 3. ⏳ 无常流转境
             { 
                 category: "⏳ 无常流转境", 
                 title: "【噪音和合卡】", 
+                core: "✦ 修持工具：坏灭智 · 离执不抗拒 ✦",
                 guide: "在装修声、车水马龙或嘈杂背景音中，不带排斥地做觉之舞或唱诵 5 分钟。", 
-                hook: "身体是否因噪音而紧绷？能否把噪音当成衬托内心宁静与舞姿的背景音？" 
+                hook: "声音生起即灭。观察身体是否因噪音抗拒？把噪音当成衬托内心的背景音，练习对嘈杂不抓取、不抗拒。" 
             },
             { 
                 category: "⏳ 无常流转境", 
                 title: "【无聊等待卡】", 
-                guide: "在排队、等车或等人的延误空挡里，不看手机，做极其细微的身体律动（觉之舞）或心诵（觉之诵）。", 
-                hook: "把焦躁的“等待时间”，转化为随时随地放松身心的“修持时刻”。" 
+                core: "✦ 修持工具：定觉支 · 调低大脑底噪 ✦",
+                guide: "在排队、等车或等人的延误空挡里，不看手机，做极其细微的身体律动或心诵。", 
+                hook: "把焦躁的“等待”转化为安住当下的“一秒钟三摩地”，让心像没有风吹动的油灯，调低大脑底噪。" 
             },
 
             // 4. 🌿 天地和合境
             { 
                 category: "🌿 天地和合境", 
                 title: "【天地共舞卡】", 
-                guide: "在草地、大树下或户外开阔处，脱鞋触地，顺应风声与树影，随心跳一段 5 分钟觉之舞。", 
-                hook: "体会身体融入天地自然时的放松、清凉与“无我”感。" 
+                core: "✦ 修持工具：观法无我 · 触地融入 ✦",
+                guide: "在草地、大树下，脱鞋触地，顺应风声与树影，随心跳一段 5 分钟觉之舞。", 
+                hook: "身体与大地自然接触，体会“我”只是名色因缘聚合，感受身体融入天地自然时的清凉与“无我”感。" 
             },
             { 
                 category: "🌿 天地和合境", 
                 title: "【水边观心卡】", 
-                guide: "在河边、湖边或喷泉旁，看着水流，配合水声的节奏进行觉之诵唱诵或舞蹈 5 分钟。", 
-                hook: "声音与舞姿是否如水流般“生灭不住”，不留痕迹？" 
+                core: "✦ 修持工具：生灭智 · 生灭不住 ✦",
+                guide: "在河边、湖边或喷泉旁，看着水流，配合水声节奏进行觉之诵唱诵或舞蹈 5 分钟。", 
+                hook: "看水流生灭不住，体会当下的声音与舞姿也是刹那生灭、不留痕迹，不求长存。" 
             },
             { 
                 category: "🌿 天地和合境", 
                 title: "【高处远眺卡】", 
+                core: "✦ 修持工具：欲解脱智 · 宽阔离执 ✦",
                 guide: "在楼顶露台、山顶或高层窗前，面向远方开阔处，舒展肢体起舞或发声唱诵 5 分钟。", 
-                hook: "视野变大时，身体的紧绷感与红尘琐事是否随之消融？" 
+                hook: "视野变大时，体会有为法的拘束，升起想从“自我固执”中解脱、回归宽阔自由的心。" 
             },
             { 
                 category: "🌿 天地和合境", 
                 title: "【沐风听雨卡】", 
+                core: "✦ 修持工具：舍觉支 · 平等接纳 ✦",
                 guide: "在风吹过或下雨时，站在窗前或伞下，全身心感受风雨之势起舞或唱诵 5 分钟。", 
-                hook: "不排斥天气的好坏，心如虚空般接纳一切自然声音。" 
+                hook: "不排斥天气的好坏，顺应自然风雨，心如虚空般平等观照一切，无爱无憎。" 
             },
 
             // 5. 🎁 欢喜利他境
             { 
                 category: "🎁 欢喜利他境", 
                 title: "【喜悦祝福卡】", 
-                guide: "在广场、医院附近或十字路口角落，带着无私的祝福心，默诵觉之诵或轻柔舞蹈 5 分钟。", 
-                hook: "心量拓宽、用舞蹈与唱诵祝福他人时，体内升起的欢喜与满足。" 
+                core: "✦ 修持工具：喜觉支 · 多巴胺助力 ✦",
+                guide: "在广场、医院附近或十字路口角落，带着无私的祝福心，默诵或轻柔舞蹈 5 分钟。", 
+                hook: "用欢喜心舞蹈与唱诵祝福他人，激活内在正向能量，在利他中感受无私的满足与快乐。" 
             },
             { 
                 category: "🎁 欢喜利他境", 
                 title: "【默默赞叹卡】", 
-                guide: "观察一位正在辛勤工作的人（如清洁工、外卖员），配合他的劳动节奏，默诵觉之诵 5 分钟。", 
-                hook: "将敬意与清净能量送给他人，感受自他一体的温暖。" 
+                core: "✦ 修持工具：缘摄受智 · 自他一体 ✦",
+                guide: "观察一位正在辛勤工作的人（如清洁工、外卖员），配合他的劳动节奏，默诵或微舞 5 分钟。", 
+                hook: "看清每个人都在各自的“因缘轨迹”中努力，将敬意与清净能量送给对方，生起理解与慈悲。" 
             },
             { 
                 category: "🎁 欢喜利他境", 
                 title: "【回向大千卡】", 
-                guide: "完成一段觉之舞或觉之诵后，将身心放松的清净能量，默默回向给所有受苦的人。", 
-                hook: "打破个人小我的局限，融入大我的无量慈悲中。" 
+                core: "✦ 修持工具：过患智 · 破除自我功德执 ✦",
+                guide: "完成一段觉之舞或唱诵后，双手合十或静立，将身心放松的能量默默回向给所有人。", 
+                hook: "不执着于“我跳得有多好/我修得有多高”，打破小我包袱，将一切清净功德融入大千无我中。" 
             }
         ];
 
@@ -351,6 +373,7 @@
             document.getElementById('cardCategory').innerText = card.category;
             document.getElementById('cardNo').innerText = `NO.${(index + 1).toString().padStart(2, '0')} / 15`;
             document.getElementById('cardTitle').innerText = card.title;
+            document.getElementById('cardCore').innerText = card.core;
             document.getElementById('cardGuide').innerText = card.guide;
             document.getElementById('cardHook').innerText = card.hook;
         }
@@ -404,14 +427,14 @@
             }
         }
 
-        // 📋 极简复制格式（只保留卡片名与觉察引导）
+        // 📋 一键复制打卡模板（带课程修持核心）
         function copyTemplate() {
             if (!currentCard) return;
 
-            // 提取维度Emoji与卡片名
             const categoryEmoji = currentCard.category.split(' ')[0] || '';
             
             const copyText = `🪞${currentCard.title}${categoryEmoji}
+${currentCard.core}
 
 --- ✍️ 我的觉察 ---`;
 
