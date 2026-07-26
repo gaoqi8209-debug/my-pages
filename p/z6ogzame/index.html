@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>觉性十三禅</title>
+    <style>
+        /* 基础样式与宣纸底色 */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #FDFCF0; /* 柔和的宣纸微黄底色 */
+            font-family: "PingFang SC", "Lantinghei SC", "Microsoft YaHei", sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            box-sizing: border-box;
+        }
+
+        /* 禅意水墨背景暗纹 */
+        .zen-bg {
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            border: 6px solid rgba(90, 80, 70, 0.04);
+            border-radius: 50%;
+            border-left-color: rgba(90, 80, 70, 0.08);
+            border-bottom-color: rgba(90, 80, 70, 0.06);
+            transform: rotate(-45deg);
+            pointer-events: none;
+            z-index: 1;
+            top: 20%;
+        }
+
+        /* 顶部导航栏 */
+        .nav-bar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            z-index: 5;
+        }
+
+        .nav-btn {
+            background: #E8E2D5;
+            color: #5A5046;
+            border: 1px solid #C8BFA9;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn.active {
+            background: #4A3B32;
+            color: #FDFCF0;
+            border-color: #2F231B;
+        }
+
+        /* 视图页面通用样式 */
+        .view-panel {
+            display: none;
+            width: 100%;
+            max-width: 400px;
+            height: calc(100% - 90px);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        .view-panel.active {
+            display: flex;
+        }
+
+        /* 1. 摇签视图 */
+        .container-inner {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: float 4s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .shadow {
+            width: 120px;
+            height: 12px;
+            background: rgba(40, 30, 20, 0.06);
+            border-radius: 50%;
+            filter: blur(4px);
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .cylinder {
+            width: 130px;
+            height: 220px;
+            background: linear-gradient(135deg, #4A3B32 0%, #2F231B 100%);
+            border-radius: 12px 12px 6px 6px;
+            border: 2px solid #201610;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 5px 10px 20px rgba(0,0,0,0.15);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cylinder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 14px;
+            background: #1C130E;
+            border-radius: 10px 10px 0 0;
+            box-shadow: inset 0 -3px 5px rgba(0,0,0,0.5);
+        }
+
+        .label {
+            background-color: #E8E2D5;
+            padding: 15px 8px;
+            color: #2F231B;
+            font-weight: bold;
+            font-size: 16px;
+            letter-spacing: 4px;
+            writing-mode: vertical-rl;
+            border: 1px solid #C8BFA9;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            border-radius: 2px;
+            margin-top: 10px;
+        }
+
+        .shake-animation {
+            animation: shake 0.8s ease-in-out !important;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            15% { transform: rotate(-8deg) translateX(-4px); }
+            30% { transform: rotate(7deg) translateX(4px); }
+            45% { transform: rotate(-5deg) translateX(-3px); }
+            60% { transform: rotate(4deg) translateX(3px); }
+            75% { transform: rotate(-2deg) translateX(-1px); }
+            90% { transform: rotate(1deg) translateX(1px); }
+        }
+
+        .hint-text {
+            color: #8A785F;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        /* 2. 觉修图谱与自选视图 */
+        .stats-container {
+            width: 90%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            padding: 10px 0 20px 0;
+        }
+
+        .notice-box {
+            background: rgba(232, 226, 213, 0.5);
+            border-left: 3px solid #8A785F;
+            padding: 12px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #4A3B32;
+            line-height: 1.8;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-overview {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-title {
+            font-size: 13px;
+            color: #8A785F;
+            margin-bottom: 3px;
+        }
+
+        .progress-rate {
+            font-size: 28px;
+            color: #2F231B;
+            font-weight: bold;
+        }
+
+        .grid-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            overflow-y: auto;
+            padding-right: 2px;
+        }
+
+        .grid-item {
+            background: #F4ECD8;
+            border: 1px solid #C5B293;
+            border-radius: 8px;
+            padding: 12px 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 1px 2px 5px rgba(0,0,0,0.04);
+            transition: all 0.2s ease;
+        }
+
+        .grid-item:active {
+            transform: scale(0.96);
+            background: #E6D5B8;
+        }
+
+        .grid-item-name {
+            color: #2F231B;
+            font-size: 14px;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .grid-item-count {
+            font-size: 11px;
+            color: #8A785F;
+            margin-top: 4px;
+        }
+
+        /* 弹窗遮罩层 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(253, 252, 240, 0.85);
+            backdrop-filter: blur(2px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            z-index: 10;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .fortune-stick {
+            background: linear-gradient(to bottom, #F4ECD8 0%, #E6D5B8 100%);
+            width: 75px;
+            height: 400px;
+            border-radius: 30px;
+            border: 2px solid #C5B293;
+            box-shadow: 3px 5px 20px rgba(40, 30, 20, 0.15), inset 0 0 10px rgba(255,255,255,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 30px 0;
+            box-sizing: border-box;
+            transform: translateY(50px) scale(0.9);
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .overlay.show .fortune-stick {
+            transform: translateY(0) scale(1);
+        }
+
+        .stick-top {
+            width: 8px;
+            height: 8px;
+            background: #BAA685;
+            border-radius: 50%;
+        }
+
+        .stick-content {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 24px;
+            color: #2F231B;
+            letter-spacing: 6px;
+            font-weight: 500;
+            text-align: center;
+            line-height: 1.5;
+            opacity: 0;
+            transition: opacity 0.4s ease 0.3s;
+            margin-top: 10px;
+        }
+
+        .overlay.show .stick-content {
+            opacity: 1;
+        }
+
+        .stick-bottom {
+            font-size: 11px;
+            color: #8A785F;
+            letter-spacing: 2px;
+            line-height: 1.8;
+            border-top: 1px dashed #C5B293;
+            padding-top: 12px;
+            width: 70%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="zen-bg"></div>
+
+    <!-- 顶部导航 -->
+    <div class="nav-bar">
+        <button class="nav-btn active" onclick="switchTab('draw')">摇签领法</button>
+        <button class="nav-btn" onclick="switchTab('stats')">观无常·觉修图谱</button>
+    </div>
+
+    <!-- 1. 摇签页面 -->
+    <div class="view-panel active" id="panel-draw">
+        <div class="container-inner" id="drawButton" onclick="drawZenStick()">
+            <div class="cylinder">
+                <div class="label">觉性十三禅</div>
+            </div>
+            <div class="shadow" id="cylinderShadow"></div>
+        </div>
+        <div class="hint-text">放松摇摇 · 随缘觉察</div>
+    </div>
+
+    <!-- 2. 合并后的图谱、自选练习与计次页面 -->
+    <div class="view-panel" id="panel-stats">
+        <div class="stats-container">
+            <div class="notice-box">
+                🌸 <strong>觉修微语：</strong><br>
+                本软件记迹于手机本地，若遇系统清理，随缘而散。<br>
+                迹本无常，心随境转；莫计数字之多少，唯保持觉与放松。<br>
+                借此亦可观无常，作日常觉察，烦恼自减，安住当下。
+            </div>
+            <div class="progress-overview">
+                <div class="progress-title">十三禅练习覆盖率</div>
+                <div class="progress-rate" id="coverageRate">0%</div>
+            </div>
+            <!-- 点选练习网格（带计次） -->
+            <div class="grid-container" id="gridContainer"></div>
+        </div>
+    </div>
+
+    <!-- 抽签/自选展示弹窗 -->
+    <div class="overlay" id="resultOverlay" onclick="closeOverlay()">
+        <div class="fortune-stick">
+            <div class="stick-top"></div>
+            <div class="stick-content" id="stickText">放松禅</div>
+            <div class="stick-bottom">
+                <div>慢慢走</div>
+                <div>快快到</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const zenMethods = [
+            "放松禅", "禅睡", "觉之诵", "觉之舞", "觉之音", 
+            "呼吸禅", "视觉禅", "听觉禅", "触觉禅", "行禅", 
+            "意识禅", "慈心禅", "沟通禅"
+        ];
+
+        let isShaking = false;
+
+        // 获取本地练习计次数据
+        function getPracticeData() {
+            const data = localStorage.getItem('zen_practice_counts');
+            if (data) {
+                return JSON.parse(data);
+            }
+            const initialData = {};
+            zenMethods.forEach(item => initialData[item] = 0);
+            return initialData;
+        }
+
+        // 记录练习次数并刷新页面
+        function recordPractice(zenName) {
+            const data = getPracticeData();
+            data[zenName] = (data[zenName] || 0) + 1;
+            localStorage.setItem('zen_practice_counts', JSON.stringify(data));
+            renderStatsAndGrid();
+        }
+
+        // Tab 切换
+        function switchTab(tabName) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
+
+            if (tabName === 'draw') {
+                document.querySelectorAll('.nav-btn')[0].classList.add('active');
+                document.getElementById('panel-draw').classList.add('active');
+            } else if (tabName === 'stats') {
+                document.querySelectorAll('.nav-btn')[1].classList.add('active');
+                document.getElementById('panel-stats').classList.add('active');
+                renderStatsAndGrid();
+            }
+        }
+
+        // 自选点选某签
+        function selectZen(zenName) {
+            recordPractice(zenName);
+            showStick(zenName);
+        }
+
+        // 摇签逻辑
+        function drawZenStick() {
+            if (isShaking) return;
+            isShaking = true;
+
+            const containerInner = document.getElementById('drawButton');
+            const shadow = document.getElementById('cylinderShadow');
+            
+            containerInner.classList.add('shake-animation');
+            shadow.style.transform = "scale(0.8)";
+            shadow.style.opacity = "0.3";
+
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * zenMethods.length);
+                const selectedZen = zenMethods[randomIndex];
+
+                recordPractice(selectedZen);
+                showStick(selectedZen);
+
+                containerInner.classList.remove('shake-animation');
+                shadow.style.transform = "scale(1)";
+                shadow.style.opacity = "1";
+                isShaking = false;
+            }, 800);
+        }
+
+        // 显示弹出竹签
+        function showStick(text) {
+            document.getElementById('stickText').innerText = text;
+            document.getElementById('resultOverlay').classList.add('show');
+        }
+
+        function closeOverlay() {
+            document.getElementById('resultOverlay').classList.remove('show');
+        }
+
+        // 渲染进度与自选网格数据（带计次）
+        function renderStatsAndGrid() {
+            const data = getPracticeData();
+            let practicedCount = 0;
+            const container = document.getElementById('gridContainer');
+            container.innerHTML = '';
+
+            zenMethods.forEach(method => {
+                const count = data[method] || 0;
+                if (count > 0) practicedCount++;
+
+                const item = document.createElement('div');
+                item.className = 'grid-item';
+                item.onclick = () => selectZen(method);
+
+                item.innerHTML = `
+                    <div class="grid-item-name">${method}</div>
+                    <div class="grid-item-count">${count > 0 ? '已练 ' + count + ' 次' : '未练习'}</div>
+                `;
+                container.appendChild(item);
+            });
+
+            // 计算体验覆盖率百分比
+            const percentage = Math.round((practicedCount / zenMethods.length) * 100);
+            document.getElementById('coverageRate').innerText = percentage + '%';
+        }
+    </script>
+</body>
+</html>
