@@ -93,7 +93,7 @@
             ✦ 365能歌善舞 · 第三个月 ✦
         </div>
 
-        <!-- 主标题：境中观察（已彻底去掉粉色莲花符号，纯净金字） -->
+        <!-- 主标题：境中观察 -->
         <div class="flex items-center justify-center mb-1">
             <h1 class="text-2xl font-bold tracking-widest text-goldLight drop-shadow">境 中 观 察</h1>
         </div>
@@ -122,7 +122,7 @@
                 <div class="corner-decoration corner-bl"></div>
                 <div class="corner-decoration corner-br"></div>
 
-                <!-- 顶部标语修改：诸行无常 诸法无我 涅槃寂静 -->
+                <!-- 顶部标语 -->
                 <div class="text-[11px] tracking-widest text-goldMain uppercase border-b border-goldMain/30 pb-1 w-full">
                     ✦ 诸行无常 · 诸法无我 · 涅槃寂静 ✦
                 </div>
@@ -130,25 +130,20 @@
                 <!-- 核心：SVG 曼陀罗矢量图腾与呼吸灯效果 -->
                 <div class="my-auto relative flex items-center justify-center">
                     <svg class="w-48 h-48 mandala-glow" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- 外层同心光环与齿轮纹 -->
                         <circle cx="100" cy="100" r="95" stroke="#C59B27" stroke-width="1.5" stroke-dasharray="4 2"/>
                         <circle cx="100" cy="100" r="88" stroke="#F2D388" stroke-width="1"/>
                         <circle cx="100" cy="100" r="82" stroke="#8A6A1A" stroke-width="0.8"/>
                         
-                        <!-- 正方形四门城池框 -->
                         <rect x="42" y="42" width="116" height="116" stroke="#F2D388" stroke-width="1.2" transform="rotate(0 100 100)"/>
                         <rect x="42" y="42" width="116" height="116" stroke="#C59B27" stroke-width="0.8" transform="rotate(45 100 100)"/>
                         
-                        <!-- 内层莲花瓣花纹 -->
                         <circle cx="100" cy="100" r="48" stroke="#F2D388" stroke-width="1"/>
                         <path d="M100 52 C110 75 125 90 148 100 C125 110 110 125 100 148 C90 125 75 110 52 100 C75 90 90 75 100 52 Z" stroke="#C59B27" stroke-width="1.2" fill="rgba(197,155,39,0.05)"/>
                         <path d="M100 62 C108 80 120 92 138 100 C120 108 108 120 100 138 C92 120 80 108 62 100 C80 92 92 80 100 62 Z" stroke="#F2D388" stroke-width="0.8" transform="rotate(45 100 100)"/>
 
-                        <!-- 核心觉性空圆 -->
                         <circle cx="100" cy="100" r="20" fill="url(#centerGlow)" stroke="#F2D388" stroke-width="1.5"/>
                         <circle cx="100" cy="100" r="8" fill="#F2D388"/>
 
-                        <!-- 渐变定义 -->
                         <defs>
                             <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
                                 <stop offset="0%" stop-color="#F2D388" stop-opacity="1"/>
@@ -409,18 +404,16 @@
             }
         }
 
+        // 📋 极简复制格式（只保留卡片名与觉察引导）
         function copyTemplate() {
             if (!currentCard) return;
 
-            const copyText = `🪞【红尘对境 · 觉察打卡】
-卡片：${currentCard.title}（${currentCard.category}）
-指引：${currentCard.guide}
+            // 提取维度Emoji与卡片名
+            const categoryEmoji = currentCard.category.split(' ')[0] || '';
+            
+            const copyText = `🪞${currentCard.title}${categoryEmoji}
 
---- ✍️ 我的三句话觉察 ---
-境：今天在（请填写：如公园树下/繁重家务后）修持 5 分钟
-起：刚开始升起了（请填写：如害羞/烦躁）的念头
-转：修持后，心念转为（请填写：如坦然/清凉）
-------------------------`;
+--- ✍️ 我的觉察 ---`;
 
             navigator.clipboard.writeText(copyText).then(() => {
                 showToast("已复制打卡模板，快去微信群发文字与照片/视频吧！");
