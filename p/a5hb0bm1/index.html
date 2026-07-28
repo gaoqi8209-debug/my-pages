@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>365能歌善舞 · 境中观察</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mandalaDark: '#0E1821',   // 深绀青背景
+                        mandalaCard: '#13222F',   // 卡片深色底
+                        goldLight: '#F2D388',     // 明亮琥珀金
+                        goldMain: '#C59B27',      // 经典法器金
+                        goldDark: '#8A6A1A',      // 暗金边框
+                        textLight: '#E6E8E6',     // 月白文字
+                        textMuted: '#9CA3AF',     // 寂静灰
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 页面基础 */
+        body {
+            background: radial-gradient(circle at center, #172837 0%, #080E14 100%);
+            color: #E6E8E6;
+            font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 曼陀罗图腾金光呼吸效 */
+        @keyframes mandalaGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(197, 155, 39, 0.4)) drop-shadow(0 0 20px rgba(197, 155, 39, 0.2));
+                transform: scale(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 20px rgba(242, 211, 136, 0.8)) drop-shadow(0 0 35px rgba(197, 155, 39, 0.5));
+                transform: scale(1.02);
+            }
+        }
+
+        .mandala-glow {
+            animation: mandalaGlow 4s infinite ease-in-out;
+        }
+
+        /* 3D 卡片翻转效果 */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.34, 1.4, 0.64, 1);
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* 古朴边角装点 */
+        .corner-decoration {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-color: #C59B27;
+            border-style: solid;
+            pointer-events: none;
+        }
+        .corner-tl { top: 8px; left: 8px; border-width: 2px 0 0 2px; }
+        .corner-tr { top: 8px; right: 8px; border-width: 2px 2px 0 0; }
+        .corner-bl { bottom: 8px; left: 8px; border-width: 0 0 2px 2px; }
+        .corner-br { bottom: 8px; right: 8px; border-width: 0 2px 2px 0; }
+
+        /* Toast 弹窗动画 */
+        #toast {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between items-center px-4 py-6 max-w-md mx-auto relative select-none">
+
+    <!-- 顶部 Header -->
+    <header class="text-center mt-2 w-full">
+        <div class="text-[11px] font-medium tracking-widest text-goldMain uppercase mb-1">
+            ✦ 365能歌善舞 · 境中观察 ✦
+        </div>
+
+        <div class="flex items-center justify-center mb-1">
+            <h1 class="text-2xl font-bold tracking-widest text-goldLight drop-shadow">境 中 觀 察</h1>
+        </div>
+
+        <p class="text-xs text-textMuted tracking-widest mt-0.5">借红尘百态为镜 · 借歌舞唱诵破执</p>
+        
+        <!-- 更新后的玩法说明框（方案一精简版） -->
+        <div class="mt-3 py-2.5 px-3.5 bg-mandalaCard/80 rounded-2xl border border-goldMain/30 inline-block shadow-inner max-w-[95%] text-left">
+            <p class="text-[11px] font-bold text-goldLight mb-1 flex items-center space-x-1">
+                <span>🎲</span>
+                <span>【境中观察】灵感小游戏：</span>
+            </p>
+            <p class="text-[11px] text-textLight/90 leading-relaxed">
+                抽卡只是点亮灵感！你可以照着玩，更鼓励去发现生活里的新对境～ 玩完快把好玩的故事和视频发群里，互相启发吧！
+            </p>
+        </div>
+    </header>
+
+    <!-- 中部：曼陀罗卡片展示区 -->
+    <main class="w-full my-auto py-4 perspective-1000 flex justify-center">
+        <div id="cardContainer" class="w-full h-[430px] relative transform-style-3d cursor-pointer" onclick="handleCardClick()">
+            
+            <!-- 正面：未翻开 -->
+            <div class="absolute inset-0 w-full h-full rounded-2xl bg-gradient-to-b from-[#162736] to-[#0D1620] border-2 border-goldMain/60 backface-hidden flex flex-col items-center justify-between p-6 text-center shadow-2xl overflow-hidden">
+                <div class="corner-decoration corner-tl"></div>
+                <div class="corner-decoration corner-tr"></div>
+                <div class="corner-decoration corner-bl"></div>
+                <div class="corner-decoration corner-br"></div>
+
+                <div class="text-[11px] tracking-widest text-goldMain uppercase border-b border-goldMain/30 pb-1 w-full">
+                    ✦ 诸行无常 · 诸法无我 · 涅槃寂静 ✦
+                </div>
+
+                <div class="my-auto relative flex items-center justify-center">
+                    <svg class="w-48 h-48 mandala-glow" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="100" cy="100" r="95" stroke="#C59B27" stroke-width="1.5" stroke-dasharray="4 2"/>
+                        <circle cx="100" cy="100" r="88" stroke="#F2D388" stroke-width="1"/>
+                        <circle cx="100" cy="100" r="82" stroke="#8A6A1A" stroke-width="0.8"/>
+                        
+                        <rect x="42" y="42" width="116" height="116" stroke="#F2D388" stroke-width="1.2" transform="rotate(0 100 100)"/>
+                        <rect x="42" y="42" width="116" height="116" stroke="#C59B27" stroke-width="0.8" transform="rotate(45 100 100)"/>
+                        
+                        <circle cx="100" cy="100" r="48" stroke="#F2D388" stroke-width="1"/>
+                        <path d="M100 52 C110 75 125 90 148 100 C125 110 110 125 100 148 C90 125 75 110 52 100 C75 90 90 75 100 52 Z" stroke="#C59B27" stroke-width="1.2" fill="rgba(197,155,39,0.05)"/>
+                        <path d="M100 62 C108 80 120 92 138 100 C120 108 108 120 100 138 C92 120 80 108 62 100 C80 92 92 80 100 62 Z" stroke="#F2D388" stroke-width="0.8" transform="rotate(45 100 100)"/>
+
+                        <circle cx="100" cy="100" r="20" fill="url(#centerGlow)" stroke="#F2D388" stroke-width="1.5"/>
+                        <circle cx="100" cy="100" r="8" fill="#F2D388"/>
+
+                        <defs>
+                            <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#F2D388" stop-opacity="1"/>
+                                <stop offset="100%" stop-color="#C59B27" stop-opacity="0.2"/>
+                            </radialGradient>
+                        </defs>
+                    </svg>
+                </div>
+
+                <div class="w-full">
+                    <p class="text-xs text-goldLight tracking-widest font-medium">观境照心 · 开启灵感</p>
+                    <p class="text-[10px] text-textMuted mt-1">点击卡片或点击下方按钮抽签</p>
+                </div>
+            </div>
+
+            <!-- 背面：已翻开 -->
+            <div class="absolute inset-0 w-full h-full rounded-2xl bg-[#111C26] border-2 border-goldMain/70 rotate-y-180 backface-hidden flex flex-col justify-between p-6 shadow-2xl overflow-y-auto">
+                <div class="corner-decoration corner-tl"></div>
+                <div class="corner-decoration corner-tr"></div>
+                <div class="corner-decoration corner-bl"></div>
+                <div class="corner-decoration corner-br"></div>
+
+                <div>
+                    <!-- 维度分类与编号 -->
+                    <div class="flex items-center justify-between pb-2.5 border-b border-goldMain/20">
+                        <span id="cardCategory" class="text-xs font-bold px-3 py-1 rounded-full bg-goldMain/20 text-goldLight border border-goldMain/40">
+                            --
+                        </span>
+                        <span id="cardNo" class="text-[10px] text-textMuted tracking-wider">NO.01 / 15</span>
+                    </div>
+                    
+                    <!-- 卡片名称与修持工具按钮 -->
+                    <div class="flex items-center justify-between mt-3 mb-2">
+                        <h2 id="cardTitle" class="text-lg font-bold text-goldLight tracking-wide">
+                            --
+                        </h2>
+                        <button id="toolBtn" onclick="openToolModal(event)" class="text-[11px] text-goldLight bg-goldMain/20 hover:bg-goldMain/30 active:scale-95 transition-all px-2.5 py-1 rounded-full border border-goldMain/50 flex items-center space-x-1 shadow-sm">
+                            <span>🔍</span>
+                            <span id="toolBtnText">--</span>
+                        </button>
+                    </div>
+
+                    <!-- 场域指引 -->
+                    <div class="mb-3">
+                        <p class="text-[11px] font-semibold text-goldMain uppercase tracking-wider mb-1">【场域指引】</p>
+                        <p id="cardGuide" class="text-xs text-textLight leading-relaxed bg-mandalaDark/90 p-2.5 rounded-lg border border-goldMain/20 shadow-inner">
+                            --
+                        </p>
+                    </div>
+
+                    <!-- 💡 小TIPS -->
+                    <div>
+                        <p class="text-[11px] font-semibold text-goldLight uppercase tracking-wider mb-1">【💡 小TIPS】</p>
+                        <p id="cardHook" class="text-xs text-textMuted leading-relaxed pl-1">
+                            --
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 底部标语 -->
+                <div class="pt-2 border-t border-dashed border-goldMain/20 text-[10px] text-center text-goldMain/70 tracking-widest">
+                    松静自然 · 照见起心动念
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- 底部：操作按钮区 -->
+    <footer class="w-full space-y-3 mb-2">
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="drawRandomCard()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-goldMain to-goldDark text-mandalaDark font-bold text-sm shadow-lg active:scale-95 transition-all flex items-center justify-center space-x-1.5 border border-goldLight/40">
+                <span>🎲</span>
+                <span>随缘抽卡</span>
+            </button>
+            <button onclick="drawDailyCard()" class="w-full py-3 px-4 rounded-xl bg-mandalaCard border border-goldMain/50 text-goldLight font-medium text-sm shadow-md active:scale-95 transition-all flex items-center justify-center space-x-1.5">
+                <span>📅</span>
+                <span>每日一签</span>
+            </button>
+        </div>
+
+        <button id="copyBtn" onclick="copyTemplate()" class="hidden w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-goldLight via-goldMain to-goldDark text-mandalaDark font-bold text-sm shadow-xl active:scale-95 transition-all flex items-center justify-center space-x-2 border border-goldLight/60">
+            <span>📋</span>
+            <span>一键复制打卡模板</span>
+        </button>
+    </footer>
+
+    <!-- 修持工具概念复习 Modal 弹窗 -->
+    <div id="toolModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300" onclick="closeToolModal()">
+        <div class="bg-[#13222F] border-2 border-goldMain/80 rounded-2xl p-5 max-w-xs w-full shadow-2xl relative text-left" onclick="event.stopPropagation()">
+            <div class="corner-decoration corner-tl"></div>
+            <div class="corner-decoration corner-tr"></div>
+            <div class="corner-decoration corner-bl"></div>
+            <div class="corner-decoration corner-br"></div>
+
+            <div class="flex justify-between items-center pb-2 border-b border-goldMain/30 mb-3">
+                <span class="text-[10px] text-goldMain tracking-widest font-bold uppercase">✦ 修持工具概念复习 ✦</span>
+                <button onclick="closeToolModal()" class="text-textMuted hover:text-white text-lg leading-none">&times;</button>
+            </div>
+
+            <h3 id="modalToolTitle" class="text-base font-bold text-goldLight mb-2">
+                --
+            </h3>
+            
+            <p id="modalToolDesc" class="text-xs text-textLight leading-relaxed bg-mandalaDark p-3 rounded-lg border border-goldMain/20 mb-3 shadow-inner">
+                --
+            </p>
+
+            <div class="text-[10px] text-goldMain/80 text-center italic">
+                点击任意空白区域关闭
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast 提示框 -->
+    <div id="toast" class="fixed top-12 left-1/2 -translate-x-1/2 bg-goldMain text-mandalaDark font-semibold text-xs px-5 py-3 rounded-full shadow-2xl opacity-0 pointer-events-none text-center max-w-[85%] z-50 border border-goldLight">
+        已复制打卡模板，快去微信群发文字与照片/视频吧！
+    </div>
+
+    <!-- JS 逻辑处理 -->
+    <script>
+        const toolDefinitions = {
+            "舍觉支": "【舍觉支】七觉支之一。指对当下的一切体验（无论是顺境还是逆境、好受还是难受）保持平等、不抗拒、不抓取、不评判的超然与松开状态。",
+            "名色分别智": "【名色分别智】观照并清晰区分“精神活动（名）”与“物质/躯体现象（色）”。例如：看清“身体的疲惫累”是色法，而“心理产生的烦躁/惰性”是名法，二者本可剥离。",
+            "观法无我": "【观法无我】四念处之一。观照一切身心现象皆是由因缘和合而生，其中并没有一个固定不变、能主宰一切的“我”。放下对控制权的执着，即得自在。",
+            "因缘算法": "【因缘算法】认出世间一切人事物和情绪的发生，都是多种条件（因缘）交织碰撞的自然产物。看清因缘，便不再对他人和自己强加完美预期。",
+            "一秒钟三摩地": "【一秒钟三摩地】在繁忙躁动的红尘事务中，通过一次深呼吸或瞬间回光，让心立刻归位安住，如同没有风吹动的油灯，享受极短暂却纯粹的寂静。",
+            "放松觉": "【放松觉】在身体舞蹈或唱诵的流动中，主动觉察并释放躯体与心念中的微细紧绷感，回到自然、舒展、无压力的本然状态。",
+            "轻安觉支": "【轻安觉支】七觉支之一。指身心经过放松与觉察后，体验到的粗重烦恼止息、身心无比轻盈、舒适与安稳的禅悦状态。",
+            "大脑广播": "【大脑广播】将脑海中不断冒出的各种碎碎念、妄想与焦虑，仅仅视为一台不停播报的“收音机”。只作为听众观察它，不跟着广播内容起舞。",
+            "坏灭智": "【坏灭智】观照一切有为法都在刹那间走向坏灭与消逝。体会到声音、情绪与境遇的短暂性，从而不再对其产生强烈的抗拒或执取。",
+            "离执不抗拒": "【离执不抗拒】面对干扰或不顺心时，不把能量消耗在“抗拒外界”上，而是敞开心扉接纳当下的发生，使其顺畅穿透身心而不留下痕迹。",
+            "定觉支": "【定觉支】七觉支之一。心念专注安住于当下，不被外界风吹草动所带走，保持内在清明与不摇动的定力。",
+            "生灭智": "【生灭智】清晰直观到现象的“生起”与“灭去”同时在发生。如水流般生灭不住，明白没有什么是能够或需要强行留住的。",
+            "欲解脱智": "【欲解脱智】在体验到有为法的局限与束缚后，内心自然升起的希望超越狭隘自我、回归宽阔自由与清净解脱的向往。",
+            "喜觉支": "【喜觉支】七觉支之一。在修持与利他中升起的无条件欢喜与清净喜悦，能快速激活身心能量，化解沉闷与惰性。",
+            "缘摄受智": "【缘摄受智】看清自己与他人皆处于错综复杂的因缘网络中。由此生起对众生生存不易的体谅与包容，达成自他一体的慈悲。",
+            "过患智": "【过患智】看清对“自我功德/名相”执着所带来的包袱与患得患失。主动破除自我傲慢，将一切清净回向大千。"
+        };
+
+        const cardsData = [
+            // 1. 🌪️ 破我执境
+            { 
+                category: "🌪️ 破我执境", 
+                title: "【人流微舞/默诵卡】",
+                tool: "舍觉支",
+                guide: "在地铁站角落、公园步道或商场开阔处，极轻柔地随呼吸起舞（觉之舞）或低声默诵（觉之诵） 5 分钟。", 
+                hook: "路人看过来时，嘴角微微上扬就好，紧绷的肩颈自然就松开啦！试试看用【舍觉支】把眼光当作清风拂过～" 
+            },
+            { 
+                category: "🌪️ 破我执境", 
+                title: "【至亲展现卡】", 
+                tool: "观法无我",
+                guide: "在家人、孩子面前，不受“好看与否”的包袱束缚，自如地跳一段觉之舞或唱诵 3 分钟。", 
+                hook: "不用管动作标准不标准，把好玩、放松的一面展示给家人们吧！放下那个想维持完美形象的小包袱～" 
+            },
+            { 
+                category: "🌪️ 破我执境", 
+                title: "【办公隙地卡】", 
+                tool: "一秒钟三摩地",
+                guide: "在茶水间、空置会议室或楼梯间隙，趁隙做 3 分钟极度放松的觉之舞摇摆或低吟。", 
+                hook: "把工作牌放一边，深呼吸三次，这 3 分钟只属于你自己哦！感受【一秒钟三摩地】带给身心的松爽归位。" 
+            },
+
+            // 2. ⚡ 烦恼转念境
+            { 
+                category: "⚡ 烦恼转念境", 
+                title: "【家务疲惫卡】", 
+                tool: "名色分别智",
+                guide: "拖完地、洗完碗或照顾完家人极度疲惫时，不随顺惰性，立刻开启 5 分钟觉之舞或唱诵。", 
+                hook: "不用使劲跳，跟着呼吸轻轻摇晃。把“身体累”和“心里烦”分离开来，在轻柔舒展里卸掉疲惫！" 
+            },
+            { 
+                category: "⚡ 烦恼转念境", 
+                title: "【怒气止息卡】", 
+                tool: "因缘算法",
+                guide: "辅导作业或跟家人争执火冒三丈时，找个角落立刻做 5 分钟拉伸舞或吟唱，拉开距离。", 
+                hook: "先把气吐干净，想象把刚才的小情绪随着动作放掉。每个人都有自己的因缘轨迹，放过对方也是放过自己～" 
+            },
+            { 
+                category: "⚡ 烦恼转念境", 
+                title: "【深夜熄灯卡】", 
+                tool: "大脑广播",
+                guide: "临睡前熄灭所有灯光，在极致的黑暗与宁静中，随心起舞 5 分钟或低声唱诵。", 
+                hook: "关掉灯，闭上眼，把脑子里的杂念当作电台广播听听就好，在黑夜里感受自己舒服的呼吸与舞动吧。" 
+            },
+
+            // 3. ⏳ 无常流转境
+            { 
+                category: "⏳ 无常流转境", 
+                title: "【噪音和合卡】", 
+                tool: "坏灭智",
+                guide: "在装修声、车水马龙或嘈杂背景音中，不带排斥地做觉之舞或唱诵 5 分钟。", 
+                hook: "把外面的嘈杂当成给你的自带伴奏，声音随生随灭，不用跟它抗衡，顺着它一起摇摆～" 
+            },
+            { 
+                category: "⏳ 无常流转境", 
+                title: "【无聊等待卡】", 
+                tool: "定觉支",
+                guide: "在排队、等车或等人的延误空挡里，不看手机，做极其细微的身体律动或心诵。", 
+                hook: "别急着看手机啦，动动脚趾、松松双肩，调低大脑底噪，等待也可以是一段惬意的微修持时光！" 
+            },
+
+            // 4. 🌿 天地和合境
+            { 
+                category: "🌿 天地和合境", 
+                title: "【天地共舞卡】", 
+                tool: "观法无我",
+                guide: "在草地、大树下，脱鞋触地，顺应风声与树影，随心跳一段 5 分钟觉之舞。", 
+                hook: "去踩踩泥土和草地，像小树一样随风晃一晃，感受身心融入大自然的清凉与舒爽！" 
+            },
+            { 
+                category: "🌿 天地和合境", 
+                title: "【水边观心卡】", 
+                tool: "生灭智",
+                guide: "在河边、湖边或喷泉旁，看着水流，配合水声节奏进行觉之诵唱诵或舞蹈 5 分钟。", 
+                hook: "听着水声放空一下，让声音和舞姿跟着水流一起流淌过去，不留一点痕迹～" 
+            },
+            { 
+                category: "🌿 天地和合境", 
+                title: "【高处远眺卡】", 
+                tool: "欲解脱智",
+                guide: "在楼顶露台、山顶或高层窗前，面向远方开阔处，舒展肢体起舞或发声唱诵 5 分钟。", 
+                hook: "往最远的地方看，伸个大大的懒腰，把胸怀彻底张开，红尘里的小琐事全都烟消云散啦！" 
+            },
+            { 
+                category: "🌿 天地和合境", 
+                title: "【沐风听雨卡】", 
+                tool: "舍觉支",
+                guide: "在风吹过或下雨时，站在窗前或伞下，全身心感受风雨之势起舞或唱诵 5 分钟。", 
+                hook: "感受风吹在脸上的凉爽，让雨声帮你清空脑子里的杂念，顺应自然多舒服呀！" 
+            },
+
+            // 5. 🎁 欢喜利他境
+            { 
+                category: "🎁 欢喜利他境", 
+                title: "【喜悦祝福卡】", 
+                tool: "喜觉支",
+                guide: "在广场、医院附近或十字路口角落，带着无私的祝福心，默诵或轻柔舞蹈 5 分钟。", 
+                hook: "带着微笑唱诵，把这份轻松愉快的好磁场悄悄送给路过的人，心里也会暖洋洋的！" 
+            },
+            { 
+                category: "🎁 欢喜利他境", 
+                title: "【默默赞叹卡】", 
+                tool: "缘摄受智",
+                guide: "观察一位正在辛勤工作的人（如清洁工、外卖员），配合他的劳动节奏，默诵或微舞 5 分钟。", 
+                hook: "心里默默为辛劳的他们道一声辛苦，体谅每一个努力生活的人，心情也会跟着变得软软的。" 
+            },
+            { 
+                category: "🎁 欢喜利他境", 
+                title: "【回向大千卡】", 
+                tool: "过患智",
+                guide: "完成一段觉之舞或唱诵后，双手合十或静立，将身心放松的能量默默回向给所有人。", 
+                hook: "跳完唱完，不执着于好坏，把这份全身松快的好情绪，大方地分享给全世界吧～" 
+            }
+        ];
+
+        let currentCard = null;
+        let isFlipped = false;
+
+        function handleCardClick() {
+            if (!isFlipped) {
+                drawRandomCard();
+            }
+        }
+
+        function updateCardDOM(card, index) {
+            currentCard = card;
+            document.getElementById('cardCategory').innerText = card.category;
+            document.getElementById('cardNo').innerText = `NO.${(index + 1).toString().padStart(2, '0')} / 15`;
+            document.getElementById('cardTitle').innerText = card.title;
+            document.getElementById('toolBtnText').innerText = card.tool;
+            document.getElementById('cardGuide').innerText = card.guide;
+            document.getElementById('cardHook').innerText = card.hook;
+        }
+
+        function showCard() {
+            const container = document.getElementById('cardContainer');
+            const copyBtn = document.getElementById('copyBtn');
+
+            if (!isFlipped) {
+                container.classList.add('rotate-y-180');
+                isFlipped = true;
+            }
+            copyBtn.classList.remove('hidden');
+        }
+
+        function drawRandomCard() {
+            const randomIndex = Math.floor(Math.random() * cardsData.length);
+            const selectedCard = cardsData[randomIndex];
+
+            if (isFlipped) {
+                const container = document.getElementById('cardContainer');
+                container.classList.remove('rotate-y-180');
+                isFlipped = false;
+                setTimeout(() => {
+                    updateCardDOM(selectedCard, randomIndex);
+                    showCard();
+                }, 400);
+            } else {
+                updateCardDOM(selectedCard, randomIndex);
+                showCard();
+            }
+        }
+
+        function drawDailyCard() {
+            const today = new Date();
+            const dayOfMonth = today.getDate();
+            const dailyIndex = (dayOfMonth - 1) % cardsData.length;
+            const selectedCard = cardsData[dailyIndex];
+
+            if (isFlipped) {
+                const container = document.getElementById('cardContainer');
+                container.classList.remove('rotate-y-180');
+                isFlipped = false;
+                setTimeout(() => {
+                    updateCardDOM(selectedCard, dailyIndex);
+                    showCard();
+                }, 400);
+            } else {
+                updateCardDOM(selectedCard, dailyIndex);
+                showCard();
+            }
+        }
+
+        function openToolModal(event) {
+            event.stopPropagation();
+            if (!currentCard) return;
+
+            const toolName = currentCard.tool;
+            const desc = toolDefinitions[toolName] || `【${toolName}】在对境练习中保持觉知与松爽的实修工具。`;
+
+            document.getElementById('modalToolTitle').innerText = `✦ 修持工具：${toolName} ✦`;
+            document.getElementById('modalToolDesc').innerText = desc;
+
+            const modal = document.getElementById('toolModal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeToolModal() {
+            const modal = document.getElementById('toolModal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function copyTemplate() {
+            if (!currentCard) return;
+
+            const categoryEmoji = currentCard.category.split(' ')[0] || '';
+            
+            const copyText = `🪞${currentCard.title}${categoryEmoji}
+✦ 修持工具：${currentCard.tool} ✦
+
+--- ✍️ 我的觉察 ---`;
+
+            navigator.clipboard.writeText(copyText).then(() => {
+                showToast("已复制打卡模板，快去微信群发文字与照片/视频吧！");
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = copyText;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast("已复制打卡模板，快去微信群发文字与照片/视频吧！");
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
